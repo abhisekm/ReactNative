@@ -3,16 +3,18 @@ import HomeScreen from './src/screens/HomeScreen';
 import ComponentsScreen from './src/screens/ComponentsScreen';
 import FirstExercise from './src/screens/FirstExercise';
 import ListScreen from './src/screens/ListScreen';
+import ExerciseFlatListScreen from './src/screens/ExerciseFlatListScreen';
 
 const navigator = createStackNavigator(
   {
     Home: HomeScreen,
     Components: ComponentsScreen,
     Ex1: FirstExercise,
+    Ex2: ExerciseFlatListScreen,
     List : ListScreen
   },
   {
-    initialRouteName: 'List',
+    initialRouteName: 'Ex2',
     defaultNavigationOptions: {
       title: 'App'
     }
