@@ -17,12 +17,16 @@ import FlexBoxScreen from './src/screens/FlexBoxScreen';
 import PrimitiveScreen from './src/screens/PrimitiveScreen';
 import StateScreen from './src/screens/StateScreen';
 import TextInputScreen from './src/screens/TextInputScreen';
+import PositionScreen from './src/screens/PositionScreen';
+import LayoutExerciseScreen from './src/screens/LayoutExerciseScreen';
+import LayoutScreen from './src/screens/LayoutScreen';
 
 const navigator = createStackNavigator(
   {
     Home: HomeScreen,
     Primitive: PrimitiveScreen,
     State: StateScreen,
+    Layout: LayoutScreen,
     TextInput: TextInputScreen,
     Components: ComponentsScreen,
     Ex1: FirstExercise,
@@ -37,7 +41,9 @@ const navigator = createStackNavigator(
     Text: TextScreen,
     Password: PasswordScreen,
     Box: BoxScreen,
-    FlexBox: FlexBoxScreen
+    FlexBox: FlexBoxScreen,
+    Position: PositionScreen,
+    LayoutEx: LayoutExerciseScreen
   },
   {
     initialRouteName: 'Home',

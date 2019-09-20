@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const FlexBoxScreen = () => {
+const PositionScreen = () => {
   return (
     <View style={styles.viewStyle}>
       <Text style={styles.textOneStyle}>Child #1</Text>
@@ -14,29 +14,26 @@ const FlexBoxScreen = () => {
 const styles = StyleSheet.create({
   viewStyle: {
     borderWidth: 3,
-    alignItems: 'center',
     borderColor: 'black',
     height: 200
   },
   textOneStyle: {
-    flex: 1,
     padding: 3,
     borderWidth: 3,
     borderColor: 'red'
   },
   textTwoStyle: {
-    flex: 2,
     padding: 3,
     borderWidth: 3,
-    alignSelf: 'stretch',
-    borderColor: 'blue'
+    borderColor: 'blue',
+    position: 'absolute',
+    ...StyleSheet.absoluteFillObject
   },
   textThreeStyle: {
-    flex: 3,
     padding: 3,
     borderWidth: 3,
     borderColor: 'green'
   }
 });
 
-export default FlexBoxScreen;
+export default PositionScreen;
