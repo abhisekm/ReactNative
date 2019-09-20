@@ -12,10 +12,18 @@ import ReducerScreen from './src/screens/ReducerScreen';
 import CounterReducerScreen from './src/screens/CounterReducerScreen';
 import TextScreen from './src/screens/TextScreen';
 import PasswordScreen from './src/screens/PasswordScreen';
+import BoxScreen from './src/screens/BoxScreen';
+import FlexBoxScreen from './src/screens/FlexBoxScreen';
+import PrimitiveScreen from './src/screens/PrimitiveScreen';
+import StateScreen from './src/screens/StateScreen';
+import TextInputScreen from './src/screens/TextInputScreen';
 
 const navigator = createStackNavigator(
   {
     Home: HomeScreen,
+    Primitive: PrimitiveScreen,
+    State: StateScreen,
+    TextInput: TextInputScreen,
     Components: ComponentsScreen,
     Ex1: FirstExercise,
     Ex2: ExerciseFlatListScreen,
@@ -27,7 +35,9 @@ const navigator = createStackNavigator(
     Reducer: ReducerScreen,
     Ex3: CounterReducerScreen,
     Text: TextScreen,
-    Password: PasswordScreen
+    Password: PasswordScreen,
+    Box: BoxScreen,
+    FlexBox: FlexBoxScreen
   },
   {
     initialRouteName: 'Home',

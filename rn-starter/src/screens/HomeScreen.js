@@ -4,37 +4,21 @@ import { Text, StyleSheet, View, Button, TouchableOpacity } from 'react-native';
 const HomeScreen = ({ navigation }) => {
   return (
     <View>
-      <Text style={styles.text}>Hello World!</Text>
       <Button
-        onPress={() => { navigation.navigate('Components') }}
-        title="Go to Components Demo" />
+        onPress={() => { navigation.navigate('Primitive') }}
+        title="Primitive Demos" />
       <Button
-        onPress={() => { navigation.navigate('List') }}
-        title="Go to List Demo" />
+        onPress={() => { navigation.navigate('State') }}
+        title="State Demos" />
       <Button
-        onPress={() => { navigation.navigate('ImageScreen') }}
-        title="Go to Image Demo" />
+        onPress={() => { navigation.navigate('TextInput') }}
+        title="Text Input Demos" />
       <Button
-        onPress={() => { navigation.navigate('Counter') }}
-        title="Go to Counter Demo" />
+        onPress={() => { navigation.navigate('Box') }}
+        title="Go to Box Layout Demo" />
       <Button
-        onPress={() => { navigation.navigate('Colors') }}
-        title="Go to Colors Demo" />
-      <Button
-        onPress={() => { navigation.navigate('Square') }}
-        title="Go to Color Square Demo" />
-      <Button
-        onPress={() => { navigation.navigate('Reducer') }}
-        title="Go to Color Reducer Demo" />
-      <Button
-        onPress={() => { navigation.navigate('Ex3') }}
-        title="Go to Counter Reducer Demo" />
-      <Button
-        onPress={() => { navigation.navigate('Text') }}
-        title="Go to Text Demo" />
-      <Button
-        onPress={() => { navigation.navigate('Password') }}
-        title="Go to Password Demo" />
+        onPress={() => { navigation.navigate('FlexBox') }}
+        title="Go to Flex Box Layout Demo" />
       {/* <TouchableOpacity onPress={() => { props.navigation.navigate('List') }}>
         <Text>Go to List Demo</Text>
       </TouchableOpacity> */}
