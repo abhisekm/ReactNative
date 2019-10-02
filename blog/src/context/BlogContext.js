@@ -12,14 +12,6 @@ const blogReducer = (state, action) => {
         return blogPost.id === action.payload.id ?
           action.payload : blogPost
       });
-      return [
-        ...state,
-        {
-          id: action.payload.id,
-          title: action.payload.title,
-          content: action.payload.content
-        }
-      ];
     default:
       return state;
   }
