@@ -1,0 +1,26 @@
+{
+  "common": {
+    "ok": "OK!",
+    "cancel": "Cancel",
+    "back": "Back"
+  },
+  "errors": {
+    "invalidEmail": "Invalid email address."
+  },
+  "loginScreen": {
+    "header": "Sign In",
+    "signup": "New user? Create an Account"
+  },
+  "dashboardScreen": {
+    "header": "Dashboard"
+  },
+  "signupScreen": {
+    "header": "Sign Up",
+    "signin": "Already have an account? ",
+    "login": "Log in"
+  },
+  "storybook": {
+    "placeholder": "Placeholder",
+    "field": "Field"
+  }
+}
