@@ -1,68 +1,52 @@
 import * as React from "react"
 import { observer } from "mobx-react"
+import { View, Image } from "react-native"
+import { Button as ReactButton } from "react-native-elements"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
-// import { useStores } from "../../models/root-store"
-import styleSheet from "../../theme/styleSheet"
-import { Button as ReactButton } from "react-native-elements"
-import { View, Image } from "react-native"
 import { color, spacing } from "../../theme"
-import { Button } from "../../components/button"
-import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
+import { NavigationStackScreenComponent, NavigationStackScreenProps } from "react-navigation-stack"
+import styleSheet from "../../theme/styleSheet"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
+import { Button } from "../../components/button"
 
-
-interface Props extends NavigationStackScreenProps {
+export interface ResetPasswordScreenProps extends NavigationStackScreenProps<{}> {
 }
 
-export const LoginScreen: NavigationStackScreenComponent<Props> = observer((props) => {
+export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordScreenProps> = observer((props) => {
   const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
 
   return (
     <View style={styleSheet.view_full}>
       <Screen style={styleSheet.view_container} preset="scroll" backgroundColor={color.transparent} unsafe >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
-          <Text preset="header" tx="loginScreen.header" />
+          <Text preset="header" tx="resetPasswordScreen.header" />
 
           <View style={{ height: 50 }} />
+
+          <Text tx="resetPasswordScreen.context" />
 
           <TextField
             placeholder="Email" label="Email"
             value={email} onChangeText={setEmail}
             inputStyle={styleSheet.text_input_container} />
 
-          <TextField
-            placeholder="Password" label="Password"
-            value={password} onChangeText={setPassword}
-            inputStyle={styleSheet.text_input_container} />
-
           <View style={{ flexDirection: "row", marginTop: spacing.large }}>
-            <ReactButton
-              raised
-              buttonStyle={{ backgroundColor: color.palette.pink1 }}
-              titleStyle={{ paddingHorizontal: spacing.medium }}
-              title="Submit"
+            <Button
+              preset="raised"
+              tx="resetPasswordScreen.reset"
               onPress={() => { }}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
-            <Text tx="loginScreen.signup" />
+            <Text tx="resetPasswordScreen.goBack" />
 
             <Button
               preset="link"
-              tx="loginScreen.newAccount"
+              tx="resetPasswordScreen.login"
               textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.navigate("Signup")}
-            />
-          </View>
-          <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
-            <Button
-              preset="link"
-              tx="loginScreen.forgotPassword"
-              textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.navigate("ResetPassword")}
+              onPress={() => props.navigation.navigate("Login")}
             />
           </View>
         </FormRow>
@@ -71,7 +55,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer((prop
   )
 })
 
-LoginScreen.navigationOptions = {
+ResetPasswordScreen.navigationOptions = {
   headerTitle: () => {
     return (
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >

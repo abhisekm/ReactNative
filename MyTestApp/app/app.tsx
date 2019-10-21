@@ -4,7 +4,7 @@
 
 import "./i18n"
 import React, { useState, useEffect } from "react"
-import { AppRegistry, YellowBox, View, StatusBar } from "react-native"
+import { AppRegistry, YellowBox, View } from "react-native"
 import { BackButtonHandler, exitRoutes, StatefulNavigator } from "./navigation"
 import { StorybookUIRoot } from "../storybook"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
@@ -66,10 +66,6 @@ const App = () => {
   // otherwise, we're ready to render the app
   return (
     <View style={{ flex: 1 }} >
-      <StatusBar
-        barStyle="default"
-        backgroundColor={color.statusBar}
-      />
       <RootStoreProvider value={rootStore}>
         <BackButtonHandler canExit={canExit}>
           <StatefulNavigator />

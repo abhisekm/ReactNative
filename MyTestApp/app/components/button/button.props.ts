@@ -13,6 +13,13 @@ export interface ButtonProps extends TouchableOpacityProps {
   text?: string
 
   /**
+  * Optional options to pass to i18n. Useful for interpolation
+  * as well as explicitly setting locale or translation fallbacks.
+  */
+  txOptions?: object
+
+
+  /**
    * An optional style override useful for padding & margin.
    */
   style?: ViewStyle | ViewStyle[]

@@ -4,15 +4,28 @@ import { LoginScreen } from "../screens/login-screen"
 import { SignupScreen } from "../screens/signup-screen"
 import { DashboardScreen } from "../screens/dashboard-screen"
 import { createSwitchNavigator } from "react-navigation"
+import { color } from "../theme"
+import { ResetPasswordScreen } from "../screens/reset-password-screen"
+import { VerifyPhoneScreen } from "../screens/verify-phone-screen"
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
     ResolveAuth: { screen: ResolveAuthScreen },
     LoginFlow: createStackNavigator({
       Login: { screen: LoginScreen },
-      Signup: { screen: SignupScreen }
+      Signup: { screen: SignupScreen },
+      ResetPassword: { screen: ResetPasswordScreen },
+      VerifyPhone: { screen: VerifyPhoneScreen }
     }, {
-      headerMode: "none",
+      defaultNavigationOptions: {
+        headerStyle: {
+          backgroundColor: color.palette.grey9,
+        },
+        headerTintColor: color.palette.white,
+        headerTitleContainerStyle: {
+          left: 0
+        }
+      }
     }),
     Dashboard: { screen: DashboardScreen }
   },
@@ -28,4 +41,4 @@ export const PrimaryNavigator = createSwitchNavigator(
  * Anything not on this list will be a standard `back` action in
  * react-navigation.
  */
-export const exitRoutes: string[] = ["Login", "Signup", "Dashboard"]
+export const exitRoutes: string[] = ["Login", "Dashboard"]

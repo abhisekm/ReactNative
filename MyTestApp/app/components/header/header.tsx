@@ -1,7 +1,6 @@
 import * as React from "react"
 import { View, ViewStyle } from "react-native"
 import { Text } from "../text"
-
 export interface HeaderProps {
   /**
    * Text which is looked up via i18n.
@@ -27,7 +26,7 @@ export interface HeaderProps {
 export function Header(props: HeaderProps) {
   // grab the props
   const { tx, text, style, ...rest } = props
-  const textStyle = { }
+  const textStyle = {}
 
   return (
     <View style={style} {...rest}>

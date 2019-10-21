@@ -51,7 +51,7 @@ export const color = {
   /**
    * Status Bar color
    */
-  statusBar: palette.statusBar,
+  statusBar: palette.grey10,
 
   /**
    * Storybook background for Text stories, or any stories where
@@ -68,5 +68,5 @@ export const color = {
 
   borderColor: palette.grey4,
 
-  inputBackground: palette.grey3
+  inputBackground: palette.grey1
 }

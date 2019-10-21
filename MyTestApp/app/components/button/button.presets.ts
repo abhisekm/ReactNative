@@ -36,6 +36,10 @@ export const viewPresets = {
     paddingVertical: 0,
     alignItems: "flex-start",
   } as ViewStyle,
+
+  raised: {
+
+  },
 }
 
 export const textPresets = {

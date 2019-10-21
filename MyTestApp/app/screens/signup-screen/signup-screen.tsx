@@ -1,23 +1,21 @@
 import * as React from "react"
 import { observer } from "mobx-react"
-import { View, TextInput } from "react-native"
+import { View, Image } from "react-native"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store
 import styleSheet from "../../theme/styleSheet"
-import { Wallpaper } from "../../components/wallpaper"
 import { color, spacing } from "../../theme"
 import { Button as ReactButton } from "react-native-elements"
 import { FormRow } from "../../components/form-row"
 import { Button } from "../../components/button"
 import { TextField } from "../../components/text-field"
+import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
 
+interface Props extends NavigationStackScreenProps {
+}
 
-const FORM_OVERRIDE = { borderColor: color.palette.white, backgroundColor: color.palette.white, flex: 1 };
-
-const MyForm = _props => <FormRow style={FORM_OVERRIDE} {..._props} />
-
-export const SignupScreen = observer((props) => {
+export const SignupScreen: NavigationStackScreenComponent<Props> = observer((props) => {
   // const { someStore } = useStores()
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
@@ -29,8 +27,10 @@ export const SignupScreen = observer((props) => {
   return (
     <View style={styleSheet.view_full}>
       <Screen style={styleSheet.view_container} preset="scroll" backgroundColor={color.transparent} unsafe >
-        <MyForm preset="top">
+        <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
           <Text preset="header" tx="signupScreen.header" />
+
+          <View style={{ height: 20 }} />
 
           <TextField
             placeholder="First Name" label="First Name"
@@ -61,21 +61,11 @@ export const SignupScreen = observer((props) => {
             placeholder="10-digit mobie number" label="Phone"
             value={phone} onChangeText={setPhone}
             inputStyle={styleSheet.text_input_container} />
-          <TextField
-            placeholder="10-digit mobie number" label="Phone"
-            value={phone} onChangeText={setPhone}
-            inputStyle={styleSheet.text_input_container} />
-          <TextField
-            placeholder="10-digit mobie number" label="Phone"
-            value={phone} onChangeText={setPhone}
-            inputStyle={styleSheet.text_input_container} />
 
           <View style={{ flexDirection: "row", marginTop: spacing.large }}>
-            <ReactButton
-              raised
-              buttonStyle={{ backgroundColor: color.palette.pink1 }}
-              titleStyle={{ paddingHorizontal: spacing.medium }}
-              title="Submit"
+            <Button
+              preset="raised"
+              tx="common.submit"
               onPress={() => { }}
             />
           </View>
@@ -89,8 +79,22 @@ export const SignupScreen = observer((props) => {
               onPress={() => props.navigation.navigate("Login")}
             />
           </View>
-        </MyForm>
+        </FormRow>
       </Screen>
     </View>
   )
 })
+
+SignupScreen.navigationOptions = {
+  headerTitle: () => {
+    return (
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
+        <Image
+          source={require('../../components/header/light.png')}
+          style={{ height: 25, width: 110 }}
+          resizeMode='contain'
+        />
+      </View>
+    )
+  }
+}
