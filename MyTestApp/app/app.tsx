@@ -5,12 +5,13 @@
 import "./i18n"
 import React, { useState, useEffect } from "react"
 import { AppRegistry, YellowBox, View } from "react-native"
-import { BackButtonHandler, exitRoutes, StatefulNavigator } from "./navigation"
+import { BackButtonHandler, exitRoutes, StatefulNavigator, RootNavigator, setNavigator } from "./navigation"
 import { StorybookUIRoot } from "../storybook"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 
 import { contains } from "ramda"
 import { color } from "./theme"
+import { ThemeProvider } from "react-native-elements"
 
 /**
  * Ignore some yellowbox warnings. Some of these are for deprecated functions
@@ -64,12 +65,22 @@ const App = () => {
   }
 
   // otherwise, we're ready to render the app
+  // return (
+  //   <View style={{ flex: 1 }} >
+  //     <RootStoreProvider value={rootStore}>
+  //       <BackButtonHandler canExit={canExit}>
+  //         <StatefulNavigator />
+  //       </BackButtonHandler>
+  //     </RootStoreProvider>
+  //   </View>
+  // )
+
   return (
     <View style={{ flex: 1 }} >
       <RootStoreProvider value={rootStore}>
-        <BackButtonHandler canExit={canExit}>
-          <StatefulNavigator />
-        </BackButtonHandler>
+        <ThemeProvider>
+          <RootNavigator ref={(navigation) => setNavigator(navigation)} />
+        </ThemeProvider>
       </RootStoreProvider>
     </View>
   )
