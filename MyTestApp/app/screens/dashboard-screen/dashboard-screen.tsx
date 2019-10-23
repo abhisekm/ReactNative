@@ -6,16 +6,10 @@ import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store"
 import styleSheet from "../../theme/styleSheet"
 import { Wallpaper } from "../../components/wallpaper"
-import { color, spacing } from "../../theme"
-import { TextField } from "../../components/text-field"
-import { FormRow } from "../../components/form-row"
+import { color } from "../../theme"
 import { Button } from "../../components/button"
-import { Button as ReactButton } from "react-native-elements"
+import { navigate } from "../../navigation"
 
-
-
-const FORM_OVERRIDE = { borderColor: color.palette.white, backgroundColor: color.palette.white, flex: 1 };
-const MyForm = _props => <FormRow style={FORM_OVERRIDE} {..._props} />
 
 export const DashboardScreen = observer((props) => {
   // const { someStore } = useStores()
@@ -25,6 +19,12 @@ export const DashboardScreen = observer((props) => {
       <Wallpaper />
       <Screen style={{ ...styleSheet.view_container }} preset="scroll" backgroundColor={color.transparent}>
         <Text preset="header" tx="dashboardScreen.header" />
+        <Button
+          preset="raised"
+          tx="resetPasswordScreen.login"
+          textStyle={{ color: color.palette.pink1 }}
+          onPress={() => navigate("Login")}
+        />
       </Screen>
     </View>
   )

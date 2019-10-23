@@ -7,16 +7,20 @@ import { createSwitchNavigator } from "react-navigation"
 import { color } from "../theme"
 import { ResetPasswordScreen } from "../screens/reset-password-screen"
 import { VerifyPhoneScreen } from "../screens/verify-phone-screen"
+import { QuestionnaireScreen } from "../screens/questionnaire-screen"
+import { HomeScreen } from "../screens/home-screen"
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
     ResolveAuth: { screen: ResolveAuthScreen },
     LoginFlow: createStackNavigator({
+      Home: { screen: HomeScreen },
       Login: { screen: LoginScreen },
       Signup: { screen: SignupScreen },
       ResetPassword: { screen: ResetPasswordScreen },
       VerifyPhone: { screen: VerifyPhoneScreen }
     }, {
+      headerMode: 'screen',
       defaultNavigationOptions: {
         headerStyle: {
           backgroundColor: color.palette.grey9,
@@ -27,6 +31,7 @@ export const PrimaryNavigator = createSwitchNavigator(
         }
       }
     }),
+    Questionnaire: { screen: QuestionnaireScreen },
     Dashboard: { screen: DashboardScreen }
   },
   {

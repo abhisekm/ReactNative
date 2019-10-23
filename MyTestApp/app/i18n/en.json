@@ -9,6 +9,10 @@
   "errors": {
     "invalidEmail": "Invalid email address."
   },
+  "homeScreen": {
+    "header": "Welcome",
+    "emailSignIn": "Sign in via Emaid address"
+  },
   "loginScreen": {
     "header": "Log In",
     "signup": "New user? ",
@@ -29,6 +33,17 @@
     "goBack": "Remember password? ",
     "login": "Login",
     "reset": "Reset"
+  },
+  "verifyPhone": {
+    "header": "Verify Phone",
+    "context": "We have sent a One Time Password (OTP) one to your phone. Enter it to complete sign up",
+    "otp": "OTP",
+    "otpHint": "6-digit OTP",
+    "resendOtp": "Didn't reveive OTP? ",
+    "resend": "Resend",
+    "changePhoneNumber": "Want to use a different phone number? ",
+    "goBack": "Go back",
+    "verify": "Verify"
   },
   "storybook": {
     "placeholder": "Placeholder",

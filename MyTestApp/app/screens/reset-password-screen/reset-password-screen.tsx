@@ -10,6 +10,7 @@ import styleSheet from "../../theme/styleSheet"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
 import { Button } from "../../components/button"
+import { goBack } from "../../navigation/navigationRef"
 
 export interface ResetPasswordScreenProps extends NavigationStackScreenProps<{}> {
 }
@@ -46,7 +47,7 @@ export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordSc
               preset="link"
               tx="resetPasswordScreen.login"
               textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.navigate("Login")}
+              onPress={() => goBack()}
             />
           </View>
         </FormRow>

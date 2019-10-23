@@ -6,11 +6,11 @@ import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store
 import styleSheet from "../../theme/styleSheet"
 import { color, spacing } from "../../theme"
-import { Button as ReactButton } from "react-native-elements"
 import { FormRow } from "../../components/form-row"
 import { Button } from "../../components/button"
 import { TextField } from "../../components/text-field"
 import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
+import { navigate } from "../../navigation/navigationRef"
 
 interface Props extends NavigationStackScreenProps {
 }
@@ -66,7 +66,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
             <Button
               preset="raised"
               tx="common.submit"
-              onPress={() => { }}
+              onPress={() => navigate("VerifyPhone")}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
@@ -76,7 +76,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
               preset="link"
               tx="signupScreen.login"
               textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.navigate("Login")}
+              onPress={() => navigate("Login")}
             />
           </View>
         </FormRow>

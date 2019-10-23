@@ -11,6 +11,7 @@ import { Button } from "../../components/button"
 import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
+import { navigate } from "../../navigation/navigationRef"
 
 
 interface Props extends NavigationStackScreenProps {
@@ -54,7 +55,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer((prop
               preset="link"
               tx="loginScreen.newAccount"
               textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.navigate("Signup")}
+              onPress={() => navigate("Signup")}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
@@ -62,7 +63,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer((prop
               preset="link"
               tx="loginScreen.forgotPassword"
               textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.navigate("ResetPassword")}
+              onPress={() => navigate("ResetPassword")}
             />
           </View>
         </FormRow>
