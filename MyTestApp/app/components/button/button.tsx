@@ -6,7 +6,6 @@ import { ButtonProps } from "./button.props"
 import { mergeAll, flatten } from "ramda"
 import { translate } from "../../i18n"
 import { Button as ReactButton } from "react-native-elements"
-import { color, spacing } from "../../theme"
 
 /**
  * For your text displaying needs.
@@ -22,19 +21,28 @@ export function Button(props: ButtonProps) {
     text,
     style: styleOverride,
     textStyle: textStyleOverride,
+    buttonStyle: buttonStyleOverride,
+    titleStyle: titleStyleOverride,
+    containerStyle: containerStyleOverride,
     children,
+    social,
     ...rest
   } = props
 
-  if (preset === "raised") {
+  if (preset === "raised" || preset === "social") {
     const i18nText = tx && translate(tx, txOptions)
     const localisedText = i18nText || text
+
+    const buttonStyle = viewPresets[preset].buttonStyle;
+    const titleStyle = viewPresets[preset].titleStyle;
+    const containerStyle = viewPresets[preset].containerStyle;
 
     return (
       <ReactButton
         raised
-        buttonStyle={{ backgroundColor: color.palette.pink1 }}
-        titleStyle={{ paddingHorizontal: spacing.medium }}
+        buttonStyle={mergeAll(flatten([buttonStyle, buttonStyleOverride]))}
+        titleStyle={mergeAll(flatten([titleStyle, titleStyleOverride]))}
+        containerStyle={mergeAll(flatten([containerStyle, containerStyleOverride]))}
         title={localisedText}
         {...rest}
       />

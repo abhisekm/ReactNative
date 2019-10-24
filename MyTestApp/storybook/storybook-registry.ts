@@ -1,3 +1,4 @@
+require("../app/components/loading/loading.story")
 require("../app/components/header/header.story")
 require("../app/components/text/text.story")
 require("../app/components/button/button.story")

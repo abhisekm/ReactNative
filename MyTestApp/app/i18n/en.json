@@ -11,7 +11,7 @@
   },
   "homeScreen": {
     "header": "Welcome",
-    "emailSignIn": "Sign in via Emaid address"
+    "emailSignIn": "Sign in With Email"
   },
   "loginScreen": {
     "header": "Log In",

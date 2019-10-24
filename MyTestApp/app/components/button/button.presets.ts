@@ -1,4 +1,4 @@
-import { ViewStyle, TextStyle } from "react-native"
+import { ViewStyle, TextStyle, Platform } from "react-native"
 import { color, spacing } from "../../theme"
 
 /**
@@ -38,7 +38,53 @@ export const viewPresets = {
   } as ViewStyle,
 
   raised: {
+    buttonStyle: {
+      flex: 1,
+      borderRadius: 30,
+      paddingHorizontal: spacing.medium,
+      paddingTop: 14,
+      paddingBottom: 14,
+    } as ViewStyle,
+    titleStyle: {
+      color: color.palette.pink1,
+    } as TextStyle,
+    containerStyle: {
+      margin: 7,
+      borderRadius: 30,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    } as ViewStyle,
+  },
 
+  social: {
+    buttonStyle: {
+      flex: 1,
+      borderRadius: 30,
+      paddingTop: 14,
+      paddingBottom: 14,
+    } as ViewStyle,
+    titleStyle: {
+      color: 'white',
+      marginLeft: 15,
+      ...Platform.select({
+        android: {
+          fontFamily: 'sans-serif',
+        },
+        default: {
+
+        },
+      }),
+      fontWeight: 'bold',
+      fontSize: 14,
+    } as TextStyle,
+    containerStyle: {
+      margin: 7,
+      borderRadius: 30,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    } as ViewStyle,
   },
 }
 

@@ -3,16 +3,18 @@ import { observer } from "mobx-react"
 import { View } from "react-native"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
-// import { useStores } from "../../models/root-store"
+import { useStores } from "../../models/root-store"
 import styleSheet from "../../theme/styleSheet"
 import { Wallpaper } from "../../components/wallpaper"
 import { color } from "../../theme"
 import { Button } from "../../components/button"
-import { navigate } from "../../navigation"
+import { Loading } from "../../components/loading"
 
 
 export const DashboardScreen = observer((props) => {
-  // const { someStore } = useStores()
+  const { authStore: { showLoading, logout } } = useStores()
+
+  console.log(showLoading())
 
   return (
     <View style={styleSheet.view_full}>
@@ -21,11 +23,13 @@ export const DashboardScreen = observer((props) => {
         <Text preset="header" tx="dashboardScreen.header" />
         <Button
           preset="raised"
-          tx="resetPasswordScreen.login"
+          text="Logout"
           textStyle={{ color: color.palette.pink1 }}
-          onPress={() => navigate("Login")}
+          onPress={logout}
         />
       </Screen>
+
+      {showLoading() && <Loading />}
     </View>
   )
 })

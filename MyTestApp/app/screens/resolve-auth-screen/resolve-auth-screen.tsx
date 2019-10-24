@@ -1,26 +1,41 @@
-import { useEffect } from "react";
-// import { useStores } from "../../models/root-store"
-import auth from '@react-native-firebase/auth';
+import React from "react";
+import { useStores } from "../../models/root-store";
+import { View, ViewStyle, Image } from "react-native";
+import { Screen } from "../../components/screen";
+import styleSheet from "../../theme/styleSheet";
+import { color, spacing } from "../../theme";
 
+const logo = require('../../components/header/logo.png');
 
 export const ResolveAuthScreen = (props) => {
-  // const { someStore } = useStores()
+  const { authStore: { silentSignIn } } = useStores()
 
-  useEffect(
-    () => {
-      const subscriber = auth().onAuthStateChanged((user) => {
-        console.log(user)
-        if (user) {
-          props.navigation.navigate("Dashboard")
-        } else {
-          props.navigation.navigate("LoginFlow")
-        }
-      })
+  React.useEffect(() => { silentSignIn() }, []);
 
-      return subscriber;
-    },
-    []
+
+  const imageContainer: ViewStyle = {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    paddingHorizontal: spacing.extraLarge,
+    backgroundColor: color.transparent,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+
+  return (
+    <View style={styleSheet.view_full}>
+      <Screen style={styleSheet.view_container} preset="scroll" backgroundColor={color.transparent} unsafe >
+      </Screen>
+      <View style={imageContainer} >
+        <Image
+          source={logo}
+          style={{ height: 200, width: "100%" }}
+          resizeMode='contain'
+        />
+      </View>
+    </View>
   );
-
-  return null;
 }

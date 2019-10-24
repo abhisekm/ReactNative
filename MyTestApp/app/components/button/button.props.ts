@@ -1,7 +1,8 @@
-import { ViewStyle, TextStyle, TouchableOpacityProps } from "react-native"
+import { ViewStyle, TextStyle } from "react-native"
 import { ButtonPresetNames } from "./button.presets"
+import { ButtonProps as RNEButtonProps } from "react-native-elements"
 
-export interface ButtonProps extends TouchableOpacityProps {
+export interface ButtonProps extends RNEButtonProps {
   /**
    * Text which is looked up via i18n.
    */
@@ -18,6 +19,10 @@ export interface ButtonProps extends TouchableOpacityProps {
   */
   txOptions?: object
 
+  /**
+  * Style it like social button
+  */
+  social?: boolean
 
   /**
    * An optional style override useful for padding & margin.
