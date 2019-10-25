@@ -25,11 +25,7 @@ interface Props extends NavigationStackScreenProps {
 const alert = (msg) => Alert.alert("Alert", msg);
 
 export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props) => {
-<<<<<<< HEAD
   const { authStore: { errorMessage, signInFacebook, signInGoogle, showLoading } } = useStores();
-=======
-  const { authStore: { errorMessage, signInFacebook } } = useStores();
->>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
 
   return (
     <View style={styleSheet.view_full}>
@@ -53,7 +49,6 @@ export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props
               light
               button
               type="google"
-<<<<<<< HEAD
               onPress={signInGoogle}
             />
 
@@ -63,26 +58,13 @@ export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props
               onPress={() => navigate("Login")}
               containerStyle={{ backgroundColor: color.palette.orangeDarker }}
               icon={<Icon type="feather" name="mail" color={color.palette.white} />}
-=======
-              onPress={() => { alert("google login") }}
-            />
-
-            <Button
-              preset="link"
-              tx="homeScreen.emailSignIn"
-              textStyle={{ color: color.palette.pink1 }}
-              onPress={() => navigate("Login")}
->>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
             />
 
             {errorMessage ? <Text text={errorMessage} /> : null}
           </View>
         </SafeAreaView>
       </Screen>
-<<<<<<< HEAD
       {showLoading() && <Loading />}
-=======
->>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
     </View>
   )
 })

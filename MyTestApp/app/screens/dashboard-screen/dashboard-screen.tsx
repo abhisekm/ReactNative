@@ -8,11 +8,7 @@ import styleSheet from "../../theme/styleSheet"
 import { Wallpaper } from "../../components/wallpaper"
 import { color } from "../../theme"
 import { Button } from "../../components/button"
-<<<<<<< HEAD
 import { Loading } from "../../components/loading"
-=======
-import { navigate } from "../../navigation"
->>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
 
 
 export const DashboardScreen = observer((props) => {
@@ -27,15 +23,9 @@ export const DashboardScreen = observer((props) => {
         <Text preset="header" tx="dashboardScreen.header" />
         <Button
           preset="raised"
-<<<<<<< HEAD
           text="Logout"
           textStyle={{ color: color.palette.pink1 }}
           onPress={logout}
-=======
-          tx="resetPasswordScreen.login"
-          textStyle={{ color: color.palette.pink1 }}
-          onPress={() => navigate("Login")}
->>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
         />
       </Screen>
 
