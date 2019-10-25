@@ -2,10 +2,13 @@ import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 import { LoginManager, AccessToken, LoginResult } from "react-native-fbsdk"
 import { firebase } from "@react-native-firebase/auth";
 import { navigate } from "../../navigation";
+<<<<<<< HEAD
 import omit from "ramda/es/omit";
 import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
 import { delay } from "../../utils/delay";
 
+=======
+>>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
 
 /**
  * Model description here for TypeScript hints.
@@ -13,6 +16,7 @@ import { delay } from "../../utils/delay";
 export const AuthStoreModel = types
   .model("AuthStore")
   .props({
+<<<<<<< HEAD
     state: types.optional(types.enumeration("State", ["pending", "done", "error"]), "done"),
     provider: types.maybeNull(types.enumeration("Provider", ["facebook", "google", "email"])),
     errorMessage: types.maybe(types.string)
@@ -21,10 +25,18 @@ export const AuthStoreModel = types
     showLoading(): boolean {
       return self.state === "pending"
     }
+=======
+    state: types.optional(types.enumeration("State", ["pending", "done", "error"]), "pending"),
+    errorMessage: types.maybe(types.string)
+  })
+  .views(self => ({
+
+>>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({
     setState(newState) {
       self.state = newState;
+<<<<<<< HEAD
     },
 
     clearError() {
@@ -67,10 +79,28 @@ export const AuthStoreModel = types
           return self.state = "done";
         }
 
+=======
+    }
+  }))
+  .actions(self => ({
+    signInFacebook: flow(function* () {
+      try {
+        const result: LoginResult = yield LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+        if (!result) {
+          throw new Error("Unable to log in")
+        }
+
+        if (result.isCancelled) {
+          return self.state = "done"
+
+        }
+>>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
         const data: AccessToken | null = yield AccessToken.getCurrentAccessToken();
         const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
         yield firebase.auth().signInWithCredential(credential);
 
+<<<<<<< HEAD
         self.state = "done";
         self.provider = "facebook";
         return navigate("Dashboard");
@@ -150,6 +180,16 @@ export const AuthStoreModel = types
     }),
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .postProcessSnapshot(omit(["state", "errorMessage"]))
+=======
+        self.state = "done"
+        navigate("Dashboard")
+      } catch (error) {
+        self.state = "error";
+        self.errorMessage = error.message;
+      }
+    })
+  })) // eslint-disable-line @typescript-eslint/no-unused-vars
+>>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
 
 /**
 * Un-comment the following to omit model attributes from your snapshots (and from async storage).
