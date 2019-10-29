@@ -4,7 +4,6 @@ import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store"
 import styleSheet from "../../theme/styleSheet"
-import { Button as ReactButton } from "react-native-elements"
 import { View, Image } from "react-native"
 import { color, spacing } from "../../theme"
 import { Button } from "../../components/button"
@@ -40,10 +39,8 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer((prop
             inputStyle={styleSheet.text_input_container} />
 
           <View style={{ flexDirection: "row", marginTop: spacing.large }}>
-            <ReactButton
-              raised
-              buttonStyle={{ backgroundColor: color.palette.pink1 }}
-              titleStyle={{ paddingHorizontal: spacing.medium }}
+            <Button
+              preset="raised"
               title="Submit"
               onPress={() => { }}
             />

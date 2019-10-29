@@ -140,6 +140,7 @@ export const AuthStoreModel = types
           LoginManager.logOut();
           break;
         case "google":
+          GoogleSignin.configure();
           yield GoogleSignin.signOut();
           break;
       }

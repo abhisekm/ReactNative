@@ -20,4 +20,5 @@ export const palette = {
   grey10: "#393e42",
   pink1: "#ED6E6E",
   pink2: "#F39191",
+  purple1: "#736BC7"
 }

@@ -5,12 +5,11 @@
 import "./i18n"
 import React, { useState, useEffect } from "react"
 import { AppRegistry, YellowBox, View } from "react-native"
-import { BackButtonHandler, exitRoutes, StatefulNavigator, RootNavigator, setNavigator } from "./navigation"
+import { RootNavigator, setNavigator } from "./navigation"
 import { StorybookUIRoot } from "../storybook"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 
-import { contains } from "ramda"
-import { color } from "./theme"
+import { AppTheme } from "./theme"
 import { ThemeProvider } from "react-native-elements"
 
 /**
@@ -35,13 +34,6 @@ Object.defineProperty(ReactNative, "AsyncStorage", {
   },
 })
 
-/**
- * Are we allowed to exit the app?  This is called when the back button
- * is pressed on android.
- *
- * @param routeName The currently active route name.
- */
-const canExit = (routeName: string) => contains(routeName, exitRoutes)
 
 /**
  * This is the root component of our app.
@@ -78,7 +70,7 @@ const App = () => {
   return (
     <View style={{ flex: 1 }} >
       <RootStoreProvider value={rootStore}>
-        <ThemeProvider>
+        <ThemeProvider theme={AppTheme}>
           <RootNavigator ref={(navigation) => setNavigator(navigation)} />
         </ThemeProvider>
       </RootStoreProvider>

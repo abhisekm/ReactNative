@@ -40,6 +40,12 @@ export const presets = {
    * A smaller piece of secondard information.
    */
   secondary: { ...BASE, fontSize: 9, color: color.dim } as TextStyle,
+
+  /**
+   * Survey Questions
+   */
+  question: { ...BASE, fontSize: 16, fontStyle: 'italic' } as TextStyle,
+
 }
 
 /**

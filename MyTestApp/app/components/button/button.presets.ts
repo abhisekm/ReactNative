@@ -40,20 +40,34 @@ export const viewPresets = {
   raised: {
     buttonStyle: {
       flex: 1,
-      borderRadius: 30,
-      paddingHorizontal: spacing.medium,
-      paddingTop: 14,
-      paddingBottom: 14,
+      paddingHorizontal: spacing.large,
+      paddingVertical: spacing.medium,
     } as ViewStyle,
     titleStyle: {
-      color: color.palette.pink1,
+      fontWeight: 'bold',
+      fontSize: 14,
     } as TextStyle,
     containerStyle: {
-      margin: 7,
-      borderRadius: 30,
-      flexDirection: 'row',
+      margin: spacing.small,
       justifyContent: 'center',
-      alignItems: 'center',
+    } as ViewStyle,
+  },
+
+  outline: {
+    buttonStyle: {
+      flex: 1,
+      paddingHorizontal: spacing.large,
+      paddingVertical: spacing.medium - 2,
+      borderWidth: 2
+    } as ViewStyle,
+    titleStyle: {
+      fontWeight: 'bold',
+      fontSize: 14,
+    } as TextStyle,
+    containerStyle: {
+      margin: spacing.small,
+      justifyContent: 'center',
+      backgroundColor: color.transparent,
     } as ViewStyle,
   },
 

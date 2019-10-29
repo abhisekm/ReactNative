@@ -9,20 +9,13 @@ import styleSheet from "../../theme/styleSheet"
 import { View, SafeAreaView, Alert } from "react-native"
 import { Button } from "../../components/button"
 import { navigate } from "../../navigation"
-<<<<<<< HEAD
 import { SocialIcon, Icon } from "react-native-elements"
 import { useStores } from "../../models/root-store"
 import { Loading } from "../../components/loading"
-=======
-import { SocialIcon } from "react-native-elements"
-import { LoginButton } from "react-native-fbsdk"
-import { useStores } from "../../models/root-store"
->>>>>>> 464aaf820f31457c1bd96f2de56367d192629720
 
 interface Props extends NavigationStackScreenProps {
 }
 
-const alert = (msg) => Alert.alert("Alert", msg);
 
 export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props) => {
   const { authStore: { errorMessage, signInFacebook, signInGoogle, showLoading } } = useStores();

@@ -9,6 +9,7 @@ import { Wallpaper } from "../../components/wallpaper"
 import { color } from "../../theme"
 import { Button } from "../../components/button"
 import { Loading } from "../../components/loading"
+import { navigate } from "../../navigation"
 
 
 export const DashboardScreen = observer((props) => {
@@ -21,10 +22,16 @@ export const DashboardScreen = observer((props) => {
       <Wallpaper />
       <Screen style={{ ...styleSheet.view_container }} preset="scroll" backgroundColor={color.transparent}>
         <Text preset="header" tx="dashboardScreen.header" />
+
+        <Button
+          preset="outline"
+          text="Questionnaire"
+          onPress={() => navigate("Questionnaire")}
+        />
+
         <Button
           preset="raised"
           text="Logout"
-          textStyle={{ color: color.palette.pink1 }}
           onPress={logout}
         />
       </Screen>

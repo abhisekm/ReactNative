@@ -12,9 +12,21 @@
     "noUnusedLocals": true,
     "sourceMap": true,
     "target": "es2015",
-    "lib": ["es6"],
-    "skipLibCheck": true
+    "lib": [
+      "es6"
+    ],
+    "skipLibCheck": true,
+    "typeRoots": [
+      "../node_modules/@types",
+      "../@types"
+    ]
   },
-  "exclude": ["node_modules"],
-  "include": ["app", "test", "storybook"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "app",
+    "test",
+    "storybook"
+  ],
 }

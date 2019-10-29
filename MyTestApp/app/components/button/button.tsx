@@ -50,6 +50,28 @@ export function Button(props: ButtonProps) {
 
   }
 
+  if (preset === "outline") {
+    const i18nText = tx && translate(tx, txOptions)
+    const localisedText = i18nText || text
+
+    const buttonStyle = viewPresets[preset].buttonStyle;
+    const titleStyle = viewPresets[preset].titleStyle;
+    const containerStyle = viewPresets[preset].containerStyle;
+
+    return (
+      <ReactButton
+        raised
+        type="outline"
+        buttonStyle={mergeAll(flatten([buttonStyle, buttonStyleOverride]))}
+        titleStyle={mergeAll(flatten([titleStyle, titleStyleOverride]))}
+        containerStyle={mergeAll(flatten([containerStyle, containerStyleOverride]))}
+        title={localisedText}
+        {...rest}
+      />
+    )
+
+  }
+
   const viewStyle = mergeAll(flatten([viewPresets[preset] || viewPresets.primary, styleOverride]))
   const textStyle = mergeAll(
     flatten([textPresets[preset] || textPresets.primary, textStyleOverride]),
