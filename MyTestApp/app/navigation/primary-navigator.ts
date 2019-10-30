@@ -31,8 +31,12 @@ export const PrimaryNavigator = createSwitchNavigator(
         }
       }
     }),
-    Questionnaire: { screen: QuestionnaireScreen },
-    Dashboard: { screen: DashboardScreen }
+    DashboardFlow: createStackNavigator({
+      Questionnaire: { screen: QuestionnaireScreen },
+      Dashboard: { screen: DashboardScreen }
+    }, {
+      headerMode: 'none'
+    }),
   },
   {
     initialRouteName: "ResolveAuth"

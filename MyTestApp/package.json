@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator=\"iPhone 11\"",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint index.js app --fix --ext .js,.ts,.tsx",
@@ -30,6 +30,9 @@
     "@react-native-firebase/auth": "^6.0.1",
     "@types/react-native-fbsdk": "^1.0.0",
     "apisauce": "1.0.3",
+    "appcenter": "2.5.0",
+    "appcenter-analytics": "2.5.0",
+    "appcenter-crashes": "2.5.0",
     "i18n-js": "^3.0.11",
     "lodash.throttle": "4.1.1",
     "mobx": "^4.13.0",
