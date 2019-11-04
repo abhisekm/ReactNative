@@ -10,19 +10,45 @@ import { color } from "../../theme"
 import { Button } from "../../components/button"
 import { Loading } from "../../components/loading"
 import { navigate } from "../../navigation"
+import { InstagramLogin } from "../../components/instagram-login"
+import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
+import { Icon } from "react-native-elements"
 
+export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
+}
 
-export const DashboardScreen = observer((props) => {
-  const { authStore: { showLoading, logout } } = useStores()
-
-  console.log(showLoading())
+export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreenProps> = observer((props) => {
+  const { authStore: { showLoading, logout }, igStore: { setCode, getToken, userName, clear } } = useStores();
 
   return (
     <View style={styleSheet.view_full}>
       <Wallpaper />
       <Screen style={{ ...styleSheet.view_container }} preset="scroll" backgroundColor={color.transparent}>
-        <Text preset="header" tx="dashboardScreen.header" />
+        {userName ?
+          <View>
+            <Text preset="header" text={`Welcome ${userName}`} />
+            <Button
+              preset="outline"
+              text="Reset Insta Login"
+              onPress={clear}
+            />
+          </View>
+          :
+          <View>
+            <Text preset="header" tx="dashboardScreen.header" />
 
+            <InstagramLogin
+              appId='761781137582854'
+              redirectUrl='https://immersify-test.com/auth/'
+              onLoginSuccess={(code) => {
+                console.log("code", code)
+                setCode(code)
+                getToken()
+              }}
+              onLoginFailure={(data) => console.log(data)}
+            />
+          </View>
+        }
         <Button
           preset="outline"
           text="Questionnaire"
@@ -40,3 +66,8 @@ export const DashboardScreen = observer((props) => {
     </View>
   )
 })
+
+DashboardScreen.navigationOptions = {
+  title: 'Dashboard',
+  tabBarIcon: <Icon name='home' />
+}

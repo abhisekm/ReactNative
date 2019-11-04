@@ -9,11 +9,14 @@ import { ResetPasswordScreen } from "../screens/reset-password-screen"
 import { VerifyPhoneScreen } from "../screens/verify-phone-screen"
 import { QuestionnaireScreen } from "../screens/questionnaire-screen"
 import { HomeScreen } from "../screens/home-screen"
+import { createBottomTabNavigator } from "react-navigation-tabs"
+import { AccountScreen } from "../screens/account-screen"
+import { FeaturePostsScreen } from "../screens/feature-posts-screen"
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
     ResolveAuth: { screen: ResolveAuthScreen },
-    LoginFlow: createStackNavigator({
+    loginFlow: createStackNavigator({
       Home: { screen: HomeScreen },
       Login: { screen: LoginScreen },
       Signup: { screen: SignupScreen },
@@ -31,9 +34,13 @@ export const PrimaryNavigator = createSwitchNavigator(
         }
       }
     }),
-    DashboardFlow: createStackNavigator({
+    mainFlow: createStackNavigator({
+      dashboardFlow: createBottomTabNavigator({
+        Dashboard: { screen: DashboardScreen },
+        Feature: { screen: FeaturePostsScreen },
+        Account: { screen: AccountScreen },
+      }),
       Questionnaire: { screen: QuestionnaireScreen },
-      Dashboard: { screen: DashboardScreen }
     }, {
       headerMode: 'none'
     }),

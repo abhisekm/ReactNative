@@ -4,7 +4,6 @@ import { firebase } from "@react-native-firebase/auth";
 import { navigate } from "../../navigation";
 import omit from "ramda/es/omit";
 import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
-import { delay } from "../../utils/delay";
 
 
 /**
@@ -42,9 +41,9 @@ export const AuthStoreModel = types
       user && console.log(user);
       user && console.log(user.providerData)
       if (user) {
-        navigate("Dashboard")
+        navigate("dashboardFlow")
       } else {
-        navigate("LoginFlow")
+        navigate("loginFlow")
       }
 
       self.state = "done";
@@ -73,7 +72,7 @@ export const AuthStoreModel = types
 
         self.state = "done";
         self.provider = "facebook";
-        return navigate("Dashboard");
+        return navigate("mainFlow");
       } catch (error) {
         self.state = "error";
         self.errorMessage = error.message;
@@ -100,7 +99,7 @@ export const AuthStoreModel = types
 
         self.state = "done";
         self.provider = "google"
-        navigate("Dashboard")
+        navigate("mainFlow")
       } catch (error) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           // user cancelled the login flow
@@ -147,7 +146,7 @@ export const AuthStoreModel = types
 
       self.provider = null;
       self.state = "done";
-      navigate("LoginFlow")
+      navigate("loginFlow")
     }),
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .postProcessSnapshot(omit(["state", "errorMessage"]))

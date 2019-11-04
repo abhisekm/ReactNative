@@ -22,3 +22,13 @@ export const DEFAULT_API_CONFIG: ApiConfig = {
   url: API_URL || "https://jsonplaceholder.typicode.com",
   timeout: 10000,
 }
+
+export const INSTA_API_CONFIG: ApiConfig = {
+  url: "https://api.instagram.com/oauth",
+  timeout: 10000,
+}
+
+export const INSTA_GRAPH_API_CONFIG: ApiConfig = {
+  url: "https://graph.instagram.com",
+  timeout: 10000,
+}

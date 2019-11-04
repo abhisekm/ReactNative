@@ -7,13 +7,13 @@
     "questionType": "TextInput",
     "questionText": "Simple Survey supports free form text input",
     "questionId": "favoriteColor",
-    "placeholderText": "Tell me your favorite color!",
+    "placeholderText": "Tell me your favorite color!"
   },
   {
     "questionType": "NumericInput",
     "questionText": "It also supports numeric input. Enter your favorite number here!",
     "questionId": "favoriteNumber",
-    "placeholderText": "",
+    "placeholderText": ""
   },
   {
     "questionType": "SelectionGroup",

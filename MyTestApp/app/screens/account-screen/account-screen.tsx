@@ -1,24 +1,31 @@
 import * as React from "react"
 import { observer } from "mobx-react"
-import { ViewStyle } from "react-native"
-import { Text } from "../../components/text"
+import { ViewStyle, View } from "react-native"
 import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store"
 import { color } from "../../theme"
-import { NavigationScreenProps } from "react-navigation"
+import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
+import { Icon } from "react-native-elements"
+import { Wallpaper } from "../../components/wallpaper"
+import styleSheet from "../../theme/styleSheet"
 
-export interface AccountScreenProps extends NavigationScreenProps<{}> {
+export interface AccountScreenProps extends NavigationTabScreenProps<{}> {
 }
 
-const ROOT: ViewStyle = {
-  backgroundColor: color.palette.black,
-}
 
-export const AccountScreen: React.FunctionComponent<AccountScreenProps> = observer((props) => {
+export const AccountScreen: NavigationBottomTabScreenComponent<AccountScreenProps> = observer((props) => {
   // const { someStore } = useStores()
   return (
-    <Screen style={ROOT} preset="scroll">
-      <Text preset="header" tx="accountScreen.header" />
-    </Screen>
+    <View style={styleSheet.view_full}>
+      <Wallpaper />
+      <Screen style={{ ...styleSheet.view_container }} preset="scroll" backgroundColor={color.transparent}>
+      </Screen>
+    </View>
   )
 })
+
+
+AccountScreen.navigationOptions = {
+  title: 'Profile',
+  tabBarIcon: <Icon name='settings' />
+}

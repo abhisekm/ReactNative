@@ -1,3 +1,5 @@
+require("../app/components/instagram-login/instagram-login.story")
+require("../app/components/postCard/postCard.story")
 require("../app/components/loading/loading.story")
 require("../app/components/header/header.story")
 require("../app/components/text/text.story")
