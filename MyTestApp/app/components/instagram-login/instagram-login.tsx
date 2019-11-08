@@ -5,7 +5,6 @@ import qs from 'qs';
 import { WebView } from "react-native-webview";
 import { Icon, SocialIcon } from 'react-native-elements';
 import { color } from "../../theme";
-import { Api } from "../../services/api";
 
 /**
  * Stateless functional component for your needs
@@ -27,8 +26,10 @@ export const InstagramLogin: React.FunctionComponent<InstagramLoginProps> = (pro
     webviewStyle,
     closeStyle,
     visibility,
+    silentSignIn,
     ...rest
   } = props
+
 
   //initial useReducer hooks
   const initialState = { modalVisibility: false, key: 1 }
@@ -53,8 +54,8 @@ export const InstagramLogin: React.FunctionComponent<InstagramLoginProps> = (pro
     if (webViewState.title === 'Instagram' && webViewState.url === 'https://www.instagram.com/') {
       dispatch({ type: 'incrementKey' });
     }
-    if (url && url.startsWith(redirectUrl)) {
 
+    if (url && url.startsWith(redirectUrl)) {
       const match = url.match(/(#|\?)(.*)(#_)/);
       const results = qs.parse(match[2]);
       dispatch({ type: 'hide' });
@@ -114,14 +115,33 @@ export const InstagramLogin: React.FunctionComponent<InstagramLoginProps> = (pro
         // onLoadEnd={this._onLoadEnd.bind(this)}
         onMessage={_onMessage}
         injectedJavaScript={patchPostMessageJsCode}
-        sharedCookiesEnabled={false}
-        thirdPartyCookiesEnabled={false}
-        domStorageEnabled={false}
       />
     )
   }
 
-  console.log(state)
+  if (silentSignIn) {
+    return (
+      <View>
+        <Modal
+          animationType={'slide'}
+          visible={state.modalVisibility}
+          onRequestClose={() => dispatch({ type: 'hide' })}
+          transparent
+        >
+          <View style={{ width: 0, height: 0, position: 'absolute', top: 0, left: 0 }}>
+            {renderWebview()}
+          </View>
+        </Modal >
+
+        <SocialIcon
+          title="Refresh token"
+          light
+          button
+          type="instagram"
+          onPress={() => dispatch({ type: 'show' })} />
+      </View>
+    )
+  }
 
   return (
     <View>

@@ -4,7 +4,6 @@ import { View, StyleSheet } from "react-native"
 import { Text } from "../../components/text"
 // import { useStores } from "../../models/root-store"
 import { color, spacing } from "../../theme"
-import { NavigationSwitchScreenProps, NavigationSwitchScreenComponent } from "react-navigation"
 import { Wallpaper } from "../../components/wallpaper"
 import { Button } from "../../components/button"
 import { TextField } from "../../components/text-field"
@@ -13,12 +12,13 @@ import { SimpleSurvey } from "react-native-simple-survey"
 import { CheckBox } from "react-native-elements"
 import styleSheet from "../../theme/styleSheet"
 import { navigate } from "../../navigation"
+import { NavigationStackScreenComponent, NavigationStackScreenProps } from "react-navigation-stack"
 
-export interface QuestionnareScreenProps extends NavigationSwitchScreenProps<{}> {
+export interface QuestionnareScreenProps extends NavigationStackScreenProps<{}> {
 }
 
 
-export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareScreenProps> = observer((props) => {
+export const QuestionnaireScreen: NavigationStackScreenComponent<QuestionnareScreenProps> = observer((props) => {
   // const { someStore } = useStores()
 
   /**

@@ -22,6 +22,7 @@ type Styles = {
   view_continue: ViewStyle,
   text_continue: TextStyle,
   text_input_container: TextStyle,
+  text_hashtag: TextStyle,
 }
 
 export default StyleSheet.create<Styles>({
@@ -98,5 +99,12 @@ export default StyleSheet.create<Styles>({
     backgroundColor: color.inputBackground,
     borderColor: color.borderColor,
     fontSize: 14,
-  }
+  },
+
+  text_hashtag: {
+    ...text,
+    fontSize: 12,
+    color: color.link,
+  },
+
 })

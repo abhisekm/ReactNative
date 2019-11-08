@@ -41,6 +41,10 @@ export const color = {
    */
   line: palette.offWhite,
   /**
+   * The color used for links.
+   */
+  link: palette.blue,
+  /**
    * The default color of text in many components.
    */
   text: palette.grey9,

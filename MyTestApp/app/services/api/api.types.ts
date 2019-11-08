@@ -23,4 +23,4 @@ export interface IGUser {
 
 export type GetIGUserResult = { kind: "ok"; user: IGUser } | GeneralApiProblem
 
-export type GetIGPostsResult = { kind: "ok"; posts: InstagramPost[] } | GeneralApiProblem
+export type GetIGPostsResult = { kind: "ok"; posts: InstagramPost[]; hasMore: boolean; nextCursor: string } | GeneralApiProblem

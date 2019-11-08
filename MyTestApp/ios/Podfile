@@ -36,6 +36,8 @@ target 'MyTestApp' do
 
 
 
+  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies'
+
   target 'MyTestAppTests' do
     inherit! :search_paths
     # Pods for testing

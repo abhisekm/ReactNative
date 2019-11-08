@@ -1,6 +1,7 @@
 import { ViewStyle } from "react-native";
+import { WebViewProps } from "react-native-webview";
 
-export interface InstagramLoginProps {
+export interface InstagramLoginProps extends WebViewProps {
   /**
    * App id of instagram client.
    */
@@ -40,6 +41,11 @@ export interface InstagramLoginProps {
   * On click close
   */
   onClose?: () => void
+
+  /**
+  * Silent Sign in for auth code refresh
+  */
+  silentSignIn?: boolean
 
   /**
   * An optional style override useful for padding & margin.

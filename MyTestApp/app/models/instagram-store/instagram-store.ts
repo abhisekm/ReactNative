@@ -1,7 +1,9 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 import { withEnvironment } from "../extensions"
-import { AccessToken, IGUser, IGPost } from "../../services/api";
-import { InstagramPostModel } from "../instagram-post";
+import { AccessToken, IGUser } from "../../services/api";
+import { InstagramPostModel, InstagramPost } from "../instagram-post";
+import CookieManager from "react-native-cookies";
+import omit from "ramda/es/omit";
 
 /**
  * Model description here for TypeScript hints.
@@ -13,62 +15,122 @@ export const InstagramStoreModel = types
     accessToken: types.maybeNull(types.string),
     userId: types.maybeNull(types.number),
     userName: types.maybeNull(types.string),
-    posts: types.map(InstagramPostModel),
-    loading: true,
+    posts: types.array(InstagramPostModel),
+    hasMore: types.maybeNull(types.boolean),
+    cursor: types.maybeNull(types.string),
+    loading: false,
+    loadingMore: false,
   })
   .extend(withEnvironment)
   .views(self => ({
     get isLoading() {
       return self.loading;
+    },
+
+    get isLoadingMore() {
+      return self.loadingMore;
+    },
+
+    get loadPosts() {
+      return self.posts.filter(post => post.media_type === "IMAGE");
     }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({
-    setCode(authCode) {
-      self.code = authCode;
-      console.log("setCode", self)
-    },
     clear() {
       self.code = null
       self.accessToken = null
       self.userId = null
       self.userName = null
       self.posts.clear();
+      CookieManager.clearAll(true);
     },
   }))
-  .actions(self => ({
-    updateUserName: flow(function* () {
+  .actions(self => {
+    const updateUserName = flow(function* () {
       const result: { kind: string, user: IGUser, temporary: boolean } = yield self.environment.api.getUserName(self.accessToken);
       const { user } = result;
       if (user) {
         const { id, username } = user;
         self.userId = Number(id);
         self.userName = username;
-        console.log("update user name", self)
       }
-    }),
-  }))
-  .actions(self => ({
-    getToken: flow(function* () {
+
+      self.loading = false;
+    })
+
+    const getToken = flow(function* () {
       const result: { kind: string, token: AccessToken, temporary: boolean } = yield self.environment.api.getToken(self.code);
+      console.log(result)
       const { token } = result;
       if (token) {
         const { access_token } = token;
         self.accessToken = access_token;
-        yield self.updateUserName();
-      }
-    }),
-    loadPosts: flow(function* () {
-      const result: { kind: string, posts: IGPost[], temporary: boolean } = yield self.environment.api.getPosts(self.accessToken);
-      const { posts } = result;
-      if (posts) {
-        posts.forEach(post => {
-          self.posts.put(post);
-        })
-
+        updateUserName();
+      } else {
         self.loading = false;
       }
     })
+
+    function setCode(authCode) {
+      self.code = authCode;
+      self.loading = true;
+      getToken();
+    }
+
+    return { setCode }
+  })
+  .actions(self => ({
+    fetchPosts: flow(function* () {
+      self.loading = true;
+
+      if (self.posts && self.posts.length > 1) {
+        self.posts.clear();
+      }
+
+      const result: { kind: string, posts: InstagramPost[], temporary: boolean, hasMore: boolean, nextCursor: string }
+        = yield self.environment.api.getPosts(self.accessToken);
+
+      const { posts, hasMore, nextCursor } = result;
+
+      self.hasMore = hasMore;
+      self.cursor = nextCursor;
+
+      if (posts) {
+        posts.forEach(post => {
+          self.posts.push(post);
+        })
+      }
+
+      self.loading = false;
+    }),
+
+    fetchMorePosts: flow(function* () {
+      if (!self.hasMore || self.isLoadingMore) {
+        return;
+      }
+
+      self.loadingMore = true;
+
+      const result: { kind: string, posts: InstagramPost[], temporary: boolean, hasMore: boolean, nextCursor: string }
+        = yield self.environment.api.getMorePosts(self.accessToken, self.cursor);
+
+      const { posts, hasMore, nextCursor } = result;
+
+      self.hasMore = hasMore;
+      self.cursor = nextCursor;
+
+      if (posts) {
+        posts.forEach(post => {
+          self.posts.push(post);
+        })
+      }
+
+      self.loadingMore = false;
+    })
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .postProcessSnapshot(
+    omit(["loading", "posts", "hasMore", "cursor"])
+  )
 
 /**
 * Un-comment the following to omit model attributes from your snapshots (and from async storage).

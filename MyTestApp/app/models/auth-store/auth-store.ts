@@ -41,7 +41,7 @@ export const AuthStoreModel = types
       user && console.log(user);
       user && console.log(user.providerData)
       if (user) {
-        navigate("dashboardFlow")
+        navigate("mainFlow")
       } else {
         navigate("loginFlow")
       }

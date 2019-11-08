@@ -128,6 +128,7 @@ export class Api {
     }
   }
 
+
   /**
   * Gets insta access_token from code
   */
@@ -141,7 +142,7 @@ export class Api {
     data.append('code', code);
 
     // make the api call
-    const response: ApiResponse<any> = await this.instaapisauce.post(`/access_token`, data)
+    const response: ApiResponse<any> = await this.instaapisauce.post(`access_token`, data)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -199,12 +200,12 @@ export class Api {
   async getPosts(token: string): Promise<Types.GetIGPostsResult> {
     // create form data
     const params = {
-      fields: 'id,caption,media_type,media_url',
+      fields: 'id,caption,media_type,media_url,username',
       access_token: token
     }
 
     // make the api call
-    const response: ApiResponse<any> = await this.instagraphapisauce.get(`/me/media`, params)
+    const response: ApiResponse<any> = await this.instagraphapisauce.get('/me/media', params)
 
     // the typical ways to die when calling an api
     if (!response.ok) {
@@ -217,15 +218,63 @@ export class Api {
         id: raw.id,
         caption: raw.caption,
         media_type: raw.media_type,
-        media_url: raw.media_url
+        media_url: raw.media_url,
+        username: raw.username,
+        likes: Math.floor(Math.random() * 100) + 1,
       } as InstagramPost
     }
 
     // transform the data into the format we are expecting
     try {
-      const rawPosts = response.data
+      const rawPosts = response.data.data
       const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
-      return { kind: "ok", posts: resultPosts }
+      const hasMore: boolean = response.data.paging && response.data.paging.next && true
+      const cursor = hasMore ? response.data.paging.cursors.after : ''
+      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
+    } catch {
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+* Gets insta post for userId
+*/
+  async getMorePosts(token: string, after: string): Promise<Types.GetIGPostsResult> {
+    // create form data
+    const params = {
+      fields: 'id,caption,media_type,media_url,username',
+      access_token: token,
+      limit: 25,
+      after: after
+    }
+
+    // make the api call
+    const response: ApiResponse<any> = await this.instagraphapisauce.get('/me/media', params)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    const convertPost = raw => {
+      return {
+        id: raw.id,
+        caption: raw.caption,
+        media_type: raw.media_type,
+        media_url: raw.media_url,
+        username: raw.username,
+        likes: Math.floor(Math.random() * 100) + 1,
+      } as InstagramPost
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawPosts = response.data.data
+      const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
+      const hasMore: boolean = response.data.paging && response.data.paging.next && true
+      const cursor = hasMore ? response.data.paging.cursors.after : ''
+      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
     } catch {
       return { kind: "bad-data" }
     }
