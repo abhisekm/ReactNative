@@ -35,8 +35,10 @@ target 'MyTestApp' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 
+  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies/ios'
 
-  pod 'react-native-cookies', :path => '../node_modules/react-native-cookies'
+  
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   target 'MyTestAppTests' do
     inherit! :search_paths
