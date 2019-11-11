@@ -21,8 +21,6 @@ export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreenProps> = observer((props) => {
   const { authStore: { showLoading, logout }, igStore: { setCode, userName, clear, isLoading } } = useStores();
 
-  console.log("dashboard - render")
-
   return (
     <View style={styleSheet.view_full}>
       <Wallpaper />
@@ -42,7 +40,6 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
                 appId='761781137582854'
                 redirectUrl='https://immersify-test.com/auth/'
                 onLoginSuccess={(code) => {
-                  console.log("code", code)
                   setCode(code)
                 }}
                 onLoginFailure={(data) => console.log(data)}
@@ -57,7 +54,6 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
                 appId='761781137582854'
                 redirectUrl='https://immersify-test.com/auth/'
                 onLoginSuccess={(code) => {
-                  console.log("code", code)
                   setCode(code)
                 }}
                 onLoginFailure={(data) => console.log(data)}

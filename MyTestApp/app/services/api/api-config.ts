@@ -32,3 +32,8 @@ export const INSTA_GRAPH_API_CONFIG: ApiConfig = {
   url: "https://graph.instagram.com",
   timeout: 10000,
 }
+
+export const IMMERSIFY_API_CONFIG: ApiConfig = {
+  url: "https://immersify.in",
+  timeout: 10000,
+}

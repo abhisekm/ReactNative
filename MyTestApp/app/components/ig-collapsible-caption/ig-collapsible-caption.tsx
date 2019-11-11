@@ -93,8 +93,6 @@ export class IgCollapsibleCaption extends React.Component<IgCollapsibleCaptionPr
     // grab the props
     const { id, text, style, ...rest } = this.props
 
-    console.log()
-
     return (
       <View style={[style, { backgroundColor: color.palette.white }]} {...rest}>
         <ViewMoreText

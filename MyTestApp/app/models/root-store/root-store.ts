@@ -1,3 +1,4 @@
+import { ImmersifyStoreModel } from "../../models/immersify-store"
 import { InstagramStoreModel } from "../../models/instagram-store"
 import { AuthStoreModel } from "../../models/auth-store"
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
@@ -10,7 +11,8 @@ export const RootStoreModel =
     .model("RootStore")
     .props({
       authStore: types.optional(AuthStoreModel, {}),
-      igStore: types.optional(InstagramStoreModel, {})
+      igStore: types.optional(InstagramStoreModel, {}),
+      immersifyStore: types.optional(ImmersifyStoreModel, {})
     })
 
 /**

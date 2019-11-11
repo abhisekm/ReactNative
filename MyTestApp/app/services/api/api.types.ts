@@ -1,5 +1,6 @@
 import { GeneralApiProblem } from "./api-problem"
 import { InstagramPost } from "../../models/instagram-post"
+import { FeaturePost } from "../../models/feature-post"
 
 export interface User {
   id: number
@@ -23,4 +24,5 @@ export interface IGUser {
 
 export type GetIGUserResult = { kind: "ok"; user: IGUser } | GeneralApiProblem
 
-export type GetIGPostsResult = { kind: "ok"; posts: InstagramPost[]; hasMore: boolean; nextCursor: string } | GeneralApiProblem
+export type GetIGPostsResult =
+  { kind: "ok"; posts: InstagramPost[]; hasMore: boolean; nextCursor: string | number } | GeneralApiProblem

@@ -6,7 +6,6 @@ import { color } from "../../theme"
 import styleSheet from "../../theme/styleSheet"
 import { View, FlatList, ListRenderItem, ActivityIndicator } from "react-native"
 import { Wallpaper } from "../../components/wallpaper"
-import { Loading } from "../../components/loading"
 import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
 import { Icon, Badge } from "react-native-elements"
 import { PostCard } from "../../components/postCard"
@@ -16,10 +15,10 @@ export interface FeaturePostsScreenProps extends NavigationTabScreenProps<{}> {
 }
 
 export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePostsScreenProps> = observer((props) => {
-  const { igStore: { isLoading, isLoadingMore, fetchPosts, fetchMorePosts, loadPosts } } = useStores()
+  const { immersifyStore: { isLoading, isLoadingMore, fetchFeaturedPosts, fetchMoreFeaturedPosts, loadPosts } } = useStores()
 
   React.useEffect(() => {
-    fetchPosts()
+    fetchFeaturedPosts()
   }, []);
 
   const _renderItem: ListRenderItem<InstagramPost> = ({ item }) => <PostCard data={item} />;
@@ -35,12 +34,12 @@ export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePosts
       <Wallpaper />
       <Screen style={{ ...styleSheet.view_container }} preset="fixed" backgroundColor={color.palette.white}>
         <FlatList
-          onRefresh={fetchPosts}
+          onRefresh={fetchFeaturedPosts}
           refreshing={isLoading}
           data={loadPosts}
           renderItem={_renderItem}
           keyExtractor={item => item.id}
-          onEndReached={fetchMorePosts}
+          onEndReached={fetchMoreFeaturedPosts}
           onEndReachedThreshold={0.5}
           ListFooterComponent={_footerLoading}
         />

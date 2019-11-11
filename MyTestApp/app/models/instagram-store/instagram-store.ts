@@ -60,7 +60,6 @@ export const InstagramStoreModel = types
 
     const getToken = flow(function* () {
       const result: { kind: string, token: AccessToken, temporary: boolean } = yield self.environment.api.getToken(self.code);
-      console.log(result)
       const { token } = result;
       if (token) {
         const { access_token } = token;

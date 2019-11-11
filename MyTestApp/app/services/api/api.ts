@@ -1,9 +1,10 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
 import { getGeneralApiProblem } from "./api-problem"
-import { ApiConfig, DEFAULT_API_CONFIG, INSTA_API_CONFIG, INSTA_GRAPH_API_CONFIG } from "./api-config"
+import { ApiConfig, DEFAULT_API_CONFIG, INSTA_API_CONFIG, INSTA_GRAPH_API_CONFIG, IMMERSIFY_API_CONFIG } from "./api-config"
 import { IG_APP_ID, IG_APP_SECRET, IG_REDIRECT_URL } from "react-native-dotenv"
 import * as Types from "./api.types"
 import { InstagramPost } from "../../models/instagram-post"
+import { FeaturePost } from "../../models/feature-post"
 
 /**
  * Manages all requests to the API.
@@ -23,6 +24,11 @@ export class Api {
    * The instagram apisauce instance which performs the requests.
    */
   instagraphapisauce: ApisauceInstance
+
+  /**
+  * The Immersify apisauce instance which performs the requests.
+  */
+  immersifyapisauce: ApisauceInstance
 
   /**
    * Configurable options.
@@ -66,6 +72,14 @@ export class Api {
     this.instagraphapisauce = create({
       baseURL: INSTA_GRAPH_API_CONFIG.url,
       timeout: INSTA_GRAPH_API_CONFIG.timeout,
+      headers: {
+        Accept: "application/json",
+      },
+    })
+
+    this.immersifyapisauce = create({
+      baseURL: IMMERSIFY_API_CONFIG.url,
+      timeout: IMMERSIFY_API_CONFIG.timeout,
       headers: {
         Accept: "application/json",
       },
@@ -195,8 +209,8 @@ export class Api {
 
 
   /**
- * Gets insta post for userId
- */
+  * Gets insta post for userId
+  */
   async getPosts(token: string): Promise<Types.GetIGPostsResult> {
     // create form data
     const params = {
@@ -237,8 +251,8 @@ export class Api {
   }
 
   /**
-* Gets insta post for userId
-*/
+  * Gets insta post for userId
+  */
   async getMorePosts(token: string, after: string): Promise<Types.GetIGPostsResult> {
     // create form data
     const params = {
@@ -274,6 +288,45 @@ export class Api {
       const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
       const hasMore: boolean = response.data.paging && response.data.paging.next && true
       const cursor = hasMore ? response.data.paging.cursors.after : ''
+      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
+    } catch {
+      return { kind: "bad-data" }
+    }
+  }
+
+  /**
+  * Gets insta post for userId
+  */
+  async getFeaturedPosts(nextCursor: number = 0): Promise<Types.GetIGPostsResult> {
+    // create form data
+    const data = {
+      cursor: nextCursor
+    }
+
+    // make the api call
+    const response: ApiResponse<any> = await this.immersifyapisauce.post('/getlatestposts', data)
+
+    console.log(response)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    const convertPost = (raw: FeaturePost): InstagramPost => {
+      return raw.post;
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const rawPosts: FeaturePost[] = response.data.result
+      const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
+      const hasMore: boolean = response.data.cursor && response.data.cursor > 0
+      const cursor: number = hasMore ? response.data.cursor : null
+
+      console.log("result: ", rawPosts.length, ", resultposts: ", resultPosts.length);
+
       return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
     } catch {
       return { kind: "bad-data" }

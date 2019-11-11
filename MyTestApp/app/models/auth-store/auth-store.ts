@@ -38,8 +38,6 @@ export const AuthStoreModel = types
       self.state = "pending";
 
       const user = firebase.auth().currentUser;
-      user && console.log(user);
-      user && console.log(user.providerData)
       if (user) {
         navigate("mainFlow")
       } else {
@@ -90,7 +88,6 @@ export const AuthStoreModel = types
 
         yield GoogleSignin.hasPlayServices();
         const userInfo = yield GoogleSignin.signIn();
-        console.log("google - " + userInfo);
         const result: { idToken: string, accessToken: string } = yield GoogleSignin.getTokens();
         const { idToken, accessToken } = result;
         const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
