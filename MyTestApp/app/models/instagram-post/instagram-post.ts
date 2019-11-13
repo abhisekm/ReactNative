@@ -12,7 +12,8 @@ export const InstagramPostModel = types
     media_url: types.maybeNull(types.string),
     likes: types.maybeNull(types.number),
     username: types.maybeNull(types.string),
-    avatar: types.maybeNull(types.string)
+    avatar: types.maybeNull(types.string),
+    location: types.optional(types.maybeNull(types.string), null)
   })
   .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

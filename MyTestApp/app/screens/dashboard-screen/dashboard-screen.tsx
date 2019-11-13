@@ -13,7 +13,7 @@ import { navigate } from "../../navigation"
 import { InstagramLogin } from "../../components/instagram-login"
 import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
 import { Icon } from "react-native-elements"
-import { PostCard } from "../../components/postCard"
+import { IgPostCard } from "../../components/ig-post-card"
 
 export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 }
@@ -73,10 +73,10 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           onPress={logout}
         />
 
-        <PostCard
+        <IgPostCard
           data={{
             id: '1231',
-            caption: 'Lorem ipsum',
+            caption: '#Lorem #ipsum @bhsdkfj asdfj @s;sfd;k    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n asjaskldjfslfh safdhaslkdfjh',
             media_type: 'IMAGE',
             media_url: 'https://instagram.fblr2-1.fna.fbcdn.net/vp/5fabd4d3ea35daca19345d470773f20b/5E64BBAC/t51.2885-15/sh0.08/e35/s640x640/75272076_984726895209127_8070932285211073312_n.jpg?_nc_ht=instagram.fblr2-1.fna.fbcdn.net&_nc_cat=107',
             likes: 100,

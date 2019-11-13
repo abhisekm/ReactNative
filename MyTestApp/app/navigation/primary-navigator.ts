@@ -57,4 +57,4 @@ export const PrimaryNavigator = createSwitchNavigator(
  * Anything not on this list will be a standard `back` action in
  * react-navigation.
  */
-export const exitRoutes: string[] = ["Login", "Dashboard"]
+export const exitRoutes: string[] = ["Home", "dashboardFlow", "Dashboard"]

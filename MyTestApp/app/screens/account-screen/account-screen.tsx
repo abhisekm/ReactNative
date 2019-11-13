@@ -1,6 +1,6 @@
 import * as React from "react"
 import { observer } from "mobx-react"
-import { ViewStyle, View } from "react-native"
+import { View } from "react-native"
 import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store"
 import { color } from "../../theme"

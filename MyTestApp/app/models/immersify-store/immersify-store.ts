@@ -1,6 +1,7 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 import { InstagramPostModel, InstagramPost } from "../instagram-post";
 import { withEnvironment } from "../extensions";
+import FastImage, { FastImageSource } from "react-native-fast-image";
 
 /**
  * Model description here for TypeScript hints.
@@ -30,7 +31,7 @@ export const ImmersifyStoreModel = types
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({
     clear() {
-      self.posts.clear();
+      self.posts && self.posts.clear();
       self.cursor = null;
       self.hasMore = false;
       self.loading = false;
@@ -39,11 +40,8 @@ export const ImmersifyStoreModel = types
   }))
   .actions(self => ({
     fetchFeaturedPosts: flow(function* () {
+      self.clear();
       self.loading = true;
-
-      if (self.posts && self.posts.length > 1) {
-        self.posts.clear();
-      }
 
       const result: { kind: string, posts: InstagramPost[], temporary: boolean, hasMore: boolean, nextCursor: number }
         = yield self.environment.api.getFeaturedPosts();
@@ -53,10 +51,15 @@ export const ImmersifyStoreModel = types
       self.hasMore = hasMore;
       self.cursor = nextCursor;
 
+      const images: FastImageSource[] = []
+
       if (posts) {
         posts.forEach(post => {
           self.posts.push(post);
+          images.push({ uri: post.media_url })
         })
+
+        FastImage.preload(images);
       }
 
       self.loading = false;
@@ -77,10 +80,15 @@ export const ImmersifyStoreModel = types
       self.hasMore = hasMore;
       self.cursor = nextCursor;
 
+      const images: FastImageSource[] = []
+
       if (posts) {
         posts.forEach(post => {
           self.posts.push(post);
+          images.push({ uri: post.media_url })
         })
+
+        FastImage.preload(images);
       }
 
       self.loadingMore = false;

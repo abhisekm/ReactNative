@@ -4,7 +4,6 @@ import { ApiConfig, DEFAULT_API_CONFIG, INSTA_API_CONFIG, INSTA_GRAPH_API_CONFIG
 import { IG_APP_ID, IG_APP_SECRET, IG_REDIRECT_URL } from "react-native-dotenv"
 import * as Types from "./api.types"
 import { InstagramPost } from "../../models/instagram-post"
-import { FeaturePost } from "../../models/feature-post"
 
 /**
  * Manages all requests to the API.
@@ -306,29 +305,35 @@ export class Api {
     // make the api call
     const response: ApiResponse<any> = await this.immersifyapisauce.post('/getlatestposts', data)
 
-    console.log(response)
-
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
 
-    const convertPost = (raw: FeaturePost): InstagramPost => {
-      return raw.post;
+    const convertPost = (raw): InstagramPost => {
+      return {
+        id: raw.post_id.toString(),
+        media_type: raw.media[0].media_type === "photo" ? "IMAGE" : "VIDEO",
+        media_url: raw.media[0].media_url,
+        caption: raw.post_text,
+        avatar: raw.profile_picture,
+        username: raw.insta_username,
+        likes: raw.likes_count,
+        location: raw.loc_name
+      }
     }
 
     // transform the data into the format we are expecting
     try {
-      const rawPosts: FeaturePost[] = response.data.result
+      const rawPosts = response.data.result
       const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
       const hasMore: boolean = response.data.cursor && response.data.cursor > 0
       const cursor: number = hasMore ? response.data.cursor : null
 
-      console.log("result: ", rawPosts.length, ", resultposts: ", resultPosts.length);
-
       return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
-    } catch {
+    } catch (error) {
+      console.log("error : ", error);
       return { kind: "bad-data" }
     }
   }

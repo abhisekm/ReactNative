@@ -1,6 +1,6 @@
+require("../app/components/ig-post-card/ig-post-card.story")
 require("../app/components/ig-collapsible-caption/ig-collapsible-caption.story")
 require("../app/components/instagram-login/instagram-login.story")
-require("../app/components/postCard/postCard.story")
 require("../app/components/loading/loading.story")
 require("../app/components/header/header.story")
 require("../app/components/text/text.story")

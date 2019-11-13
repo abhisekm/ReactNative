@@ -8,20 +8,22 @@ import { View, FlatList, ListRenderItem, ActivityIndicator } from "react-native"
 import { Wallpaper } from "../../components/wallpaper"
 import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
 import { Icon, Badge } from "react-native-elements"
-import { PostCard } from "../../components/postCard"
 import { InstagramPost } from "../../models/instagram-post"
+import { IgPostCard } from "../../components/ig-post-card"
 
 export interface FeaturePostsScreenProps extends NavigationTabScreenProps<{}> {
 }
 
 export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePostsScreenProps> = observer((props) => {
-  const { immersifyStore: { isLoading, isLoadingMore, fetchFeaturedPosts, fetchMoreFeaturedPosts, loadPosts } } = useStores()
+  const {
+    immersifyStore: { isLoading, isLoadingMore, fetchFeaturedPosts, fetchMoreFeaturedPosts, loadPosts }
+  } = useStores()
 
   React.useEffect(() => {
     fetchFeaturedPosts()
   }, []);
 
-  const _renderItem: ListRenderItem<InstagramPost> = ({ item }) => <PostCard data={item} />;
+  const _renderItem: ListRenderItem<InstagramPost> = ({ item }) => <IgPostCard data={item} />;
 
   const _footerLoading = () => {
     return (
@@ -42,6 +44,8 @@ export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePosts
           onEndReached={fetchMoreFeaturedPosts}
           onEndReachedThreshold={0.5}
           ListFooterComponent={_footerLoading}
+          removeClippedSubviews
+          initialNumToRender={4}
         />
         {/* {isLoading && <Loading />} */}
 

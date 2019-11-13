@@ -1,6 +1,5 @@
 import { GeneralApiProblem } from "./api-problem"
 import { InstagramPost } from "../../models/instagram-post"
-import { FeaturePost } from "../../models/feature-post"
 
 export interface User {
   id: number

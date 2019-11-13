@@ -1,8 +1,9 @@
 import * as React from "react"
-import { View, ViewStyle, TouchableHighlight } from "react-native"
+import { View, ViewStyle } from "react-native"
 import { Text } from "../text"
 import ViewMoreText from 'react-native-view-more-text';
 import { color } from "../../theme";
+import { Button } from "../button";
 
 export interface IgCollapsibleCaptionProps {
   /**
@@ -27,17 +28,12 @@ export interface IgCollapsibleCaptionProps {
  *
  * Component description here for TypeScript tips.
  */
-export class IgCollapsibleCaption extends React.Component<IgCollapsibleCaptionProps> {
-  constructor(props) {
-    super(props);
-    this.state = { c: 0 }
-  }
+export function IgCollapsibleCaption(props: IgCollapsibleCaptionProps) {
+  const { id, text, style, ...rest } = props
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return this.props.text !== nextProps.text
-  }
-
-  tokenizeText = (text): string[] => {
+  const tokenizeText = React.useMemo(() => {
+    if (!text)
+      return null;
 
     //define delimiter
     let delimiter = /\s+/;
@@ -62,48 +58,55 @@ export class IgCollapsibleCaption extends React.Component<IgCollapsibleCaptionPr
     }
     _parts.push(_text);
 
-    //highlight hashtags
-    _parts = _parts.map((text) => {
+    //highlight hashtags and mentions
+    _parts = _parts.map((text, index) => {
       if (/^#/.test(text)) {
-        return <Text key={text} style={{ color: '#4444EE' }}>{text}</Text>;
+        return <Text key={index} style={{ color: '#4444EE' }}>{text}</Text>;
+      } else if (/^@/.test(text)) {
+        return <Text key={index} style={{ color: color.palette.pink2 }}>{text}</Text>;
       } else {
         return text;
       }
     });
 
-    return _parts;
-  }
-
-  _renderViewMore = (handlePress) => {
     return (
-      <TouchableHighlight onPress={handlePress} >
-        <Text style={{ color: color.palette.pink2, paddingVertical: 5 }} text='Read more' />
-      </TouchableHighlight>
+      <Text>
+        {_parts}
+      </Text>
+    )
+  }, [text])
+
+  const _renderViewMore = (handlePress) => {
+    return (
+      <Button
+        preset="link"
+        onPress={handlePress}
+        text="Read more"
+        style={{ paddingVertical: 5 }}
+        textStyle={{ color: color.palette.pink2 }}
+      />
     );
   }
 
-  _renderViewLess = (handlePress) => {
+  const _renderViewLess = (handlePress) => {
     return (
       null
       // <Text style={{ color: color.palette.pink2, paddingVertical: 5 }} onPress={handlePress} text='Show less' />
     );
   }
 
-  render() {
-    // grab the props
-    const { id, text, style, ...rest } = this.props
-
-    return (
-      <View style={[style, { backgroundColor: color.palette.white }]} {...rest}>
-        <ViewMoreText
-          numberOfLines={3}
-          renderViewMore={this._renderViewMore}
-          renderViewLess={this._renderViewLess}>
-          <Text>
-            {this.tokenizeText(text)}
-          </Text>
-        </ViewMoreText>
-      </View>
-    )
+  if (!text) {
+    return null;
   }
+
+  return (
+    <View style={[style, { backgroundColor: color.palette.white }]} {...rest} >
+      <ViewMoreText
+        numberOfLines={3}
+        renderViewMore={_renderViewMore}
+        renderViewLess={_renderViewLess}>
+        {tokenizeText}
+      </ViewMoreText>
+    </View>
+  )
 }
