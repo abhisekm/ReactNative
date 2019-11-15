@@ -1,10 +1,11 @@
 import * as React from "react"
-import { View, TextInput, TextStyle, ViewStyle } from "react-native"
+import { View, TextStyle, ViewStyle } from "react-native"
 import { color, spacing, typography } from "../../theme"
 import { translate } from "../../i18n"
 import { Text } from "../text"
 import { TextFieldProps } from "./text-field.props"
 import { mergeAll, flatten } from "ramda"
+import { Input } from "react-native-elements"
 
 // the base styling for the container
 const CONTAINER: ViewStyle = {
@@ -50,14 +51,16 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
   let inputStyle: TextStyle = INPUT
   inputStyle = enhance(inputStyle, inputStyleOverride)
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
+  const labelElement = <Text preset="fieldLabel" tx={labelTx} text={label} />
 
   return (
     <View style={containerStyle}>
-      <Text preset="fieldLabel" tx={labelTx} text={label} />
-      <TextInput
+
+      <Input
         placeholder={actualPlaceholder}
         placeholderTextColor={color.palette.grey8}
         underlineColorAndroid={color.transparent}
+        label={labelElement}
         {...rest}
         style={inputStyle}
         ref={forwardedRef}

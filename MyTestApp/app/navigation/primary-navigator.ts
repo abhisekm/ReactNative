@@ -12,6 +12,7 @@ import { HomeScreen } from "../screens/home-screen"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { AccountScreen } from "../screens/account-screen"
 import { FeaturePostsScreen } from "../screens/feature-posts-screen"
+import { UserDetailsScreen } from "../screens/user-details-screen"
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
@@ -38,7 +39,7 @@ export const PrimaryNavigator = createSwitchNavigator(
       dashboardFlow: createBottomTabNavigator({
         Dashboard: { screen: DashboardScreen },
         Feature: { screen: FeaturePostsScreen },
-        Account: { screen: AccountScreen },
+        Account: { screen: UserDetailsScreen },
       }),
       Questionnaire: { screen: QuestionnaireScreen },
     }, {

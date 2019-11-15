@@ -46,6 +46,11 @@ export const presets = {
    */
   question: { ...BASE, fontSize: 16, fontStyle: 'italic' } as TextStyle,
 
+  /**
+  * Error
+  */
+  error: { ...BASE, fontSize: 12, fontStyle: 'italic', color: 'red' } as TextStyle,
+
 }
 
 /**

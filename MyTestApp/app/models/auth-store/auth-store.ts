@@ -3,7 +3,10 @@ import { LoginManager, AccessToken, LoginResult } from "react-native-fbsdk"
 import { firebase } from "@react-native-firebase/auth";
 import { navigate } from "../../navigation";
 import omit from "ramda/es/omit";
-import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
+import { GoogleSignin, statusCodes, User } from '@react-native-community/google-signin';
+import { withRootStore } from "../extensions";
+import { RootStore } from "../root-store";
+import { InstagramStore } from "../instagram-store";
 
 
 /**
@@ -14,8 +17,10 @@ export const AuthStoreModel = types
   .props({
     state: types.optional(types.enumeration("State", ["pending", "done", "error"]), "done"),
     provider: types.maybeNull(types.enumeration("Provider", ["facebook", "google", "email"])),
-    errorMessage: types.maybe(types.string)
+    errorMessage: types.maybe(types.string),
+    displayName: types.maybe(types.string)
   })
+  .extend(withRootStore)
   .views(self => ({
     showLoading(): boolean {
       return self.state === "pending"
@@ -70,6 +75,7 @@ export const AuthStoreModel = types
 
         self.state = "done";
         self.provider = "facebook";
+        self.displayName = firebase.auth().currentUser.displayName;
         return navigate("mainFlow");
       } catch (error) {
         self.state = "error";
@@ -87,7 +93,7 @@ export const AuthStoreModel = types
         GoogleSignin.configure();
 
         yield GoogleSignin.hasPlayServices();
-        const userInfo = yield GoogleSignin.signIn();
+        const userInfo: User = yield GoogleSignin.signIn();
         const result: { idToken: string, accessToken: string } = yield GoogleSignin.getTokens();
         const { idToken, accessToken } = result;
         const credential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
@@ -96,6 +102,7 @@ export const AuthStoreModel = types
 
         self.state = "done";
         self.provider = "google"
+        self.displayName = firebase.auth().currentUser.displayName;
         navigate("mainFlow")
       } catch (error) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -141,6 +148,7 @@ export const AuthStoreModel = types
           break;
       }
 
+      ((self.rootStore as RootStore).igStore as InstagramStore).clear()
       self.provider = null;
       self.state = "done";
       navigate("loginFlow")
