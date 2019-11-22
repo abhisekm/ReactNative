@@ -56,7 +56,8 @@ export const ImmersifyStoreModel = types
       if (posts) {
         posts.forEach(post => {
           self.posts.push(post);
-          images.push({ uri: post.media_url })
+          images.push({ uri: post.media_url });
+          images.push({ uri: post.avatar });
         })
 
         FastImage.preload(images);

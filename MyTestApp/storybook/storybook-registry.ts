@@ -1,3 +1,6 @@
+require("../app/components/user-interest/user-interest.story")
+require("../app/components/add-social-media-account-modal/add-social-media-account-modal.story")
+require("../app/components/add-social-media-account/add-social-media-account.story")
 require("../app/components/ig-post-card/ig-post-card.story")
 require("../app/components/ig-collapsible-caption/ig-collapsible-caption.story")
 require("../app/components/instagram-login/instagram-login.story")

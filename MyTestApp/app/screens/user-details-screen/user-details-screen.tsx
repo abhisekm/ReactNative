@@ -1,5 +1,5 @@
 import * as React from "react"
-import { observer } from "mobx-react"
+import { observer, inject, useLocalStore } from "mobx-react"
 import { Image, View, Text as RNText, FlatList, TouchableOpacity, Alert, AlertButton, ViewStyle } from "react-native"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
@@ -10,19 +10,42 @@ import styleSheet from "../../theme/styleSheet"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
 import { Button } from "../../components/button"
-import { navigate } from "../../navigation"
-import { Avatar, Button as RNEButton, Icon } from "react-native-elements"
+import { Avatar, Button as RNEButton } from "react-native-elements"
 import { useStores } from "../../models/root-store"
 import { InstagramLogin } from "../../components/instagram-login"
 import { Loading } from "../../components/loading"
-import { UserDetailsModel, Gender } from "../../models/user-details"
+import { UserDetailsModel, Gender, UserDetails } from "../../models/user-details"
+import { AddSocialMediaAccount } from "../../components/add-social-media-account"
 
 export interface UserDetailsScreenProps extends NavigationStackScreenProps<{}> {
+}
+
+export interface IInterestData {
+  value: string,
+  isSelected: boolean
 }
 
 const boyImage = require("./boy.png")
 const girlImage = require("./girl.png")
 const interestData = ['Art', 'Design', 'Fashion', 'Food', 'Fitness', 'Health', 'Inspiration', 'Nature', 'Party', 'Photography', 'Travel', 'Lorem', 'Ipsum'];
+
+const modData = React.useMemo(() => {
+  console.log("calculate moddata");
+
+  const dataWithSelection: IInterestData[] = interestData.map((value) => { return { value: value, isSelected: false } as IInterestData });
+
+  const rowCount = 3;
+  const columns = interestData.length / rowCount;
+  const result: IInterestData[][] = [];
+
+  for (var i = 0; i < columns; i++) {
+    const start = i * rowCount;
+    const end = Math.min(start + rowCount, interestData.length + 1);
+    result.push(dataWithSelection.slice(start, end))
+  }
+
+  return result;
+}, [interestData]);
 
 const UserType = (props) => {
   const { boy, isSelected, onPress } = props;
@@ -62,33 +85,28 @@ const InterestButton = (props) => {
   )
 }
 
+const _renderItem = ({ item }) => (
+  <View style={{ flex: 1, flexDirection: 'column', marginHorizontal: spacing.tiny }}>
+    {item.map((_item) => {
+      return (
+        <View style={{ marginVertical: spacing.tiny }}>
+          <InterestButton id={_item} text={_item} selected={allInterest.get(_item)} onSelect={addInterest} />
+        </View>
+      )
+    })}
+  </View>
+)
 
 export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreenProps> = observer((props) => {
   const { authStore: { displayName }, igStore: { setCode, userName, clear, isLoading } } = useStores();
 
-  const userDetails = UserDetailsModel.create({ name: displayName });
+  const userDetails: UserDetails = useLocalStore(() => UserDetailsModel.create({ name: displayName }));
   const {
-    name, gender, interests, selectedInterests, addInterest,
-    isValidName, isValidInterest, isValidType, isValid, setIgUsername,
-    setIsValidInterest, setIsValidName, setIsValidType, setName, setGender
+    name, gender, allInterest, selectedInterests, igUsername, mediaAccounts, addInterest, setName, setGender,
+    isValidName, isValidInterest, isValidType, isValid, setIgUsername, updateCalculated, updateSocialAccounts
   } = userDetails;
 
   const nameRef = React.useRef(null);
-
-  const modData = React.useMemo(() => {
-    const rowCount = 3;
-    const columns = interestData.length / rowCount;
-    const result = [];
-
-    for (var i = 0; i < columns; i++) {
-      const start = i * rowCount;
-      const end = Math.min(start + rowCount, interestData.length + 1);
-      result.push(interestData.slice(start, end))
-    }
-
-    return result;
-  }, [interestData]);
-
 
   const unlink = () => {
     const buttons: AlertButton[] = [];
@@ -98,28 +116,19 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
     Alert.alert("Remove Instagram Login", "Are you sure you want to remove your instagram login?", buttons);
   }
 
-  console.log(selectedInterests);
-
   const validateAndProceed = React.useCallback(() => {
-    const validName = name && name.length > 0;
-    setIsValidName(validName);
-    if (!validName) {
+    updateCalculated();
+
+    console.log("isvalid - ", isValid())
+
+    if (!isValid()) {
       return;
     }
 
-    const validGender = gender != null;
-    setIsValidName(validGender);
-    if (!validGender) {
-      return;
-    }
+    console.log("media account - ", mediaAccounts);
 
-    const validInterest = selectedInterests && selectedInterests.length > 0;
-    setIsValidName(validInterest);
-    if (!isValidInterest) {
-      return;
-    }
 
-    alert("All valid");
+    alert(`All valid\n\nGender - ${gender}\n\nName - ${name}\n\nIG nick - ${igUsername}\n\nInterest - ${selectedInterests}\n\nSocial Accounts\n${mediaAccounts()}`);
 
   }, [name, gender, selectedInterests]);
 
@@ -132,7 +141,8 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
         style={{ ...styleSheet.view_container, justifyContent: "center", }}
         preset="scroll"
         backgroundColor={color.transparent}
-        unsafe >
+        unsafe
+      >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, paddingHorizontal: spacing.medium, }} >
           <Text preset="header" text="Almost done ..." style={{ color: color.primary }} />
 
@@ -150,7 +160,7 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
           </View>
 
           {
-            !isValidType
+            !isValidType()
               ? <Text preset="error" text="Please select gender" style={{ margin: spacing.medium }} />
               : null
           }
@@ -164,7 +174,7 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
             style={{ paddingHorizontal: spacing.medium, }}
             leftIcon={{ type: "ocicons", name: "person", color: color.palette.grey10 }}
             inputStyle={styleSheet.text_input_container}
-            errorMessage={!isValidName ? "Name cannot be blank" : null}
+            errorMessage={!isValidName() ? "Name cannot be blank" : null}
             errorStyle={{}}
           />
 
@@ -188,33 +198,27 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
               </View>
           }
 
+          <AddSocialMediaAccount
+            style={{ paddingHorizontal: spacing.large, paddingVertical: spacing.small }}
+            onUpdate={updateSocialAccounts} />
+
           <Text
             preset="fieldLabel"
             text="Interests"
             style={{ marginVertical: spacing.large, marginHorizontal: spacing.medium, paddingHorizontal: spacing.medium, }} />
 
-          <FlatList<string[]>
+          <FlatList<IInterestData[]>
             data={modData}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View style={{ flex: 1, flexDirection: 'column', marginHorizontal: spacing.tiny }}>
-                {item.map((_item) => {
-                  return (
-                    <View style={{ marginVertical: spacing.tiny }}>
-                      <InterestButton id={_item} text={_item} selected={interests.get(_item)} onSelect={addInterest} />
-                    </View>
-                  )
-                })}
-              </View>
-            )}
+            renderItem={_renderItem}
             //Setting the number of column
             horizontal
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(item, index) => item.toString() + index.toString()}
             extraData={selectedInterests}
           />
 
           {
-            !isValidInterest
+            !isValidInterest()
               ? <Text preset="error" text="Please select atleast one interest" style={{ margin: spacing.medium, paddingHorizontal: spacing.medium, }} />
               : null
           }

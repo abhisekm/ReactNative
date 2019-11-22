@@ -1,5 +1,4 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import type from "ramda/es/type";
 
 export enum Gender {
   MALE = "m",
@@ -16,23 +15,49 @@ export const UserDetailsModel = types
     gender: types.maybeNull(types.enumeration<Gender>(Object.keys(Gender).map(key => Gender[key]))),
     interests: types.optional(types.map(types.boolean), {}),
     igUsername: types.optional(types.string, ''),
-    isValidName: true,
-    isValidType: true,
-    isValidInterest: true,
+    socialAccounts: types.optional(types.map(types.string), {}),
+    calculated: false,
   })
+  .actions(self => ({
+    updateCalculated() {
+      self.calculated = true;
+    }
+  }))
   .views(self => ({
-    get isValid() {
-      return self.isValidName && self.isValidType && self.isValidInterest;
-    },
-
     get selectedInterests() {
-      const result = [];
+      const result: string[] = [];
       self.interests.forEach((v, k) => {
         if (v)
           result.push(k);
       })
 
       return result;
+    },
+
+    get allInterest() {
+      return self.interests;
+    },
+  }))
+  .views(self => ({
+    isValidName() {
+      if (!self.calculated)
+        return true;
+      else
+        return self.name && self.name.length > 0;
+    },
+
+    isValidType() {
+      if (!self.calculated)
+        return true;
+      else
+        return self.gender != null;
+    },
+
+    isValidInterest() {
+      if (!self.calculated)
+        return true;
+      else
+        return self.selectedInterests && self.selectedInterests.length > 0;
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({
@@ -51,20 +76,22 @@ export const UserDetailsModel = types
       self.name = name;
     },
 
-    setIsValidName(isValid: boolean) {
-      self.isValidName = isValid;
-    },
-
-    setIsValidType(isValid: boolean) {
-      self.isValidType = isValid;
-    },
-
-    setIsValidInterest(isValid: boolean) {
-      self.isValidInterest = isValid;
-    },
-
     setGender(gender: Gender) {
       self.gender = gender;
+    },
+
+    updateSocialAccounts(mediaAccounts: Map<string, string>) {
+      self.socialAccounts.clear();
+      mediaAccounts.forEach((value, key) => self.socialAccounts.set(key, value));
+    },
+
+    isValid() {
+      return self.isValidName() && self.isValidType() && self.isValidInterest();
+    },
+
+    mediaAccounts() {
+      console.log(JSON.stringify(self.socialAccounts));
+      return JSON.stringify(self.socialAccounts);
     }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 

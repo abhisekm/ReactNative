@@ -1,4 +1,5 @@
 import { palette } from "./palette"
+import { socialMedia } from "./socialMedia"
 
 /**
  * Roles for colors.  Prefer using these over the palette.  It makes it easier
@@ -14,6 +15,10 @@ export const color = {
    * The palette is available to use, but prefer using the name.
    */
   palette,
+  /**
+   * The palette is available to use for coloring social media icons
+   */
+  socialMedia,
   /**
    * A helper for making something see-thru. Use sparingly as many layers of transparency
    * can cause older Android devices to slow down due to the excessive compositing required
