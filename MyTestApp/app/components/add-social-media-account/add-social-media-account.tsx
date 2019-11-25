@@ -1,9 +1,9 @@
 import * as React from "react"
 import { View, ViewStyle, Alert, Image } from "react-native"
 import { Text } from "../text"
-import { ListItem, Icon } from "react-native-elements";
+import { ListItem, Icon, Button as RNEButton } from "react-native-elements";
 import { AddSocialMediaAccountModal } from "../add-social-media-account-modal";
-import { color } from "../../theme";
+import { color, spacing } from "../../theme";
 import { Button } from "../button";
 
 const tiktok = require('./tik-tok.png');
@@ -99,11 +99,12 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
 
             const isTikTok = key === 'tiktok';
             const leftElement = isTikTok
-              ? <Image source={tiktok} style={{ width: 20, height: 20 }} />
-              : <Icon name={key} type="font-awesome" size={20} color={color.socialMedia[key]} />;
+              ? <Image source={tiktok} style={{ width: 20, height: 20, }} />
+              : <Icon name={key} type="font-awesome" size={20} color={color.socialMedia[key]} containerStyle={{ minWidth: 20 }} />;
 
             return (
               <ListItem
+                key={key}
                 leftElement={leftElement}
                 title={value}
                 containerStyle={{ backgroundColor: 'transparent' }}
@@ -116,8 +117,21 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
       {
         getRemainingMedia().length > 0
           ?
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-            <Button preset="raised" text="Add Account" onPress={toggleModal} />
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: spacing.medium, marginHorizontal: spacing.large }}>
+            <RNEButton
+              icon={
+                <Icon
+                  name="add"
+                  size={15}
+                  containerStyle={{ marginEnd: spacing.tiny }}
+                  color={color.primary}
+                />
+              }
+              type="outline"
+              title="Add Account"
+              titleStyle={{ fontSize: 14 }}
+              buttonStyle={{ borderWidth: 2, borderRadius: 10 }}
+              onPress={toggleModal} />
           </View>
           :
           null

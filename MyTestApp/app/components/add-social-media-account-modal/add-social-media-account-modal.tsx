@@ -106,7 +106,7 @@ export function AddSocialMediaAccountModal(props: AddSocialMediaAccountModalProp
     if (!isValidName)
       return;
 
-    onSubmit(media, name);
+    onSubmit(media, name.trim());
     setState(defaultState);
   }, [media, name]);
 
@@ -132,6 +132,7 @@ export function AddSocialMediaAccountModal(props: AddSocialMediaAccountModalProp
           {remainingMedia.map((value) => {
             return (
               <MediaType
+                key={value}
                 media={value}
                 isSelected={media === value}
                 onMediaSelected={(mediaValue) => {

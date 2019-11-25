@@ -1,6 +1,6 @@
 import * as React from "react"
 import { observer, inject, useLocalStore } from "mobx-react"
-import { Image, View, Text as RNText, FlatList, TouchableOpacity, Alert, AlertButton, ViewStyle } from "react-native"
+import { Image, View, Text as RNText, FlatList, TouchableOpacity, Alert, AlertButton, ViewStyle, ListRenderItem } from "react-native"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
 // import { useStores } from "../../models/root-store"
@@ -29,24 +29,6 @@ const boyImage = require("./boy.png")
 const girlImage = require("./girl.png")
 const interestData = ['Art', 'Design', 'Fashion', 'Food', 'Fitness', 'Health', 'Inspiration', 'Nature', 'Party', 'Photography', 'Travel', 'Lorem', 'Ipsum'];
 
-const modData = React.useMemo(() => {
-  console.log("calculate moddata");
-
-  const dataWithSelection: IInterestData[] = interestData.map((value) => { return { value: value, isSelected: false } as IInterestData });
-
-  const rowCount = 3;
-  const columns = interestData.length / rowCount;
-  const result: IInterestData[][] = [];
-
-  for (var i = 0; i < columns; i++) {
-    const start = i * rowCount;
-    const end = Math.min(start + rowCount, interestData.length + 1);
-    result.push(dataWithSelection.slice(start, end))
-  }
-
-  return result;
-}, [interestData]);
-
 const UserType = (props) => {
   const { boy, isSelected, onPress } = props;
 
@@ -67,13 +49,17 @@ const InterestButton = (props) => {
 
   return (
     <RNEButton
+      key={id}
       TouchableComponent={TouchableOpacity}
       type={selected ? "solid" : "outline"}
       title={text}
       containerStyle={{
         borderRadius: 20,
+        marginVertical: spacing.small,
+        marginHorizontal: spacing.tiny
       }}
       buttonStyle={{
+        minWidth: 80,
         paddingHorizontal: spacing.medium,
         borderRadius: 20,
         backgroundColor: selected ? color.secondary : 'transparent',
@@ -85,26 +71,36 @@ const InterestButton = (props) => {
   )
 }
 
-const _renderItem = ({ item }) => (
+const _renderItem = (item: IInterestData[], addInterest) => (
   <View style={{ flex: 1, flexDirection: 'column', marginHorizontal: spacing.tiny }}>
     {item.map((_item) => {
       return (
         <View style={{ marginVertical: spacing.tiny }}>
-          <InterestButton id={_item} text={_item} selected={allInterest.get(_item)} onSelect={addInterest} />
+          <InterestButton id={_item} text={_item.value} selected={_item.isSelected} onSelect={addInterest} />
         </View>
       )
     })}
   </View>
 )
 
-export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreenProps> = observer((props) => {
-  const { authStore: { displayName }, igStore: { setCode, userName, clear, isLoading } } = useStores();
+const DEFAULT_MARGIN = { margin: spacing.medium, } as ViewStyle;
 
-  const userDetails: UserDetails = useLocalStore(() => UserDetailsModel.create({ name: displayName }));
+export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreenProps> = observer((props) => {
   const {
-    name, gender, allInterest, selectedInterests, igUsername, mediaAccounts, addInterest, setName, setGender,
-    isValidName, isValidInterest, isValidType, isValid, setIgUsername, updateCalculated, updateSocialAccounts
-  } = userDetails;
+    authStore: { displayName },
+    igStore: { setCode, userName, clear, isLoading },
+    userInfoStore: { name, gender, allInterest, selectedInterests, igUsername, mediaAccounts, addInterest,
+      setName, setGender, isValidName, isValidInterest, isValidType, isValid, setIgUsername, updateCalculated,
+      updateSocialAccounts }
+  } = useStores();
+
+  const modData = React.useMemo(() => {
+    console.log("calculate moddata");
+
+    const result: IInterestData[] = interestData.map((value) => { return { value: value, isSelected: false } as IInterestData });
+    return result;
+  }, [interestData]);
+
 
   const nameRef = React.useRef(null);
 
@@ -135,6 +131,7 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
   if (userName)
     setIgUsername(userName);
 
+
   return (
     <View style={styleSheet.view_full}>
       <Screen
@@ -143,93 +140,88 @@ export const UserDetailsScreen: NavigationStackScreenComponent<UserDetailsScreen
         backgroundColor={color.transparent}
         unsafe
       >
-        <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, paddingHorizontal: spacing.medium, }} >
-          <Text preset="header" text="Almost done ..." style={{ color: color.primary }} />
 
-          <View style={{ height: 20 }} />
+        <Text preset="header" text="Almost done ..." style={[DEFAULT_MARGIN, { color: color.primary, }]} />
 
-          <Text preset="fieldLabel" text="Select your gender" style={{ margin: spacing.medium }} />
+        <View style={{ height: 20 }} />
 
-          <View style={{ flexDirection: "row", justifyContent: "space-evenly" }} >
-            <UserType boy onPress={() => {
-              setGender(Gender.MALE)
-            }} isSelected={gender === Gender.MALE} />
-            <UserType onPress={() => {
-              setGender(Gender.FEMALE)
-            }} isSelected={gender === Gender.FEMALE} />
-          </View>
+        <Text preset="fieldLabel" text="Select your gender" style={DEFAULT_MARGIN} />
 
+        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }} >
+          <UserType boy onPress={() => {
+            setGender(Gender.MALE)
+          }} isSelected={gender === Gender.MALE} />
+          <UserType onPress={() => {
+            setGender(Gender.FEMALE)
+          }} isSelected={gender === Gender.FEMALE} />
+        </View>
+
+        {
+          !isValidType()
+            ? <Text preset="error" text="Please select gender" style={DEFAULT_MARGIN} />
+            : null
+        }
+
+        <TextField
+          placeholder="Name" label="Name"
+          forwardedRef={nameRef}
+          value={name} onChangeText={setName}
+          style={DEFAULT_MARGIN}
+          leftIcon={{ type: "ocicons", name: "person", color: color.palette.grey10 }}
+          inputStyle={styleSheet.text_input_container}
+          errorMessage={!isValidName() ? "Name cannot be blank" : null}
+          errorStyle={{}}
+        />
+
+        <Text preset="fieldLabel" text="Instagram" style={DEFAULT_MARGIN} />
+        {
+          userName ?
+            <View style={[DEFAULT_MARGIN, { paddingHorizontal: spacing.large, marginHorizontal: spacing.medium, flexDirection: "row" }]}>
+              <Text text={`@${userName}`} style={{ flex: 1 }} />
+              <Button text="Unlink" preset="link" textStyle={{ color: color.palette.pink1 }} onPress={unlink} />
+            </View>
+            :
+            <View style={{ paddingHorizontal: spacing.large, }} >
+              <InstagramLogin
+                appId='761781137582854'
+                redirectUrl='https://immersify-test.com/auth/'
+                onLoginSuccess={(code) => {
+                  setCode(code)
+                }}
+                onLoginFailure={(data) => console.log(data)}
+              />
+            </View>
+        }
+
+        <AddSocialMediaAccount
+          style={DEFAULT_MARGIN}
+          onUpdate={updateSocialAccounts} />
+
+        <Text
+          preset="fieldLabel"
+          text="Interests"
+          style={DEFAULT_MARGIN} />
+
+        <View style={[DEFAULT_MARGIN, { paddingHorizontal: spacing.small, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }]}>
           {
-            !isValidType()
-              ? <Text preset="error" text="Please select gender" style={{ margin: spacing.medium }} />
-              : null
+            interestData.map((item) => {
+              return (
+                <InterestButton id={item} text={item} selected={selectedInterests.indexOf(item) > -1} onSelect={addInterest} />
+              );
+            })
           }
-        </FormRow>
-        <FormRow preset="middle" style={{ borderColor: color.transparent, backgroundColor: color.transparent, paddingHorizontal: 0 }} >
+        </View>
 
-          <TextField
-            placeholder="Name" label="Name"
-            forwardedRef={nameRef}
-            value={name} onChangeText={setName}
-            style={{ paddingHorizontal: spacing.medium, }}
-            leftIcon={{ type: "ocicons", name: "person", color: color.palette.grey10 }}
-            inputStyle={styleSheet.text_input_container}
-            errorMessage={!isValidName() ? "Name cannot be blank" : null}
-            errorStyle={{}}
-          />
-
-          <Text preset="fieldLabel" text="Instagram" style={{ margin: spacing.medium, paddingHorizontal: spacing.medium, }} />
-          {
-            userName ?
-              <View style={{ paddingHorizontal: spacing.large, marginHorizontal: spacing.medium, flexDirection: "row" }}>
-                <Text text={`@${userName}`} style={{ flex: 1 }} />
-                <Button text="Unlink" preset="link" textStyle={{ color: color.palette.pink1 }} onPress={unlink} />
-              </View>
-              :
-              <View style={{ paddingHorizontal: spacing.medium, }} >
-                <InstagramLogin
-                  appId='761781137582854'
-                  redirectUrl='https://immersify-test.com/auth/'
-                  onLoginSuccess={(code) => {
-                    setCode(code)
-                  }}
-                  onLoginFailure={(data) => console.log(data)}
-                />
-              </View>
-          }
-
-          <AddSocialMediaAccount
-            style={{ paddingHorizontal: spacing.large, paddingVertical: spacing.small }}
-            onUpdate={updateSocialAccounts} />
-
-          <Text
-            preset="fieldLabel"
-            text="Interests"
-            style={{ marginVertical: spacing.large, marginHorizontal: spacing.medium, paddingHorizontal: spacing.medium, }} />
-
-          <FlatList<IInterestData[]>
-            data={modData}
-            showsHorizontalScrollIndicator={false}
-            renderItem={_renderItem}
-            //Setting the number of column
-            horizontal
-            keyExtractor={(item, index) => item.toString() + index.toString()}
-            extraData={selectedInterests}
-          />
-
-          {
-            !isValidInterest()
-              ? <Text preset="error" text="Please select atleast one interest" style={{ margin: spacing.medium, paddingHorizontal: spacing.medium, }} />
-              : null
-          }
-        </FormRow>
-        <FormRow preset="bottom" style={{ borderColor: color.transparent, backgroundColor: color.transparent, paddingHorizontal: spacing.medium, }} >
-          <Button
-            preset="raised"
-            text="Continue"
-            onPress={validateAndProceed}
-          />
-        </FormRow>
+        {
+          !isValidInterest()
+            ? <Text preset="error" text="Please select atleast one interest" style={DEFAULT_MARGIN} />
+            : null
+        }
+        <Button
+          preset="raised"
+          text="Continue"
+          onPress={validateAndProceed}
+        />
       </Screen>
 
       {isLoading && <Loading />}

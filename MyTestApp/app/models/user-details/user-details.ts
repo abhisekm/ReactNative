@@ -1,4 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { withRootStore } from "../extensions";
+import { RootStore } from "../root-store";
+import { AuthStore } from "../auth-store";
 
 export enum Gender {
   MALE = "m",
@@ -18,6 +21,13 @@ export const UserDetailsModel = types
     socialAccounts: types.optional(types.map(types.string), {}),
     calculated: false,
   })
+  .extend(withRootStore)
+  .actions(self => ({
+    afterAttach() {
+      if (!self.name)
+        self.name = (((self.rootStore) as RootStore).authStore as AuthStore).displayName;
+    }
+  }))
   .actions(self => ({
     updateCalculated() {
       self.calculated = true;

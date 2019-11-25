@@ -3,6 +3,7 @@ import { InstagramStoreModel } from "../../models/instagram-store"
 import { AuthStoreModel } from "../../models/auth-store"
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { CacheHeightModel } from "../cache-height"
+import { UserDetailsModel } from "../user-details"
 
 /**
  * A RootStore model.
@@ -15,6 +16,7 @@ export const RootStoreModel =
       igStore: types.optional(InstagramStoreModel, {}),
       immersifyStore: types.optional(ImmersifyStoreModel, {}),
       heightCache: types.optional(CacheHeightModel, {}),
+      userInfoStore: types.optional(UserDetailsModel, {}),
     })
 
 /**
