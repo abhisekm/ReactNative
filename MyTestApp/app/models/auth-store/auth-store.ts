@@ -18,7 +18,10 @@ export const AuthStoreModel = types
     state: types.optional(types.enumeration("State", ["pending", "done", "error"]), "done"),
     provider: types.maybeNull(types.enumeration("Provider", ["facebook", "google", "email"])),
     errorMessage: types.maybe(types.string),
-    displayName: types.maybe(types.string)
+    displayName: types.maybe(types.string),
+    showWalkthrough: true,
+    showUserDetails: true,
+    showQuestionnaire: true,
   })
   .extend(withRootStore)
   .views(self => ({
@@ -42,9 +45,20 @@ export const AuthStoreModel = types
     silentSignIn: flow(function* () {
       self.state = "pending";
 
+      if (self.showWalkthrough) {
+        self.state = "done";
+        navigate("WalkThrough");
+        return;
+      }
+
       const user = firebase.auth().currentUser;
       if (user) {
-        navigate("mainFlow")
+        if (self.showUserDetails)
+          navigate("UserDetails")
+        else if (self.showQuestionnaire)
+          navigate("Questionnaire")
+        else
+          navigate("dashboardFlow")
       } else {
         navigate("loginFlow")
       }
@@ -153,7 +167,28 @@ export const AuthStoreModel = types
       self.state = "done";
       navigate("loginFlow")
     }),
+
+    resetWalkthrough() {
+      self.showWalkthrough = true;
+    }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .actions(self => ({
+    walkthroughComplete() {
+      self.showWalkthrough = false;
+      self.silentSignIn();
+    },
+
+    userDetailesEntered() {
+      self.showUserDetails = false;
+      self.silentSignIn();
+    },
+
+    questionnaireCompleted(answersAsObj) {
+      console.log(answersAsObj);
+      self.showQuestionnaire = false;
+      self.silentSignIn();
+    }
+  }))
   .postProcessSnapshot(omit(["state", "errorMessage"]))
 
 /**

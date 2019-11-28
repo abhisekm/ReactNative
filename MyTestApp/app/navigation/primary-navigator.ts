@@ -13,10 +13,12 @@ import { createBottomTabNavigator } from "react-navigation-tabs"
 import { AccountScreen } from "../screens/account-screen"
 import { FeaturePostsScreen } from "../screens/feature-posts-screen"
 import { UserDetailsScreen } from "../screens/user-details-screen"
+import { WalkthroughScreen } from "../screens/walkthrough-screen"
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
     ResolveAuth: { screen: ResolveAuthScreen },
+    WalkThrough: { screen: WalkthroughScreen },
     loginFlow: createStackNavigator({
       Home: { screen: HomeScreen },
       Login: { screen: LoginScreen },
@@ -35,16 +37,13 @@ export const PrimaryNavigator = createSwitchNavigator(
         }
       }
     }),
-    mainFlow: createStackNavigator({
-      dashboardFlow: createBottomTabNavigator({
-        Dashboard: { screen: DashboardScreen },
-        Feature: { screen: FeaturePostsScreen },
-        Account: { screen: UserDetailsScreen },
-      }),
-      Questionnaire: { screen: QuestionnaireScreen },
-    }, {
-      headerMode: 'none'
+    UserDetails: { screen: UserDetailsScreen },
+    dashboardFlow: createBottomTabNavigator({
+      Dashboard: { screen: DashboardScreen },
+      Feature: { screen: FeaturePostsScreen },
+      Account: { screen: AccountScreen },
     }),
+    Questionnaire: { screen: QuestionnaireScreen },
   },
   {
     initialRouteName: "ResolveAuth"

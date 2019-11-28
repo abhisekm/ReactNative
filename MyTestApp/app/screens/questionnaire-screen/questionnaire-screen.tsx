@@ -2,7 +2,7 @@ import * as React from "react"
 import { observer } from "mobx-react"
 import { View, StyleSheet } from "react-native"
 import { Text } from "../../components/text"
-// import { useStores } from "../../models/root-store"
+import { useStores } from "../../models/root-store"
 import { color, spacing } from "../../theme"
 import { Wallpaper } from "../../components/wallpaper"
 import { Button } from "../../components/button"
@@ -11,15 +11,14 @@ import { TextField } from "../../components/text-field"
 import { SimpleSurvey } from "react-native-simple-survey"
 import { CheckBox } from "react-native-elements"
 import styleSheet from "../../theme/styleSheet"
-import { navigate } from "../../navigation"
-import { NavigationStackScreenComponent, NavigationStackScreenProps } from "react-navigation-stack"
+import { NavigationSwitchScreenComponent, NavigationSwitchScreenProps } from "react-navigation"
 
-export interface QuestionnareScreenProps extends NavigationStackScreenProps<{}> {
+export interface QuestionnareScreenProps extends NavigationSwitchScreenProps<{}> {
 }
 
 
-export const QuestionnaireScreen: NavigationStackScreenComponent<QuestionnareScreenProps> = observer((props) => {
-  // const { someStore } = useStores()
+export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareScreenProps> = observer((props) => {
+  const { authStore: { questionnaireCompleted } } = useStores()
 
   /**
    * Next button
@@ -153,8 +152,7 @@ export const QuestionnaireScreen: NavigationStackScreenComponent<QuestionnareScr
       }
     }
 
-    console.log(answersAsObj);
-    navigate("Dashboard");
+    questionnaireCompleted(answersAsObj);
   }
 
   /**

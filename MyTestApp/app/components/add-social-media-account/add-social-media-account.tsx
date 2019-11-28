@@ -5,6 +5,8 @@ import { ListItem, Icon, Button as RNEButton } from "react-native-elements";
 import { AddSocialMediaAccountModal } from "../add-social-media-account-modal";
 import { color, spacing } from "../../theme";
 import { Button } from "../button";
+import { useObserver } from "mobx-react";
+import { useStores } from "../../models/root-store";
 
 const tiktok = require('./tik-tok.png');
 
@@ -26,6 +28,8 @@ export interface AddSocialMediaAccountProps {
 export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
   // grab the props
   const { style, onUpdate } = props
+
+  const { userInfoStore: { socialAccountsMap } } = useStores();
 
   const socialMediaList = [
     'youtube',
@@ -81,7 +85,12 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
     return result;
   }, [accounts]);
 
-  return (
+  React.useEffect(() => {
+    setAccounts(socialAccountsMap());
+    console.log(accounts)
+  }, []);
+
+  return useObserver(() => (
     <View style={style}>
       <View style={{ flexDirection: 'row' }} >
         <Text preset="fieldLabel" text="Social Media Accounts" style={{ flex: 1 }} />
@@ -147,5 +156,5 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
         />
       }
     </View >
-  )
+  ))
 }

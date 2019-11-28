@@ -1,3 +1,4 @@
+require("../app/components/user-profile/user-profile.story")
 require("../app/components/user-interest/user-interest.story")
 require("../app/components/add-social-media-account-modal/add-social-media-account-modal.story")
 require("../app/components/add-social-media-account/add-social-media-account.story")

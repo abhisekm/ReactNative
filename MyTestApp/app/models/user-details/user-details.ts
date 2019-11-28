@@ -99,6 +99,12 @@ export const UserDetailsModel = types
       return self.isValidName() && self.isValidType() && self.isValidInterest();
     },
 
+    socialAccountsMap() {
+      const result = new Map<string, string>();
+      self.socialAccounts.forEach((value, key) => result.set(key, value))
+      return result;
+    },
+
     mediaAccounts() {
       console.log(JSON.stringify(self.socialAccounts));
       return JSON.stringify(self.socialAccounts);
