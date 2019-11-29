@@ -31,6 +31,15 @@ export const AccountScreen: NavigationBottomTabScreenComponent<AccountScreenProp
 
     console.log("media account - ", mediaAccounts);
 
+    const json = {
+      gender: gender,
+      name: name,
+      ig_name: igUsername,
+      interest: selectedInterests,
+      accounts: mediaAccounts()
+    }
+
+    console.log("json", JSON.stringify(json))
 
     alert(`All valid\n\nGender - ${gender}\n\nName - ${name}\n\nIG nick - ${igUsername}\n\nInterest - ${selectedInterests}\n\nSocial Accounts\n${mediaAccounts()}`);
 

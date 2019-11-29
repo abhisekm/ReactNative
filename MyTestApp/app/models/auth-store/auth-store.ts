@@ -90,7 +90,7 @@ export const AuthStoreModel = types
         self.state = "done";
         self.provider = "facebook";
         self.displayName = firebase.auth().currentUser.displayName;
-        return navigate("mainFlow");
+        return navigate("UserDetails");
       } catch (error) {
         self.state = "error";
         self.errorMessage = error.message;
@@ -117,7 +117,7 @@ export const AuthStoreModel = types
         self.state = "done";
         self.provider = "google"
         self.displayName = firebase.auth().currentUser.displayName;
-        navigate("mainFlow")
+        navigate("UserDetails")
       } catch (error) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           // user cancelled the login flow
