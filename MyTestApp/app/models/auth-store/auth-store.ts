@@ -20,6 +20,7 @@ export const AuthStoreModel = types
     state: types.optional(types.enumeration("State", ["pending", "done", "error"]), "done"),
     provider: types.maybeNull(types.enumeration("Provider", ["facebook", "google", "email"])),
     errorMessage: types.maybe(types.string),
+    successMessage: types.maybeNull(types.string),
     displayName: types.maybe(types.string),
     showWalkthrough: true,
     showUserDetails: true,
@@ -38,6 +39,10 @@ export const AuthStoreModel = types
 
     clearError() {
       self.errorMessage = '';
+    },
+
+    clearSuccess() {
+      self.successMessage = '';
     },
   }))
   .actions(self => ({
@@ -160,7 +165,7 @@ export const AuthStoreModel = types
           yield firebase.auth().signInWithEmailAndPassword(email, password);
 
         self.state = "done";
-        self.provider = "google";
+        self.provider = "email";
         self.displayName = firebase.auth().currentUser.displayName;
         navigate("UserDetails");
       } catch (error) {
@@ -237,6 +242,35 @@ export const AuthStoreModel = types
     }),
 
     /**
+    * Reset password in firebase with email credential
+    */
+    resetPassword: flow(function* (email: string) {
+      self.state = "pending";
+
+      self.clearSuccess();
+      self.clearError();
+      console.log(email);
+      if (!email) {
+        self.state = "error";
+        self.errorMessage = "Email cannot be empty";
+        return;
+      }
+
+      try {
+        const userCredential: FirebaseAuthTypes.UserCredential =
+          yield firebase.auth().sendPasswordResetEmail(email);
+
+        self.state = "done";
+        self.successMessage = "Email has been sent to your " + email + " with password reset link.";
+      } catch (error) {
+        self.state = "error";
+        self.errorMessage = "Invalid email";
+        console.log(error);
+      }
+    }),
+
+
+    /**
      * Logout from firebase
      */
     logout: flow(function* () {
@@ -304,7 +338,7 @@ export const AuthStoreModel = types
       navigate("ResetPassword");
     },
   }))
-  .postProcessSnapshot(omit(["state", "errorMessage"]))
+  .postProcessSnapshot(omit(["state", "errorMessage", "successMessage"]))
 
 /**
 * Un-comment the following to omit model attributes from your snapshots (and from async storage).

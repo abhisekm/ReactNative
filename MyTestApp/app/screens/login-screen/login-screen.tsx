@@ -39,7 +39,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
 
   return (
     <View style={styleSheet.view_full}>
-      <Screen style={styleSheet.view_container} preset="scroll" unsafe >
+      <Screen style={styleSheet.view_container} preset="scroll" unsafe statusBar="light-content"  >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
           <Text preset="header" tx="loginScreen.header" />
 

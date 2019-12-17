@@ -1,7 +1,6 @@
 import * as React from "react"
 import { observer } from "mobx-react"
 import { View, Image } from "react-native"
-import { Button as ReactButton } from "react-native-elements"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
 import { color, spacing } from "../../theme"
@@ -11,16 +10,18 @@ import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
 import { Button } from "../../components/button"
 import { goBack } from "../../navigation/navigationRef"
+import { useStores } from "../../models/root-store"
 
 export interface ResetPasswordScreenProps extends NavigationStackScreenProps<{}> {
 }
 
 export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordScreenProps> = observer((props) => {
   const [email, setEmail] = React.useState('');
+  const { authStore: { resetPassword, errorMessage, successMessage } } = useStores();
 
   return (
     <View style={styleSheet.view_full}>
-      <Screen style={styleSheet.view_container} preset="scroll" unsafe >
+      <Screen style={styleSheet.view_container} preset="scroll" unsafe statusBar="light-content" >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
           <Text preset="header" tx="resetPasswordScreen.header" />
 
@@ -29,15 +30,26 @@ export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordSc
           <Text tx="resetPasswordScreen.context" />
 
           <TextField
-            placeholder="Email" label="Email"
+            placeholder="johndoe@mail.com" label="Email"
             value={email} onChangeText={setEmail}
+            autoCompleteType="email" autoCapitalize="none" autoCorrect={false}
+            containerStyle={{ marginTop: spacing.large }}
             inputStyle={styleSheet.text_input_container} />
+
+          {
+            errorMessage ? <Text preset="error" text={errorMessage} /> : null
+          }
+
+          {
+            successMessage ? <Text preset="question" text={successMessage} style={{ margin: spacing.medium }} /> : null
+          }
 
           <View style={{ flexDirection: "row", marginTop: spacing.large }}>
             <Button
               preset="raised"
               tx="resetPasswordScreen.reset"
-              onPress={() => { }}
+              onPress={() => resetPassword(email)}
+              disabled={successMessage && successMessage.length > 0}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
@@ -67,5 +79,8 @@ ResetPasswordScreen.navigationOptions = {
         />
       </View>
     )
+  },
+  headerTitleContainerStyle: {
+    flex: 1
   }
 }
