@@ -21,5 +21,7 @@ export const palette = {
   pink1: "#ED6E6E",
   pink2: "#F39191",
   purple1: "#736BC7",
-  blue: "#0000DD"
+  blue: "#0000DD",
+  blue2: "#4444EE",
+  green: "#00FF00"
 }

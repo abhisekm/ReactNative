@@ -29,6 +29,15 @@ export const UserDetailsModel = types
     }
   }))
   .actions(self => ({
+    clear() {
+      self.name = null;
+      self.gender = null;
+      self.interests.clear();
+      self.igUsername = '';
+      self.socialAccounts.clear();
+      self.calculated = false;
+    },
+
     updateCalculated() {
       self.calculated = true;
     }
@@ -106,7 +115,6 @@ export const UserDetailsModel = types
     },
 
     mediaAccounts() {
-      console.log(JSON.stringify(self.socialAccounts));
       return JSON.stringify(self.socialAccounts);
     }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars

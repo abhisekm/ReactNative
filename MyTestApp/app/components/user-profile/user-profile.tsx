@@ -68,9 +68,9 @@ export function UserProfile(props: UserProfileProps) {
   const { showName = true } = props;
 
   const {
-    igStore: { setCode, userName, clear, isLoading },
+    igStore: { setCode, getUserName, clear, isLoading },
     userInfoStore: { name, gender, selectedInterests, addInterest,
-      setName, setGender, isValidName, isValidInterest, isValidType, setIgUsername, updateSocialAccounts }
+      setName, setGender, isValidName, isValidInterest, isValidType, updateSocialAccounts }
   } = useStores();
 
   const nameRef = React.useRef(null);
@@ -82,11 +82,6 @@ export function UserProfile(props: UserProfileProps) {
     buttons.push(cancelButton, okButton);
     Alert.alert("Remove Instagram Login", "Are you sure you want to remove your instagram login?", buttons);
   }
-
-  if (userName)
-    setIgUsername(userName);
-
-
 
   return useObserver(() => (
     <View >
@@ -124,9 +119,9 @@ export function UserProfile(props: UserProfileProps) {
 
       <Text preset="fieldLabel" text="Instagram" style={DEFAULT_MARGIN} />
       {
-        userName ?
+        getUserName() ?
           <View style={[DEFAULT_MARGIN, { paddingHorizontal: spacing.large, marginHorizontal: spacing.medium, flexDirection: "row" }]}>
-            <Text text={`@${userName}`} style={{ flex: 1 }} />
+            <Text text={`@${getUserName()}`} style={{ flex: 1 }} />
             <Button text="Unlink" preset="link" textStyle={{ color: color.palette.pink1 }} onPress={unlink} />
           </View>
           :
@@ -134,9 +129,7 @@ export function UserProfile(props: UserProfileProps) {
             <InstagramLogin
               appId='761781137582854'
               redirectUrl='https://immersify-test.com/auth/'
-              onLoginSuccess={(code) => {
-                setCode(code)
-              }}
+              onLoginSuccess={setCode}
               onLoginFailure={(data) => console.log(data)}
             />
           </View>

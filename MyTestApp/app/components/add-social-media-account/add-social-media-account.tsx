@@ -87,7 +87,6 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
 
   React.useEffect(() => {
     setAccounts(socialAccountsMap());
-    console.log(accounts)
   }, []);
 
   return useObserver(() => (

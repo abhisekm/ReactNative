@@ -4,6 +4,8 @@ import { Text } from "../text"
 import styles from "./campaign-slider-styles"
 import FastImage from "react-native-fast-image"
 import { ParallaxImage } from 'react-native-snap-carousel'
+import { Button as RNEButton } from "react-native-elements"
+import { color, spacing } from "../../theme"
 
 export interface CampaignSliderProps {
   /**
@@ -22,7 +24,7 @@ export interface CampaignSliderProps {
    */
   style?: ViewStyle
 
-  data: { illustration: string, title: string, subtitle: string }
+  data: { illustration: string, title: string, subtitle: string, brand: string, logo: string }
 
   parallax?: boolean
 
@@ -36,7 +38,7 @@ export interface CampaignSliderProps {
  */
 export function CampaignSlider(props: CampaignSliderProps) {
   // grab the props
-  const { even, style, data: { illustration, title, subtitle }, parallax, parallaxProps, ...rest } = props
+  const { even, style, data: { illustration, title, subtitle, brand, logo }, parallax, parallaxProps, ...rest } = props
 
   const uppercaseTitle = React.useMemo(() => title ? (
     <Text
@@ -46,6 +48,16 @@ export function CampaignSlider(props: CampaignSliderProps) {
       {title.toUpperCase()}
     </Text>
   ) : false, [title]);
+
+  const uppercaseBrand = React.useMemo(() => brand ? (
+    <Text
+      style={[styles.brand, even ? styles.brandEven : {}]}
+      numberOfLines={1}
+    >
+      {brand.toUpperCase()}
+    </Text>
+  ) : false, [brand]);
+
 
   const image = React.useMemo(() => {
     return parallax ? (
@@ -67,10 +79,8 @@ export function CampaignSlider(props: CampaignSliderProps) {
   }, [illustration, parallaxProps, even, parallax]);
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
+    <View
       style={styles.slideInnerContainer}
-      onPress={() => { alert(`You've clicked '${title}'`); }}
     >
       <View style={styles.shadow} />
       <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
@@ -78,6 +88,11 @@ export function CampaignSlider(props: CampaignSliderProps) {
         <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
       </View>
       <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
+        <FastImage
+          source={{ uri: logo }}
+          style={[styles.imageLogo, even ? styles.imageLogoEven : {}]}
+        />
+        {uppercaseBrand}
         {uppercaseTitle}
         <Text
           style={[styles.subtitle, even ? styles.subtitleEven : {}]}
@@ -85,7 +100,18 @@ export function CampaignSlider(props: CampaignSliderProps) {
         >
           {subtitle}
         </Text>
+        <View style={{ flex: 1, justifyContent: "flex-end" }} >
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }} >
+            <RNEButton
+              type="outline"
+              title="Apply"
+              buttonStyle={[styles.buttonMask, even ? styles.buttonMaskEven : {}]}
+              titleStyle={[styles.buttonText, even ? styles.buttonTextEven : {}]}
+              onPress={() => { alert(`You've clicked '${title}'`); }}
+            />
+          </View>
+        </View>
       </View>
-    </TouchableOpacity>
+    </View>
   )
 }

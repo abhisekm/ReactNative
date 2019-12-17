@@ -13,6 +13,7 @@ function ScreenWithoutScrolling(props: ScreenProps) {
   const style = props.style || {}
   const backgroundStyle = props.backgroundColor ? { backgroundColor: props.backgroundColor } : {}
   const Wrapper = props.unsafe ? View : SafeAreaView
+  const Background = props.hideWallpaper ? View : Wallpaper
 
   return (
     <KeyboardAvoidingView
@@ -20,8 +21,8 @@ function ScreenWithoutScrolling(props: ScreenProps) {
       behavior={isIos ? "padding" : null}
       keyboardVerticalOffset={offsets[props.keyboardOffset || "none"]}
     >
-      <StatusBar barStyle={props.statusBar || "light-content"} backgroundColor={color.statusBar} />
-      <Wallpaper />
+      <StatusBar barStyle={props.statusBar || "dark-content"} backgroundColor={color.statusBar} />
+      <Background />
       <Wrapper style={[preset.inner, style]}>{props.children}</Wrapper>
     </KeyboardAvoidingView>
   )
@@ -30,8 +31,12 @@ function ScreenWithoutScrolling(props: ScreenProps) {
 function ScreenWithScrolling(props: ScreenProps) {
   const preset = presets["scroll"]
   const style = props.style || {}
-  const backgroundStyle = props.backgroundColor ? { backgroundColor: props.backgroundColor } : {}
+  const backgroundStyle =
+    props.backgroundColor
+      ? { backgroundColor: props.backgroundColor }
+      : { backgroundColor: color.transparent }
   const Wrapper = props.unsafe ? View : SafeAreaView
+  const Background = props.hideWallpaper ? View : Wallpaper
 
   return (
     <KeyboardAvoidingView
@@ -39,8 +44,8 @@ function ScreenWithScrolling(props: ScreenProps) {
       behavior={isIos ? "padding" : null}
       keyboardVerticalOffset={offsets[props.keyboardOffset || "none"]}
     >
-      <StatusBar barStyle={props.statusBar || "light-content"} backgroundColor={color.statusBar} />
-      <Wallpaper />
+      <StatusBar barStyle={props.statusBar || "dark-content"} backgroundColor={color.statusBar} />
+      <Background />
       <Wrapper style={[preset.wrapper, backgroundStyle]}>
         <ScrollView
           style={[preset.outer, backgroundStyle]}

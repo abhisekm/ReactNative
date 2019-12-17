@@ -333,7 +333,6 @@ export class Api {
 
       return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
     } catch (error) {
-      console.log("error : ", error);
       return { kind: "bad-data" }
     }
   }

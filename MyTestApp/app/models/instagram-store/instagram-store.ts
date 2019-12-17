@@ -1,9 +1,12 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
-import { withEnvironment } from "../extensions"
+import { withEnvironment, withRootStore } from "../extensions"
 import { AccessToken, IGUser } from "../../services/api";
 import { InstagramPostModel, InstagramPost } from "../instagram-post";
 import CookieManager from "react-native-cookies";
 import omit from "ramda/es/omit";
+import { RootStore } from "../root-store";
+import { AuthStore } from "../auth-store";
+import { UserDetails } from "../user-details";
 
 /**
  * Model description here for TypeScript hints.
@@ -22,6 +25,7 @@ export const InstagramStoreModel = types
     loadingMore: false,
   })
   .extend(withEnvironment)
+  .extend(withRootStore)
   .views(self => ({
     get isLoading() {
       return self.loading;
@@ -43,7 +47,12 @@ export const InstagramStoreModel = types
       self.userName = null
       self.posts.clear();
       CookieManager.clearAll(true);
+      ((self.rootStore as RootStore).userInfoStore as UserDetails).setIgUsername('');
     },
+
+    getUserName() {
+      return self.userName;
+    }
   }))
   .actions(self => {
     const updateUserName = flow(function* () {
@@ -53,6 +62,7 @@ export const InstagramStoreModel = types
         const { id, username } = user;
         self.userId = Number(id);
         self.userName = username;
+        ((self.rootStore) as RootStore).userInfoStore.setIgUsername(username);
       }
 
       self.loading = false;

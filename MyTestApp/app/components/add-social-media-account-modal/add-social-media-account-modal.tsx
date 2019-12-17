@@ -2,11 +2,12 @@ import * as React from "react"
 import { View, TouchableOpacity } from "react-native"
 import { Text } from "../text"
 import Modal from "react-native-modal"
-import { Icon, Image } from "react-native-elements";
+import { Icon, Image, Button as RNEButton } from "react-native-elements";
 import { spacing, color } from "../../theme";
 import { TextField } from "../text-field";
 import styleSheet from "../../theme/styleSheet";
 import { Button } from "../button";
+
 
 const tiktok = require('../add-social-media-account/tik-tok.png');
 const tiktokSelected = require('../add-social-media-account/tik-tok-selected.png');
@@ -162,7 +163,14 @@ export function AddSocialMediaAccountModal(props: AddSocialMediaAccountModalProp
 
             : null
         }
-        <View style={{ flexDirection: 'row-reverse', marginTop: spacing.large, marginBottom: spacing.medium, marginHorizontal: spacing.medium, height: 60 }}>
+        <View
+          style={{
+            flexDirection: 'row-reverse',
+            marginTop: spacing.large,
+            marginBottom: spacing.medium,
+            marginHorizontal: spacing.medium,
+            height: 60
+          }}>
           <Button
             preset="raised"
             text="Add"
@@ -170,6 +178,6 @@ export function AddSocialMediaAccountModal(props: AddSocialMediaAccountModalProp
           />
         </View>
       </View>
-    </Modal>
+    </Modal >
   )
 }

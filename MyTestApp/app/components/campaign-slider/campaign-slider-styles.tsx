@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
-import { color } from '../../theme';
+import { color, spacing } from '../../theme';
 
 const IS_IOS = Platform.OS === 'ios';
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -20,8 +20,9 @@ const entryBorderRadius = 8;
 
 export default StyleSheet.create({
   slideInnerContainer: {
+    flex: 10,
     width: itemWidth,
-    height: slideHeight,
+    // height: slideHeight,
     paddingHorizontal: itemHorizontalMargin,
     paddingBottom: 18 // needed for shadow
   },
@@ -38,7 +39,7 @@ export default StyleSheet.create({
     borderRadius: entryBorderRadius
   },
   imageContainer: {
-    flex: 1,
+    flex: 7,
     marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
     backgroundColor: 'white',
     borderTopLeftRadius: entryBorderRadius,
@@ -54,6 +55,21 @@ export default StyleSheet.create({
     borderTopLeftRadius: entryBorderRadius,
     borderTopRightRadius: entryBorderRadius
   },
+  imageLogo: {
+    position: 'absolute',
+    height: 75,
+    width: 75,
+    top: -40,
+    start: 10,
+    backgroundColor: color.palette.white,
+    resizeMode: 'contain',
+    borderColor: color.palette.white,
+    borderWidth: 4,
+    borderRadius: entryBorderRadius
+  },
+  imageLogoEven: {
+    borderColor: color.palette.black
+  },
   // image's border radius is buggy on iOS; let's hack it!
   radiusMask: {
     position: 'absolute',
@@ -67,6 +83,7 @@ export default StyleSheet.create({
     backgroundColor: color.palette.black
   },
   textContainer: {
+    flex: 3,
     justifyContent: 'center',
     paddingTop: 20 - entryBorderRadius,
     paddingBottom: 20,
@@ -87,6 +104,17 @@ export default StyleSheet.create({
   titleEven: {
     color: 'white'
   },
+  brand: {
+    color: color.text,
+    fontSize: 16,
+    paddingStart: 80,
+    marginBottom: spacing.medium,
+    fontWeight: 'bold',
+    letterSpacing: 0.5
+  },
+  brandEven: {
+    color: 'white'
+  },
   subtitle: {
     marginTop: 6,
     color: color.palette.grey8,
@@ -95,5 +123,20 @@ export default StyleSheet.create({
   },
   subtitleEven: {
     color: 'rgba(255, 255, 255, 0.7)'
+  },
+  buttonMask: {
+    paddingHorizontal: spacing.large,
+    borderRadius: spacing.large,
+    borderWidth: 2,
+    borderColor: color.primary
+  },
+  buttonMaskEven: {
+    borderColor: color.palette.white
+  },
+  buttonText: {
+    color: color.primary
+  },
+  buttonTextEven: {
+    color: color.palette.white
   }
 });

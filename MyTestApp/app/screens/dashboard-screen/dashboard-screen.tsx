@@ -19,6 +19,7 @@ import { CampaignSlider } from "../../components/campaign-slider"
 import styleSheet from "../../theme/styleSheet"
 import { itemWidth, sliderWidth } from "../../components/campaign-slider/campaign-slider-styles"
 import { ENTRIES1, LONG_TEXT } from "./entries-dummy"
+import SafeAreaView from "react-native-safe-area-view"
 
 export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 }
@@ -42,50 +43,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
   return (
     <View style={styleSheet.view_full}>
       <Wallpaper />
-      {/* <Screen style={{ ...styleSheet.view_container }} preset="scroll" backgroundColor={color.transparent}>
-
-        <Button
-          preset="outline"
-          text="Reset Walkthorugh"
-          onPress={resetWalkthrough}
-        />
-
-        <Button
-          preset="outline"
-          text="Questionnaire"
-          onPress={() => navigate("Questionnaire")}
-        />
-
-        <Button
-          preset="raised"
-          text="Logout"
-          onPress={logout}
-        />
-
-        <IgPostCard
-          data={{
-            id: '1231',
-            caption: '#Lorem #ipsum @bhsdkfj asdfj @s;sfd;k    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n asjaskldjfslfh safdhaslkdfjh',
-            media_type: 'IMAGE',
-            media_url: 'https://instagram.fblr2-1.fna.fbcdn.net/vp/5fabd4d3ea35daca19345d470773f20b/5E64BBAC/t51.2885-15/sh0.08/e35/s640x640/75272076_984726895209127_8070932285211073312_n.jpg?_nc_ht=instagram.fblr2-1.fna.fbcdn.net&_nc_cat=107',
-            likes: 100,
-            username: 'Hello There!',
-            location: '',
-            avatar: ''
-          }} />
-      </Screen>
-      */}
-
-      <View style={{ flex: 1, justifyContent: "center", }}>
-        <Image
-          containerStyle={{ alignSelf: "center", margin: spacing.extraLarge }}
-          source={require("../../components/header/logo.png")}
-          style={{ width: 200, height: 50, }}
-          resizeMode="contain" />
-        <Text preset="header" text="Campaign" style={{ textAlign: "center" }} />
-        <Text preset="default" text={LONG_TEXT} style={{ margin: spacing.medium }} />
-      </View>
-      <View>
+      <SafeAreaView style={{ flex: 1 }} >
         <Carousel
           // ref={c => this._slider1Ref = c}
           data={ENTRIES1}
@@ -103,7 +61,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           loopClonesPerSide={2}
           onSnapToItem={(index) => setSliderIndex(index)}
         />
-      </View>
+      </SafeAreaView>
     </View>
   )
 })

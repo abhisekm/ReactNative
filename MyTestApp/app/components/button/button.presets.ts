@@ -39,17 +39,24 @@ export const viewPresets = {
 
   raised: {
     buttonStyle: {
-      flex: 1,
       paddingHorizontal: spacing.large,
       paddingVertical: spacing.medium,
     } as ViewStyle,
     titleStyle: {
+      color: 'white',
+      ...Platform.select({
+        android: {
+          fontFamily: 'sans-serif',
+        },
+        default: {
+
+        },
+      }),
       fontWeight: 'bold',
       fontSize: 14,
     } as TextStyle,
     containerStyle: {
       margin: spacing.small,
-      justifyContent: 'center',
     } as ViewStyle,
   },
 
@@ -73,7 +80,6 @@ export const viewPresets = {
 
   social: {
     buttonStyle: {
-      flex: 1,
       borderRadius: 30,
       paddingTop: 14,
       paddingBottom: 14,
@@ -93,11 +99,10 @@ export const viewPresets = {
       fontSize: 14,
     } as TextStyle,
     containerStyle: {
+      flex: 1,
       margin: 7,
       borderRadius: 30,
-      flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center',
     } as ViewStyle,
   },
 }

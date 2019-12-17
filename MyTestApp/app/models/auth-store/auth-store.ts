@@ -1,12 +1,14 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 import { LoginManager, AccessToken, LoginResult } from "react-native-fbsdk"
-import { firebase } from "@react-native-firebase/auth";
+import { firebase, FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { navigate } from "../../navigation";
 import omit from "ramda/es/omit";
 import { GoogleSignin, statusCodes, User } from '@react-native-community/google-signin';
 import { withRootStore } from "../extensions";
 import { RootStore } from "../root-store";
 import { InstagramStore } from "../instagram-store";
+import { validate } from "../../utils/validate";
+import { UserDetails } from "../user-details";
 
 
 /**
@@ -115,9 +117,9 @@ export const AuthStoreModel = types
 
 
         self.state = "done";
-        self.provider = "google"
+        self.provider = "google";
         self.displayName = firebase.auth().currentUser.displayName;
-        navigate("UserDetails")
+        navigate("UserDetails");
       } catch (error) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           // user cancelled the login flow
@@ -134,6 +136,103 @@ export const AuthStoreModel = types
         }
 
         self.state = "error";
+      }
+    }),
+
+    /**
+    * Sign in into firebase with email credential
+    */
+    signInEmail: flow(function* (email: string, password: string) {
+      self.clearError();
+      console.log(email, password);
+      if (!email) {
+        self.state = "error";
+        self.errorMessage = "Email cannot be empty";
+        return;
+      } else if (!password) {
+        self.state = "error";
+        self.errorMessage = "Password cannot be empty";
+        return;
+      }
+
+      try {
+        const userCredential: FirebaseAuthTypes.UserCredential =
+          yield firebase.auth().signInWithEmailAndPassword(email, password);
+
+        self.state = "done";
+        self.provider = "google";
+        self.displayName = firebase.auth().currentUser.displayName;
+        navigate("UserDetails");
+      } catch (error) {
+        self.state = "error";
+        self.errorMessage = "Invalid email id or password";
+        console.log(error);
+      }
+    }),
+
+    /**
+    * Sign up into firebase with email credential
+    */
+    signUpEmail: flow(function* (name: string, email: string, password: string, confirmPassword: string) {
+      self.state = "pending";
+
+      self.clearError();
+      console.log(email, password);
+      if (name.length < 3) {
+        self.state = "error";
+        self.errorMessage = "Please enter a valid Name";
+        return;
+      } else if (!email) {
+        self.state = "error";
+        self.errorMessage = "Email cannot be empty";
+        return;
+      } else if (!password) {
+        self.state = "error";
+        self.errorMessage = "Password cannot be empty";
+        return;
+      } else if (!confirmPassword) {
+        self.state = "error";
+        self.errorMessage = "Confirm Password cannot be empty";
+        return;
+      } else if (password != confirmPassword) {
+        self.state = "error";
+        self.errorMessage = "Password and Confirm Password doesnt match";
+        return;
+      }
+
+      var constraint = {
+        from: {
+          email: {
+            message: "Please enter a valid email"
+          }
+        }
+      }
+
+      const result = validate(constraint, { from: email });
+      const { from } = result;
+      if (from) {
+        self.state = "error";
+        self.errorMessage = "" + from;
+        return;
+      }
+
+      try {
+        const userCredential: FirebaseAuthTypes.UserCredential =
+          yield firebase.auth().createUserWithEmailAndPassword(email, password);
+
+        console.log("user signed in - ", userCredential)
+
+        self.state = "done";
+        self.provider = "email"
+        self.displayName = name;
+        firebase.auth().currentUser.updateProfile({
+          displayName: name,
+        })
+        navigate("UserDetails")
+      } catch (error) {
+        self.state = "error";
+        self.errorMessage = error.message;
+        return;
       }
     }),
 
@@ -162,7 +261,8 @@ export const AuthStoreModel = types
           break;
       }
 
-      ((self.rootStore as RootStore).igStore as InstagramStore).clear()
+      ((self.rootStore as RootStore).igStore as InstagramStore).clear();
+      ((self.rootStore as RootStore).userInfoStore as UserDetails).clear();
       self.provider = null;
       self.state = "done";
       navigate("loginFlow")
@@ -187,7 +287,22 @@ export const AuthStoreModel = types
       console.log(answersAsObj);
       self.showQuestionnaire = false;
       self.silentSignIn();
-    }
+    },
+
+    goToEmailLogin() {
+      self.clearError();
+      navigate("Login");
+    },
+
+    goToEmailSignup() {
+      self.clearError();
+      navigate("Signup");
+    },
+
+    goToForgotPassword() {
+      self.clearError();
+      navigate("ResetPassword");
+    },
   }))
   .postProcessSnapshot(omit(["state", "errorMessage"]))
 

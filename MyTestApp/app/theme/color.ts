@@ -81,5 +81,7 @@ export const color = {
 
   borderColor: palette.grey4,
 
-  inputBackground: palette.grey1
+  inputBackground: palette.grey1,
+
+  igTag: palette.blue2,
 }

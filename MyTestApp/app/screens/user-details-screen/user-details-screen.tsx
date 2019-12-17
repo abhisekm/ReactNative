@@ -24,9 +24,6 @@ export const UserDetailsScreen: NavigationSwitchScreenComponent<UserDetailsScree
 
   const validateAndProceed = React.useCallback(() => {
     updateCalculated();
-
-    console.log("isvalid - ", isValid())
-
     if (!isValid()) {
       return;
     }
@@ -49,8 +46,7 @@ export const UserDetailsScreen: NavigationSwitchScreenComponent<UserDetailsScree
       <Screen
         style={{ ...styleSheet.view_container, justifyContent: "center", }}
         preset="scroll"
-        backgroundColor={color.transparent}
-        unsafe
+
       >
 
         <Text preset="header" text="Almost done ..." style={[DEFAULT_MARGIN, { color: color.primary, }]} />
@@ -61,6 +57,7 @@ export const UserDetailsScreen: NavigationSwitchScreenComponent<UserDetailsScree
         <Button
           preset="raised"
           text="Continue"
+          containerStyle={{ marginHorizontal: spacing.large }}
           onPress={validateAndProceed}
         />
       </Screen>

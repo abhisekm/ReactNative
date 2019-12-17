@@ -27,7 +27,7 @@ export const ResolveAuthScreen = (props) => {
 
   return (
     <View style={styleSheet.view_full}>
-      <Screen style={styleSheet.view_container} preset="scroll" backgroundColor={color.transparent} unsafe >
+      <Screen style={styleSheet.view_container} preset="scroll" unsafe >
       </Screen>
       <View style={imageContainer} >
         <Image

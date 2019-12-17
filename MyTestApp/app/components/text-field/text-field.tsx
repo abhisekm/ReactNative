@@ -61,9 +61,9 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
         placeholderTextColor={color.palette.grey8}
         underlineColorAndroid={color.transparent}
         label={labelElement}
-        {...rest}
         style={inputStyle}
         ref={forwardedRef}
+        {...rest}
       />
     </View>
   )

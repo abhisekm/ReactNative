@@ -21,7 +21,7 @@ export const VerifyPhoneScreen: NavigationStackScreenComponent<VerifyPhoneScreen
 
   return (
     <View style={styleSheet.view_full}>
-      <Screen style={styleSheet.view_container} preset="scroll" backgroundColor={color.transparent} unsafe >
+      <Screen style={styleSheet.view_container} preset="scroll" unsafe >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
           <Text preset="header" tx="verifyPhone.header" />
 

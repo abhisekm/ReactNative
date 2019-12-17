@@ -22,40 +22,38 @@ export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props
 
   return (
     <View style={styleSheet.view_full}>
-      <Screen style={styleSheet.view_container} preset="scroll" backgroundColor={color.transparent} unsafe >
+      <Screen style={styleSheet.view_container} preset="scroll" >
         <Text preset="header" tx="homeScreen.header" />
 
         <View style={{ height: 50 }} />
 
-        <SafeAreaView>
-          <View style={{ padding: spacing.medium }}>
 
-            <SocialIcon
-              title="Continue With Facebook"
-              button
-              type="facebook"
-              onPress={signInFacebook}
-            />
+        <View style={{ padding: spacing.medium }}>
 
-            <SocialIcon
-              title="Continue With Google"
-              light
-              button
-              type="google"
-              onPress={signInGoogle}
-            />
+          <SocialIcon
+            title="Continue With Facebook"
+            button
+            type="facebook"
+            onPress={signInFacebook}
+          />
 
-            <Button
-              preset="social"
-              tx="homeScreen.emailSignIn"
-              onPress={() => navigate("Login")}
-              containerStyle={{ backgroundColor: color.palette.orangeDarker }}
-              icon={<Icon type="feather" name="mail" color={color.palette.white} />}
-            />
+          <SocialIcon
+            title="Continue With Google"
+            light
+            button
+            type="google"
+            onPress={signInGoogle}
+          />
 
-            {errorMessage ? <Text text={errorMessage} /> : null}
-          </View>
-        </SafeAreaView>
+          <Button
+            preset="social"
+            tx="homeScreen.emailSignIn"
+            onPress={() => navigate("Login")}
+            icon={<Icon type="feather" name="mail" color={color.palette.white} />}
+          />
+
+          {errorMessage ? <Text text={errorMessage} /> : null}
+        </View>
       </Screen>
       {showLoading() && <Loading />}
     </View>
