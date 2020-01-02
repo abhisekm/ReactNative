@@ -4,6 +4,7 @@ import { ApiConfig, DEFAULT_API_CONFIG, INSTA_API_CONFIG, INSTA_GRAPH_API_CONFIG
 import { IG_APP_ID, IG_APP_SECRET, IG_REDIRECT_URL } from "react-native-dotenv"
 import * as Types from "./api.types"
 import { InstagramPost } from "../../models/instagram-post"
+import { Campaign } from "../../models/campaign"
 
 /**
  * Manages all requests to the API.
@@ -169,9 +170,9 @@ export class Api {
         user_id: response.data.user_id,
         access_token: response.data.access_token,
       }
-      return { kind: "ok", token: resultToken }
+      return { kind: "ok", token: resultToken };
     } catch {
-      return { kind: "bad-data" }
+      return { kind: "bad-data" };
     }
   }
 
@@ -200,9 +201,9 @@ export class Api {
         id: response.data.id,
         username: response.data.username,
       }
-      return { kind: "ok", user: result }
+      return { kind: "ok", user: result };
     } catch {
-      return { kind: "bad-data" }
+      return { kind: "bad-data" };
     }
   }
 
@@ -239,13 +240,13 @@ export class Api {
 
     // transform the data into the format we are expecting
     try {
-      const rawPosts = response.data.data
-      const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
-      const hasMore: boolean = response.data.paging && response.data.paging.next && true
-      const cursor = hasMore ? response.data.paging.cursors.after : ''
-      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
+      const rawPosts = response.data.data;
+      const resultPosts: InstagramPost[] = rawPosts.map(convertPost);
+      const hasMore: boolean = response.data.paging && response.data.paging.next && true;
+      const cursor = hasMore ? response.data.paging.cursors.after : '';
+      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor };
     } catch {
-      return { kind: "bad-data" }
+      return { kind: "bad-data" };
     }
   }
 
@@ -267,7 +268,7 @@ export class Api {
     // the typical ways to die when calling an api
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
-      if (problem) return problem
+      if (problem) return problem;
     }
 
     const convertPost = raw => {
@@ -283,13 +284,13 @@ export class Api {
 
     // transform the data into the format we are expecting
     try {
-      const rawPosts = response.data.data
-      const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
-      const hasMore: boolean = response.data.paging && response.data.paging.next && true
-      const cursor = hasMore ? response.data.paging.cursors.after : ''
-      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
+      const rawPosts = response.data.data;
+      const resultPosts: InstagramPost[] = rawPosts.map(convertPost);
+      const hasMore: boolean = response.data.paging && response.data.paging.next && true;
+      const cursor = hasMore ? response.data.paging.cursors.after : '';
+      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor };
     } catch {
-      return { kind: "bad-data" }
+      return { kind: "bad-data" };
     }
   }
 
@@ -326,14 +327,58 @@ export class Api {
 
     // transform the data into the format we are expecting
     try {
-      const rawPosts = response.data.result
-      const resultPosts: InstagramPost[] = rawPosts.map(convertPost)
-      const hasMore: boolean = response.data.cursor && response.data.cursor > 0
-      const cursor: number = hasMore ? response.data.cursor : null
+      const rawPosts = response.data.result;
+      const resultPosts: InstagramPost[] = rawPosts.map(convertPost);
+      const hasMore: boolean = response.data.cursor && response.data.cursor > 0;
+      const cursor: number = hasMore ? response.data.cursor : null;
 
-      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor }
+      return { kind: "ok", posts: resultPosts, hasMore: hasMore, nextCursor: cursor };
     } catch (error) {
-      return { kind: "bad-data" }
+      return { kind: "bad-data" };
+    }
+  }
+
+  /**
+ * Gets insta post for userId
+ */
+  async getCampaignListing(): Promise<Types.GetCampaignListingResult> {
+    // create form data
+    const data = {}
+
+    // make the api call
+    const response: ApiResponse<any> = await this.immersifyapisauce.post('/getlivecampaigns', data)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem;
+    }
+
+    const convertPost = (raw): Campaign => {
+      return {
+        id: raw.campaign_id,
+        campaignImage: raw.campaign_image,
+        brandImage: raw.brand_image,
+        brandName: raw.brand_name,
+        title: raw.campaign_title,
+        link: raw.link,
+        description: raw.campaign_description
+      }
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const status: boolean = response.data.status;
+      if (!status) {
+        return { kind: "ok", campaigns: null, errorMessage: response.data.errorMessage };
+      }
+
+      const rawCampaign = response.data.result;
+      const resultCampaign: Campaign[] = rawCampaign.map(convertPost);
+
+      return { kind: "ok", campaigns: resultCampaign };
+    } catch (error) {
+      return { kind: "bad-data" };
     }
   }
 }

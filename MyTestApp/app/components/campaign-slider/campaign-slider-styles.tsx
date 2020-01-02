@@ -39,7 +39,7 @@ export default StyleSheet.create({
     borderRadius: entryBorderRadius
   },
   imageContainer: {
-    flex: 7,
+    flex: 1,
     marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
     backgroundColor: 'white',
     borderTopLeftRadius: entryBorderRadius,
@@ -57,9 +57,9 @@ export default StyleSheet.create({
   },
   imageLogo: {
     position: 'absolute',
-    height: 75,
-    width: 75,
-    top: -40,
+    height: 50,
+    width: 50,
+    top: -20,
     start: 10,
     backgroundColor: color.palette.white,
     resizeMode: 'contain',
@@ -83,7 +83,6 @@ export default StyleSheet.create({
     backgroundColor: color.palette.black
   },
   textContainer: {
-    flex: 3,
     justifyContent: 'center',
     paddingTop: 20 - entryBorderRadius,
     paddingBottom: 20,
@@ -106,8 +105,8 @@ export default StyleSheet.create({
   },
   brand: {
     color: color.text,
-    fontSize: 16,
-    paddingStart: 80,
+    fontSize: 14,
+    paddingStart: 50,
     marginBottom: spacing.medium,
     fontWeight: 'bold',
     letterSpacing: 0.5

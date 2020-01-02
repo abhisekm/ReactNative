@@ -79,39 +79,28 @@ export function CampaignSlider(props: CampaignSliderProps) {
   }, [illustration, parallaxProps, even, parallax]);
 
   return (
-    <View
-      style={styles.slideInnerContainer}
-    >
-      <View style={styles.shadow} />
-      <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
-        {image}
-        <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
-      </View>
-      <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
-        <FastImage
-          source={{ uri: logo }}
-          style={[styles.imageLogo, even ? styles.imageLogoEven : {}]}
-        />
-        {uppercaseBrand}
-        {uppercaseTitle}
-        <Text
-          style={[styles.subtitle, even ? styles.subtitleEven : {}]}
-          numberOfLines={2}
-        >
-          {subtitle}
-        </Text>
-        <View style={{ flex: 1, justifyContent: "flex-end" }} >
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }} >
-            <RNEButton
-              type="outline"
-              title="Apply"
-              buttonStyle={[styles.buttonMask, even ? styles.buttonMaskEven : {}]}
-              titleStyle={[styles.buttonText, even ? styles.buttonTextEven : {}]}
-              onPress={() => { alert(`You've clicked '${title}'`); }}
-            />
-          </View>
+    <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert(`You've clicked '${title}'`); }} >
+      <View style={styles.slideInnerContainer}>
+        <View style={styles.shadow} />
+        <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
+          {image}
+          <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
+        </View>
+        <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
+          <FastImage
+            source={{ uri: logo }}
+            style={[styles.imageLogo, even ? styles.imageLogoEven : {}]}
+          />
+          {uppercaseBrand}
+          {uppercaseTitle}
+          <Text
+            style={[styles.subtitle, even ? styles.subtitleEven : {}]}
+            numberOfLines={2}
+          >
+            {subtitle}
+          </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
