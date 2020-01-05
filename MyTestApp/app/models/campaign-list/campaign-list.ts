@@ -18,10 +18,6 @@ export const CampaignListModel = types
     get isLoading() {
       return self.loading;
     },
-
-    get loadPosts() {
-      return self.campaigns;
-    }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({
     clear() {
@@ -29,27 +25,46 @@ export const CampaignListModel = types
       self.loading = false;
       self.errorMessage = null;
     },
+
+    getCampaigns() {
+      return self.campaigns.slice();
+    }
   }))
   .actions(self => ({
-    fetchFeaturedPosts: flow(function* () {
+    fetchCampaigns: flow(function* () {
       self.clear();
       self.loading = true;
 
-      const result: { kind: string, campaign: Campaign[], temporary: boolean, errorMessage: string }
+      const result: { kind: string, campaigns: Campaign[], temporary: boolean, errorMessage: string }
         = yield self.environment.api.getCampaignListing();
 
-      const { kind, campaign, errorMessage } = result;
+      const { kind, campaigns, errorMessage } = result;
 
       if (kind !== "ok") {
         console.log(kind, errorMessage);
+        self.loading = false;
         self.errorMessage = errorMessage ? errorMessage : "Unknown Error. Try again later";
         return;
       }
 
       const images: FastImageSource[] = []
 
-      if (campaign) {
-        campaign.forEach(_campaign => {
+      console.log("campaign : ", campaigns);
+
+      let _id = 1;
+
+      if (campaigns) {
+        campaigns.forEach((_campaign, index) => {
+          _campaign.id = _campaign.id + (1 + index);
+          self.campaigns.push(_campaign);
+
+          _campaign.id = _campaign.id + (1 + index) * 10;
+          self.campaigns.push(_campaign);
+
+          _campaign.id = _campaign.id + (1 + index) * 10;
+          self.campaigns.push(_campaign);
+
+          _campaign.id = _campaign.id + (1 + index) * 10;
           self.campaigns.push(_campaign);
 
           if (_campaign.campaignImage)

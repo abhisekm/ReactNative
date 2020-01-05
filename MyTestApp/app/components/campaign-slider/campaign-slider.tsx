@@ -4,8 +4,7 @@ import { Text } from "../text"
 import styles from "./campaign-slider-styles"
 import FastImage from "react-native-fast-image"
 import { ParallaxImage } from 'react-native-snap-carousel'
-import { Button as RNEButton } from "react-native-elements"
-import { color, spacing } from "../../theme"
+import { Campaign } from "../../models/campaign"
 
 export interface CampaignSliderProps {
   /**
@@ -24,7 +23,7 @@ export interface CampaignSliderProps {
    */
   style?: ViewStyle
 
-  data: { illustration: string, title: string, subtitle: string, brand: string, logo: string }
+  data: Campaign
 
   parallax?: boolean
 
@@ -38,7 +37,13 @@ export interface CampaignSliderProps {
  */
 export function CampaignSlider(props: CampaignSliderProps) {
   // grab the props
-  const { even, style, data: { illustration, title, subtitle, brand, logo }, parallax, parallaxProps, ...rest } = props
+  const {
+    even,
+    style,
+    data: { id, title, brandImage, brandName, campaignImage, link, description },
+    parallax,
+    parallaxProps
+  } = props
 
   const uppercaseTitle = React.useMemo(() => title ? (
     <Text
@@ -49,20 +54,27 @@ export function CampaignSlider(props: CampaignSliderProps) {
     </Text>
   ) : false, [title]);
 
-  const uppercaseBrand = React.useMemo(() => brand ? (
+  const uppercaseBrand = React.useMemo(() => (brandName + title) ? (
     <Text
       style={[styles.brand, even ? styles.brandEven : {}]}
-      numberOfLines={1}
     >
-      {brand.toUpperCase()}
+      {brandName.toUpperCase()} - {title.toUpperCase()}
     </Text>
-  ) : false, [brand]);
+  ) : false, [brandName, title]);
+
+  const uppercaseHeader = React.useMemo(() => title ? (
+    <Text
+      style={[styles.brand, even ? styles.brandEven : {}]}
+    >
+      {title.toUpperCase()}
+    </Text>
+  ) : false, [title]);
 
 
   const image = React.useMemo(() => {
     return parallax ? (
       <ParallaxImage
-        source={{ uri: illustration }}
+        source={{ uri: campaignImage }}
         containerStyle={[styles.imageContainer, even ? styles.imageContainerEven : {}]}
         style={styles.image}
         parallaxFactor={0.35}
@@ -72,14 +84,14 @@ export function CampaignSlider(props: CampaignSliderProps) {
       />
     ) : (
         <FastImage
-          source={{ uri: illustration }}
+          source={{ uri: campaignImage }}
           style={styles.image}
         />
       );
-  }, [illustration, parallaxProps, even, parallax]);
+  }, [campaignImage, parallaxProps, even, parallax]);
 
   return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert(`You've clicked '${title}'`); }} >
+    <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert(`You've clicked '${title}' redirected to '${link}'`); }} >
       <View style={styles.slideInnerContainer}>
         <View style={styles.shadow} />
         <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
@@ -88,16 +100,14 @@ export function CampaignSlider(props: CampaignSliderProps) {
         </View>
         <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
           <FastImage
-            source={{ uri: logo }}
+            source={{ uri: brandImage }}
             style={[styles.imageLogo, even ? styles.imageLogoEven : {}]}
           />
-          {uppercaseBrand}
-          {uppercaseTitle}
+          {uppercaseHeader}
           <Text
             style={[styles.subtitle, even ? styles.subtitleEven : {}]}
-            numberOfLines={2}
           >
-            {subtitle}
+            {description}
           </Text>
         </View>
       </View>

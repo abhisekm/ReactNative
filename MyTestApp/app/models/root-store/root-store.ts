@@ -4,6 +4,7 @@ import { AuthStoreModel } from "../../models/auth-store"
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { CacheHeightModel } from "../cache-height"
 import { UserDetailsModel } from "../user-details"
+import { CampaignListModel } from "../campaign-list"
 
 /**
  * A RootStore model.
@@ -17,6 +18,7 @@ export const RootStoreModel =
       immersifyStore: types.optional(ImmersifyStoreModel, {}),
       heightCache: types.optional(CacheHeightModel, {}),
       userInfoStore: types.optional(UserDetailsModel, {}),
+      campaignStore: types.optional(CampaignListModel, {}),
     })
 
 /**

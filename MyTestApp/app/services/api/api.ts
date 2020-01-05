@@ -373,7 +373,7 @@ export class Api {
         return { kind: "ok", campaigns: null, errorMessage: response.data.errorMessage };
       }
 
-      const rawCampaign = response.data.result;
+      const rawCampaign = response.data.campaigns;
       const resultCampaign: Campaign[] = rawCampaign.map(convertPost);
 
       return { kind: "ok", campaigns: resultCampaign };

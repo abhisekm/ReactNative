@@ -13,16 +13,22 @@ import { ENTRIES1 } from "./entries-dummy"
 import SafeAreaView from "react-native-safe-area-view"
 import Toast, { DURATION } from "react-native-easy-toast"
 import { Button } from "../../components/button"
+import { Loading } from "../../components/loading"
 
 export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 }
 
 
 export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreenProps> = observer(() => {
-  const { } = useStores();
+  const { campaignStore: { getCampaigns, isLoading, fetchCampaigns } } = useStores();
   const toastRef = React.useRef(null);
   const [sliderIndex, setSliderIndex] = React.useState(0)
   const [sliderIndex2, setSliderIndex2] = React.useState(0)
+
+  React.useEffect(() => {
+    fetchCampaigns()
+  }, []);
+
 
   const _renderItemWithParallax = ({ item, index }, parallaxProps) => {
     return (
@@ -59,7 +65,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
 
         <Carousel
           // ref={c => this._slider1Ref = c}
-          data={ENTRIES1}
+          data={getCampaigns()}
           firstItem={sliderIndex2}
           renderItem={_renderItemWithParallax}
           sliderWidth={sliderWidth}
@@ -75,6 +81,9 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           onSnapToItem={(index) => setSliderIndex2(index)}
         />
         <Button preset="raised" text="Show Toast" onPress={() => toastRef.current.show("sample toast")} />
+
+        {isLoading && <Loading />}
+
         <Toast ref={toastRef} />
       </SafeAreaView>
     </View>

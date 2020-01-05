@@ -59,7 +59,7 @@ export default StyleSheet.create({
     position: 'absolute',
     height: 50,
     width: 50,
-    top: -20,
+    top: -30,
     start: 10,
     backgroundColor: color.palette.white,
     resizeMode: 'contain',
@@ -107,6 +107,7 @@ export default StyleSheet.create({
     color: color.text,
     fontSize: 14,
     paddingStart: 50,
+    marginTop: -15,
     marginBottom: spacing.medium,
     fontWeight: 'bold',
     letterSpacing: 0.5
