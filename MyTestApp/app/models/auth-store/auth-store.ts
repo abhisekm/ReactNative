@@ -65,7 +65,7 @@ export const AuthStoreModel = types
         else if (self.showQuestionnaire)
           navigate("Questionnaire")
         else
-          navigate("dashboardFlow")
+          navigate("campaignFlow")
       } else {
         navigate("loginFlow")
       }

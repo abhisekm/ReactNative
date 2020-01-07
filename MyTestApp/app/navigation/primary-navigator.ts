@@ -14,6 +14,27 @@ import { AccountScreen } from "../screens/account-screen"
 import { FeaturePostsScreen } from "../screens/feature-posts-screen"
 import { UserDetailsScreen } from "../screens/user-details-screen"
 import { WalkthroughScreen } from "../screens/walkthrough-screen"
+import { CampaignDetailsScreen } from "../screens/campaign-details-screen"
+
+const DashboardFlowStack = createBottomTabNavigator({
+  Dashboard: { screen: DashboardScreen },
+  Feature: { screen: FeaturePostsScreen },
+  Account: { screen: AccountScreen },
+});
+
+DashboardFlowStack.navigationOptions = {
+  header: null
+}
+
+const DefaultNavOptions = {
+  headerStyle: {
+    backgroundColor: color.palette.grey9,
+  },
+  headerTintColor: color.palette.white,
+  headerTitleContainerStyle: {
+    left: 0
+  }
+}
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
@@ -27,21 +48,15 @@ export const PrimaryNavigator = createSwitchNavigator(
       VerifyPhone: { screen: VerifyPhoneScreen }
     }, {
       headerMode: 'screen',
-      defaultNavigationOptions: {
-        headerStyle: {
-          backgroundColor: color.palette.grey9,
-        },
-        headerTintColor: color.palette.white,
-        headerTitleContainerStyle: {
-          left: 0
-        }
-      }
+      defaultNavigationOptions: DefaultNavOptions
     }),
     UserDetails: { screen: UserDetailsScreen },
-    dashboardFlow: createBottomTabNavigator({
-      Dashboard: { screen: DashboardScreen },
-      Feature: { screen: FeaturePostsScreen },
-      Account: { screen: AccountScreen },
+    campaignFlow: createStackNavigator({
+      dashboardFlow: DashboardFlowStack,
+      CampaignListing: { screen: CampaignDetailsScreen },
+    }, {
+      headerMode: 'screen',
+      defaultNavigationOptions: DefaultNavOptions
     }),
     Questionnaire: { screen: QuestionnaireScreen },
   },

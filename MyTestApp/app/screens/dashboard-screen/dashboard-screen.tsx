@@ -45,7 +45,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
     <View style={styleSheet.view_full}>
       <Wallpaper />
       <SafeAreaView style={{ flex: 1 }} >
-        <Carousel
+        {/* <Carousel
           // ref={c => this._slider1Ref = c}
           data={ENTRIES1}
           firstItem={sliderIndex}
@@ -61,7 +61,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           loop={true}
           loopClonesPerSide={2}
           onSnapToItem={(index) => setSliderIndex(index)}
-        />
+        /> */}
 
         <Carousel
           // ref={c => this._slider1Ref = c}
@@ -80,11 +80,8 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           loopClonesPerSide={2}
           onSnapToItem={(index) => setSliderIndex2(index)}
         />
-        <Button preset="raised" text="Show Toast" onPress={() => toastRef.current.show("sample toast")} />
 
         {isLoading && <Loading />}
-
-        <Toast ref={toastRef} />
       </SafeAreaView>
     </View>
   )

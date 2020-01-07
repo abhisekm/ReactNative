@@ -5,6 +5,7 @@ import styles from "./campaign-slider-styles"
 import FastImage from "react-native-fast-image"
 import { ParallaxImage } from 'react-native-snap-carousel'
 import { Campaign } from "../../models/campaign"
+import { navigate } from "../../navigation"
 
 export interface CampaignSliderProps {
   /**
@@ -54,21 +55,21 @@ export function CampaignSlider(props: CampaignSliderProps) {
     </Text>
   ) : false, [title]);
 
-  const uppercaseBrand = React.useMemo(() => (brandName + title) ? (
+  const uppercaseBrand = React.useMemo(() => brandName ? (
     <Text
       style={[styles.brand, even ? styles.brandEven : {}]}
     >
-      {brandName.toUpperCase()} - {title.toUpperCase()}
+      {brandName.toUpperCase()}
     </Text>
-  ) : false, [brandName, title]);
+  ) : false, [brandName]);
 
   const uppercaseHeader = React.useMemo(() => title ? (
     <Text
       style={[styles.brand, even ? styles.brandEven : {}]}
     >
-      {title.toUpperCase()}
+      {(brandName ? brandName.toUpperCase() + " - " : "") + title.toUpperCase()}
     </Text>
-  ) : false, [title]);
+  ) : false, [title, brandName]);
 
 
   const image = React.useMemo(() => {
@@ -91,7 +92,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
   }, [campaignImage, parallaxProps, even, parallax]);
 
   return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert(`You've clicked '${title}' redirected to '${link}'`); }} >
+    <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate('CampaignListing', { campaignId: id, campaignLink: link })} >
       <View style={styles.slideInnerContainer}>
         <View style={styles.shadow} />
         <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
@@ -103,7 +104,9 @@ export function CampaignSlider(props: CampaignSliderProps) {
             source={{ uri: brandImage }}
             style={[styles.imageLogo, even ? styles.imageLogoEven : {}]}
           />
-          {uppercaseHeader}
+          <View style={{ flexDirection: 'row' }} >
+            {uppercaseHeader}
+          </View>
           <Text
             style={[styles.subtitle, even ? styles.subtitleEven : {}]}
           >
