@@ -1,6 +1,7 @@
 import { GeneralApiProblem } from "./api-problem"
 import { InstagramPost } from "../../models/instagram-post"
 import { Campaign } from "../../models/campaign"
+import { CampaignDetail } from "../../models/campaign-detail"
 
 export interface User {
   id: number
@@ -29,3 +30,6 @@ export type GetIGPostsResult =
 
 export type GetCampaignListingResult =
   { kind: "ok"; campaigns: Campaign[]; errorMessage?: string } | GeneralApiProblem
+
+export type GetOngoingCampaignDetailsResult =
+  { kind: "ok"; campaignDetail: CampaignDetail; errorMessage?: string } | GeneralApiProblem

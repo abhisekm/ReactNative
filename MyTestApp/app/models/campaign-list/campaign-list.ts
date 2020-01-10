@@ -2,6 +2,8 @@ import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 import { withEnvironment } from "../extensions";
 import { CampaignModel, Campaign } from "../campaign/campaign";
 import FastImage, { FastImageSource } from "react-native-fast-image";
+import { CampaignDetailModel, CampaignDetail } from "../campaign-detail";
+import omit from "ramda/es/omit";
 
 /**
  * Model description here for TypeScript hints.
@@ -10,6 +12,7 @@ export const CampaignListModel = types
   .model("CampaignList")
   .props({
     campaigns: types.array(CampaignModel),
+    campaignDetail: types.maybeNull(CampaignDetailModel),
     errorMessage: types.maybeNull(types.string),
     loading: false,
   })
@@ -28,6 +31,10 @@ export const CampaignListModel = types
 
     getCampaigns() {
       return self.campaigns.slice();
+    },
+
+    getCampaignDetail() {
+      return self.campaignDetail;
     }
   }))
   .actions(self => ({
@@ -48,8 +55,6 @@ export const CampaignListModel = types
       }
 
       const images: FastImageSource[] = []
-
-      console.log("campaign : ", campaigns);
 
       let _id = 1;
 
@@ -79,8 +84,38 @@ export const CampaignListModel = types
 
       self.loading = false;
     }),
-  })) // eslint-disable-line @typescript-eslint/no-unused-vars
 
+    fetchCampaignDetails: flow(function* (campaignId: string) {
+      self.clear();
+      self.loading = true;
+
+      const result: { kind: string, campaignDetail: CampaignDetail, temporary: boolean, errorMessage: string }
+        = yield self.environment.api.getCampaignDetails(campaignId);
+
+      const { kind, campaignDetail, errorMessage } = result;
+
+      if (kind !== "ok") {
+        console.log(kind, errorMessage);
+        self.loading = false;
+        self.errorMessage = errorMessage ? errorMessage : "Unknown Error. Try again later";
+        return;
+      }
+
+      const images: FastImageSource[] = []
+
+      if (campaignDetail) {
+        images.push({ uri: campaignDetail.brandImage });
+        images.push({ uri: campaignDetail.campaignImage });
+
+        FastImage.preload(images);
+
+        self.campaignDetail = campaignDetail;
+      }
+
+      self.loading = false;
+    }),
+  })) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .postProcessSnapshot(omit(["campaignDetail", "errorMessage", "loading"]))
 
 /**
 * Un-comment the following to omit model attributes from your snapshots (and from async storage).

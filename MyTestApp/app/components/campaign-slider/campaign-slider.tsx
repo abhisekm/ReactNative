@@ -29,6 +29,8 @@ export interface CampaignSliderProps {
   parallax?: boolean
 
   parallaxProps?: Object
+
+  ongoing?: boolean
 }
 
 /**
@@ -43,7 +45,8 @@ export function CampaignSlider(props: CampaignSliderProps) {
     style,
     data: { id, title, brandImage, brandName, campaignImage, link, description },
     parallax,
-    parallaxProps
+    parallaxProps,
+    ongoing
   } = props
 
   const uppercaseTitle = React.useMemo(() => title ? (
@@ -91,8 +94,10 @@ export function CampaignSlider(props: CampaignSliderProps) {
       );
   }, [campaignImage, parallaxProps, even, parallax]);
 
+  const route = ongoing ? 'AppliedCampaign' : 'CampaignDetails';
+
   return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate('CampaignListing', { campaignId: id, campaignLink: link })} >
+    <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate(route, { campaignId: id, campaignLink: link })} >
       <View style={styles.slideInnerContainer}>
         <View style={styles.shadow} />
         <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>

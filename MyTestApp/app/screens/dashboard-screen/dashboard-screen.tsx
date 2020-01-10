@@ -21,7 +21,6 @@ export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 
 export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreenProps> = observer(() => {
   const { campaignStore: { getCampaigns, isLoading, fetchCampaigns } } = useStores();
-  const toastRef = React.useRef(null);
   const [sliderIndex, setSliderIndex] = React.useState(0)
   const [sliderIndex2, setSliderIndex2] = React.useState(0)
 
@@ -41,15 +40,27 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
     );
   }
 
+  const _renderItemWithParallax2 = ({ item, index }, parallaxProps) => {
+    return (
+      <CampaignSlider
+        data={item}
+        even={(index + 1) % 2 === 0}
+        parallax={true}
+        parallaxProps={parallaxProps}
+        ongoing={true}
+      />
+    );
+  }
+
   return (
     <View style={styleSheet.view_full}>
       <Wallpaper />
       <SafeAreaView style={{ flex: 1 }} >
-        {/* <Carousel
+        <Carousel
           // ref={c => this._slider1Ref = c}
           data={ENTRIES1}
           firstItem={sliderIndex}
-          renderItem={_renderItemWithParallax}
+          renderItem={_renderItemWithParallax2}
           sliderWidth={sliderWidth}
           itemWidth={itemWidth}
           hasParallaxImages={true}
@@ -61,7 +72,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           loop={true}
           loopClonesPerSide={2}
           onSnapToItem={(index) => setSliderIndex(index)}
-        /> */}
+        />
 
         <Carousel
           // ref={c => this._slider1Ref = c}

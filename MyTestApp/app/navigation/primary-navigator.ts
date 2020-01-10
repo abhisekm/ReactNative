@@ -15,6 +15,7 @@ import { FeaturePostsScreen } from "../screens/feature-posts-screen"
 import { UserDetailsScreen } from "../screens/user-details-screen"
 import { WalkthroughScreen } from "../screens/walkthrough-screen"
 import { CampaignDetailsScreen } from "../screens/campaign-details-screen"
+import { AppliedCampaignScreen } from "../screens/applied-campaign-screen"
 
 const DashboardFlowStack = createBottomTabNavigator({
   Dashboard: { screen: DashboardScreen },
@@ -53,7 +54,8 @@ export const PrimaryNavigator = createSwitchNavigator(
     UserDetails: { screen: UserDetailsScreen },
     campaignFlow: createStackNavigator({
       dashboardFlow: DashboardFlowStack,
-      CampaignListing: { screen: CampaignDetailsScreen },
+      CampaignDetails: { screen: CampaignDetailsScreen },
+      AppliedCampaign: { screen: AppliedCampaignScreen },
     }, {
       headerMode: 'screen',
       defaultNavigationOptions: DefaultNavOptions

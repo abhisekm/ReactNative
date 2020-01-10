@@ -5,6 +5,7 @@ import { IG_APP_ID, IG_APP_SECRET, IG_REDIRECT_URL } from "react-native-dotenv"
 import * as Types from "./api.types"
 import { InstagramPost } from "../../models/instagram-post"
 import { Campaign } from "../../models/campaign"
+import { CampaignDetail } from "../../models/campaign-detail"
 
 /**
  * Manages all requests to the API.
@@ -339,8 +340,59 @@ export class Api {
   }
 
   /**
- * Gets insta post for userId
- */
+  * Gets campaign details for a campaign id
+  */
+  async getCampaignDetails(campaignId: string): Promise<Types.GetOngoingCampaignDetailsResult> {
+    // create form data
+    const data = { campaign_id: campaignId }
+
+    // make the api call
+    const response: ApiResponse<any> = await this.immersifyapisauce.post('/getinfluencercampaign', data)
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem;
+    }
+
+    const convertPost = (raw): CampaignDetail => {
+      return {
+        id: raw.campaign_id,
+        campaignImage: raw.campaign_image,
+        brandImage: raw.brand_image,
+        brandName: raw.brand_name,
+        title: raw.campaign_title,
+        link: raw.link,
+        description: raw.campaign_description,
+        campaignStatus: raw.campaign_status,
+        campaignStatusText: raw.campaign_status_text,
+        deliverableDeadline: raw.deliverable_deadline,
+        deliverableLink: raw.deliverable_link,
+        deliverableStatus: raw.deliverable_status,
+        quote: raw.quote,
+      }
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      const status: boolean = response.data.status;
+      if (!status) {
+        return { kind: "ok", campaignDetail: null, errorMessage: response.data.errorMessage };
+      }
+
+      const rawCampaign = response.data.campaign;
+      const details: CampaignDetail = convertPost(rawCampaign);
+
+      return { kind: "ok", campaignDetail: details };
+    } catch (error) {
+      console.log(error)
+      return { kind: "bad-data" };
+    }
+  }
+
+  /**
+  * Gets live campaign listings
+  */
   async getCampaignListing(): Promise<Types.GetCampaignListingResult> {
     // create form data
     const data = {}
