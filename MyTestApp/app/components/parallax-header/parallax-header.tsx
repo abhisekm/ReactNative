@@ -74,7 +74,7 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
 
   const avatarTranslateY = animatedValue.interpolate({
     inputRange: [0, parallaxHeight - headerHeight],
-    outputRange: [0, headerHeight / 2],
+    outputRange: [0, headerHeight],
     extrapolateRight: 'clamp'
   });
 
@@ -86,7 +86,7 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
 
   const textTranslateX = animatedValue.interpolate({
     inputRange: [0, headerHeight / 4],
-    outputRange: [0, 0],
+    outputRange: [0, -10],
     extrapolateRight: 'clamp'
   });
 
@@ -151,8 +151,6 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
                 ]
               }
             ]}
-
-            numberOfLines={1}
           >
             {/* <Text
               preset="header"
@@ -167,7 +165,7 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
                 borderColor: 'black',
                 flexWrap: "nowrap"
               }} /> */}
-            {"who lets the dogs out lorem ipsum".toUpperCase()}
+            {text.toUpperCase()}
           </Animated.Text>
         </View>
       </Animated.View>
@@ -205,11 +203,13 @@ const styles = StyleSheet.create({
   name: {
     color: '#fff',
     fontSize: 24,
-    marginLeft: 20,
     fontWeight: 'bold',
     textAlign: 'center',
     marginHorizontal: spacing.small,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    maxHeight: 80,
+    minHeight: 80,
+    textAlignVertical: 'center'
   },
   avatarContainer: {
     width: 100,

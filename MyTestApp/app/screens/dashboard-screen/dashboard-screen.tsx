@@ -1,6 +1,6 @@
 import * as React from "react"
 import { observer } from "mobx-react"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, Image } from "react-native"
 import { useStores } from "../../models/root-store"
 import { Wallpaper } from "../../components/wallpaper"
 import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
@@ -10,35 +10,26 @@ import { CampaignSlider } from "../../components/campaign-slider"
 import styleSheet from "../../theme/styleSheet"
 import { itemWidth, sliderWidth } from "../../components/campaign-slider/campaign-slider-styles"
 import { ENTRIES1 } from "./entries-dummy"
-import SafeAreaView from "react-native-safe-area-view"
-import Toast, { DURATION } from "react-native-easy-toast"
-import { Button } from "../../components/button"
 import { Loading } from "../../components/loading"
+import { Screen } from "../../components/screen"
+import { Text } from "../../components/text"
+import { spacing } from "../../theme"
 
 export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 }
 
 
 export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreenProps> = observer(() => {
-  const { campaignStore: { getCampaigns, isLoading, fetchCampaigns } } = useStores();
+  const {
+    userInfoStore: { name },
+    campaignStore: { getCampaigns, isLoading, fetchCampaigns }
+  } = useStores();
   const [sliderIndex, setSliderIndex] = React.useState(0)
-  const [sliderIndex2, setSliderIndex2] = React.useState(0)
 
   React.useEffect(() => {
     fetchCampaigns()
   }, []);
 
-
-  const _renderItemWithParallax = ({ item, index }, parallaxProps) => {
-    return (
-      <CampaignSlider
-        data={item}
-        even={(index + 1) % 2 === 0}
-        parallax={true}
-        parallaxProps={parallaxProps}
-      />
-    );
-  }
 
   const _renderItemWithParallax2 = ({ item, index }, parallaxProps) => {
     return (
@@ -55,10 +46,31 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
   return (
     <View style={styleSheet.view_full}>
       <Wallpaper />
-      <SafeAreaView style={{ flex: 1 }} >
+      <Screen preset="fixed" unsafe statusBar="light-content" style={{ flex: 1 }} >
+
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }} >
+          <Image
+            source={require('../../components/header/logo.png')}
+            style={{ height: 100, width: 200 }}
+            resizeMode='contain'
+          />
+        </View>
+
+        <Text
+          preset="header"
+          style={{ margin: spacing.medium }}
+          text={`Welcome back \n${name}`}
+        />
+
+        <Text
+          preset="question"
+          style={{ margin: spacing.medium }}
+          text="This is your Dashboard, all your ongoing campaigns will show up here. Lorem Ipsum is simply dummy text of the printing and typesett an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centur was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        />
+
         <Carousel
           // ref={c => this._slider1Ref = c}
-          data={ENTRIES1}
+          data={getCampaigns()}
           firstItem={sliderIndex}
           renderItem={_renderItemWithParallax2}
           sliderWidth={sliderWidth}
@@ -74,33 +86,15 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
           onSnapToItem={(index) => setSliderIndex(index)}
         />
 
-        <Carousel
-          // ref={c => this._slider1Ref = c}
-          data={getCampaigns()}
-          firstItem={sliderIndex2}
-          renderItem={_renderItemWithParallax}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
-          hasParallaxImages={true}
-          inactiveSlideScale={0.94}
-          inactiveSlideOpacity={0.7}
-          // inactiveSlideShift={20}
-          containerCustomStyle={styles.slider}
-          contentContainerCustomStyle={styles.sliderContentContainer}
-          loop={true}
-          loopClonesPerSide={2}
-          onSnapToItem={(index) => setSliderIndex2(index)}
-        />
-
         {isLoading && <Loading />}
-      </SafeAreaView>
+      </Screen>
     </View>
   )
 })
 
 DashboardScreen.navigationOptions = {
   title: 'Dashboard',
-  tabBarIcon: <Icon name='home' />
+  tabBarIcon: ({ tintColor }) => <Icon name='home' color={tintColor} />
 }
 
 const styles = StyleSheet.create({

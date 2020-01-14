@@ -74,5 +74,5 @@ export const AccountScreen: NavigationBottomTabScreenComponent<AccountScreenProp
 
 AccountScreen.navigationOptions = {
   title: 'Profile',
-  tabBarIcon: <Icon name='settings' />
+  tabBarIcon: ({ tintColor }) => <Icon name='settings' color={tintColor} />
 }

@@ -94,7 +94,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
       );
   }, [campaignImage, parallaxProps, even, parallax]);
 
-  const route = ongoing ? 'AppliedCampaign' : 'CampaignDetails';
+  const route = link === "listing" ? "LiveCampaign" : (ongoing ? 'AppliedCampaign' : 'CampaignDetails');
 
   return (
     <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate(route, { campaignId: id, campaignLink: link, campaignImage: campaignImage, brandImage: brandImage, title: title })} >

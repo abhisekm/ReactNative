@@ -22,7 +22,7 @@ export default StyleSheet.create({
   slideInnerContainer: {
     flex: 10,
     width: itemWidth,
-    // height: slideHeight,
+    height: slideHeight,
     paddingHorizontal: itemHorizontalMargin,
     paddingBottom: 18 // needed for shadow
   },

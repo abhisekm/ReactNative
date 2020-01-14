@@ -1,6 +1,6 @@
 import * as React from "react"
 import { observer } from "mobx-react"
-import { StyleSheet, View, Dimensions, Platform, TouchableOpacity } from "react-native"
+import { StyleSheet, View, Dimensions, Platform, TouchableOpacity, KeyboardAvoidingView } from "react-native"
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
 import { useStores } from "../../models/root-store"
@@ -95,8 +95,10 @@ export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampai
             headerFixedBackgroundColor={'rgba(51, 51, 51, 1)'}
             parallaxBackgroundScrollSpeed={5}
             parallaxForegroundScrollSpeed={2.5}
+            keyboardShouldPersistTaps="always"
           >
-            <View style={{ marginHorizontal: spacing.small, marginTop: -spacing.large, marginBottom: spacing.medium }}>
+
+            <View style={{ minHeight: 750, marginHorizontal: spacing.small, marginTop: -spacing.large, marginBottom: spacing.medium }} >
               <AppliedCampaignContent data={getCampaignDetail()} />
             </View>
           </ParallaxScroll>

@@ -4,7 +4,7 @@ import { Screen } from "../../components/screen"
 import { useStores } from "../../models/root-store"
 import { color, spacing } from "../../theme"
 import styleSheet from "../../theme/styleSheet"
-import { View, FlatList, ListRenderItem, ActivityIndicator } from "react-native"
+import { View, FlatList, ListRenderItem, ActivityIndicator, RefreshControl } from "react-native"
 import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
 import { Icon, Badge } from "react-native-elements"
 import { InstagramPost } from "../../models/instagram-post"
@@ -33,11 +33,11 @@ export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePosts
 
   return (
     <View style={styleSheet.view_full}>
-      <Screen style={{ ...styleSheet.view_container }} preset="fixed" backgroundColor={color.palette.white} hideWallpaper>
+      <Screen style={{ ...styleSheet.view_container }} preset="fixed" unsafe statusBar="light-content" backgroundColor={color.palette.grey9} hideWallpaper>
 
         <FlatList
-          onRefresh={fetchFeaturedPosts}
-          refreshing={isLoading}
+          // onRefresh={fetchFeaturedPosts}
+          // refreshing={isLoading}
           data={loadPosts}
           renderItem={_renderItem}
           keyExtractor={item => item.id}
@@ -46,9 +46,14 @@ export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePosts
           ListFooterComponent={_footerLoading}
           removeClippedSubviews
           initialNumToRender={3}
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoading}
+              onRefresh={fetchFeaturedPosts}
+              colors={[color.primary, color.secondary]}
+            />
+          }
         />
-        {isLoading && <Loading />}
-
         <Badge containerStyle={{ position: 'absolute' }} value={loadPosts.length} />
       </Screen>
     </View>
@@ -57,5 +62,5 @@ export const FeaturePostsScreen: NavigationBottomTabScreenComponent<FeaturePosts
 
 FeaturePostsScreen.navigationOptions = {
   title: 'Posts',
-  tabBarIcon: <Icon name='heart' type='foundation' color='red' />
+  tabBarIcon: ({ tintColor }) => <Icon name='heart' type='foundation' color={tintColor} />
 }

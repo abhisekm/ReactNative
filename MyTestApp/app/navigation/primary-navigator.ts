@@ -16,11 +16,18 @@ import { UserDetailsScreen } from "../screens/user-details-screen"
 import { WalkthroughScreen } from "../screens/walkthrough-screen"
 import { CampaignDetailsScreen } from "../screens/campaign-details-screen"
 import { AppliedCampaignScreen } from "../screens/applied-campaign-screen"
+import { LiveCampaignListingScreen } from "../screens/live-campaign-listing-screen"
 
 const DashboardFlowStack = createBottomTabNavigator({
+  LiveCampaign: { screen: LiveCampaignListingScreen },
   Dashboard: { screen: DashboardScreen },
   Feature: { screen: FeaturePostsScreen },
   Account: { screen: AccountScreen },
+}, {
+  tabBarOptions: {
+    activeTintColor: color.primary,
+    inactiveTintColor: color.palette.grey10,
+  }
 });
 
 DashboardFlowStack.navigationOptions = {

@@ -62,22 +62,21 @@ export const CampaignListModel = types
 
       const images: FastImageSource[] = []
 
-      let _id = 1;
+      const moreCampaign: Campaign = {
+        id: "404",
+        campaignImage: "http://prod-upp-image-read.ft.com/39648f42-2110-11ea-b8a1-584213ee7b2b",
+        brandName: "Immersify",
+        brandImage: "https://st3.depositphotos.com/3969727/12985/v/950/depositphotos_129854204-stock-illustration-hashtag-sign-of-splash-paint.jpg",
+        title: "Are you an Influencer?",
+        link: "listing",
+        description: "Spread your story with media and storytellers that are just right for you."
+      }
+
+      campaigns.push(moreCampaign);
 
       if (campaigns) {
-        campaigns.forEach((_campaign, index) => {
-          _campaign.id = _campaign.id + (1 + index);
+        campaigns.forEach((_campaign) => {
           self.campaigns.push(_campaign);
-
-          _campaign.id = _campaign.id + (1 + index) * 10;
-          self.campaigns.push(_campaign);
-
-          _campaign.id = _campaign.id + (1 + index) * 10;
-          self.campaigns.push(_campaign);
-
-          _campaign.id = _campaign.id + (1 + index) * 10;
-          self.campaigns.push(_campaign);
-
           if (_campaign.campaignImage)
             images.push({ uri: _campaign.campaignImage });
 
