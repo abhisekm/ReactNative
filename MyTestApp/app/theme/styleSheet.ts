@@ -23,6 +23,9 @@ type Styles = {
   text_continue: TextStyle,
   text_input_container: TextStyle,
   text_hashtag: TextStyle,
+  shadow_4: ViewStyle,
+  shadow_8: ViewStyle,
+  shadow_16: ViewStyle,
 }
 
 export default StyleSheet.create<Styles>({
@@ -105,6 +108,42 @@ export default StyleSheet.create<Styles>({
     ...text,
     fontSize: 12,
     color: color.link,
+  },
+
+  shadow_4: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
+  },
+
+  shadow_8: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.30,
+    shadowRadius: 4.65,
+
+    elevation: 8,
+  },
+
+  shadow_16: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+
+    elevation: 16,
   },
 
 })

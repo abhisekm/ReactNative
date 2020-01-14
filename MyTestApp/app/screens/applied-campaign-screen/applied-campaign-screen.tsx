@@ -4,38 +4,45 @@ import { StyleSheet, View, Dimensions, Platform, TouchableOpacity } from "react-
 import { Text } from "../../components/text"
 import { Screen } from "../../components/screen"
 import { useStores } from "../../models/root-store"
-import { color } from "../../theme"
+import { color, spacing } from "../../theme"
 import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
-import { NavigationParams, SafeAreaView } from "react-navigation"
+import { NavigationParams, SafeAreaView, NavigationEvents } from "react-navigation"
 import styleSheet from "../../theme/styleSheet"
 import { Wallpaper } from "../../components/wallpaper"
 import { Loading } from "../../components/loading"
 import Toast from "react-native-easy-toast"
-import ParallaxScrollView from "react-native-parallax-scroll-view"
 import FastImage from "react-native-fast-image"
 import { Avatar, Icon } from "react-native-elements"
 
-import ReactNativeParallaxHeader from 'react-native-parallax-header';
+import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
+import { ParallaxHeader } from "../../components/parallax-header"
+import { AppliedCampaignContent } from "../../components/applied-campaign-content"
 
 export interface AppliedCampaignScreenProps extends NavigationStackScreenProps<{}> {
 }
 
 export interface AppliedCampaignNavigationParams extends NavigationParams {
   campaignId: string,
+  brandImage: string,
+  campaignImage: string,
+  title: string
 }
 
 const isIos = Platform.OS === "ios";
 
+const window = Dimensions.get('window');
+
 export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampaignNavigationParams, AppliedCampaignScreenProps> = observer((props) => {
-  const { campaignStore: { getCampaignDetail, isLoading, fetchCampaignDetails } } = useStores();
+  const { campaignStore: { getCampaignDetail, isLoading, fetchCampaignDetails, clearCampaignDetails } } = useStores();
   const toastRef = React.useRef(null);
 
   const { navigation } = props;
   const campaignId = navigation.getParam("campaignId", "");
+  const brandImage = navigation.getParam("brandImage", "");
+  const campaignImage = navigation.getParam("campaignImage", "");
+  const title = navigation.getParam("title", "");
 
-  const window = Dimensions.get('window');
-
-  const backArrowIcon = isIos ? <Icon color='white' name='md-arrow-back' type='ionicons' /> : <Icon color='white' name='arrow-back' type='material' />;
+  const backArrowIcon = (onPress: () => {}) => isIos ? <Icon color='white' name='md-arrow-back' type='ionicons' onPress={onPress} /> : <Icon color='white' name='arrow-back' type='material' onPress={onPress} />;
 
   React.useEffect(() => {
     if (campaignId)
@@ -45,95 +52,79 @@ export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampai
     }
   }, [campaignId]);
 
-  const renderNavBar = () => {
-    <View style={styles.navContainer}>
-      <View style={styles.statusBar} />
-      <View style={styles.navBar}>
-        <TouchableOpacity onPress={() => { }}>
-          <Icon name="add" type="material" size={25} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => { }}>
-          <Icon name="search" type="material" size={25} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  }
-
-  const renderContent = () => {
-    <View style={{ height: 800, borderWidth: 1, }}>
-      <Text>Scroll me</Text>
-      {/* <Text text={getCampaignDetail().description} /> */}
-    </View>
-  }
-
 
   return (
     <View style={styleSheet.view_full}>
+      <NavigationEvents
+        onWillBlur={payload => clearCampaignDetails()}
+      />
       <Wallpaper />
-      <SafeAreaView style={{ flex: 1 }} >
+      <Screen
+        preset="fixed"
+        unsafe
+        statusBar="light-content"
+        style={{ flex: 1, backgroundColor: getCampaignDetail() != null ? 'rgba(51,51,51,1)' : color.transparent }} >
         {
-          getCampaignDetail() != null
+          !isLoading && getCampaignDetail() != null
           &&
-          // <ParallaxScrollView
-          //   backgroundColor={color.primary}
-          //   contentBackgroundColor={color.secondary}
-          //   parallaxHeaderHeight={300}
-          //   stickyHeaderHeight={70}
-          //   renderBackground={() => (
-          //     <FastImage key="background" source={{ uri: getCampaignDetail().campaignImage }} style={{ width: window.width, height: 300 }} />
-          //   )}
-          //   renderForeground={() => (
-          //     <View key="parallax-header" style={{ height: 300, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          //       <Avatar source={{ uri: getCampaignDetail().brandImage }} rounded size="large" containerStyle={{ margin: 10 }} />
-          //       <Text text={getCampaignDetail().title} style={{ color: 'white', fontSize: 24 }} />
-          //     </View>
-          //   )}
-          //   renderStickyHeader={() => (
-          //     <View key="sticky-header" style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', height: 70, paddingStart: 50, borderWidth: 1 }}>
-          //       <Text text={getCampaignDetail().title} style={{ color: 'white', fontSize: 20, height: 70, textAlignVertical: 'center' }} />
-          //       <Avatar source={{ uri: getCampaignDetail().brandImage }} rounded size="medium" containerStyle={{ margin: 10 }} />
-          //     </View>
-          //   )}
-          //   renderFixedHeader={() => (
-          //     <View key="fixed-header" style={{ position: 'absolute', left: 10, height: 70, justifyContent: 'center' }}>
-          //       {backArrowIcon}
-          //     </View>
-          //   )}
-          // >
-          //   <View style={{ height: 1800 }}>
-          //     <Text>Scroll me</Text>
-          //     <Text text={getCampaignDetail().description} />
-          //   </View>
-          // </ParallaxScrollView>
-          <ReactNativeParallaxHeader
-            headerMinHeight={64}
-            headerMaxHeight={350}
-            extraScrollHeight={20}
-            alwaysShowNavBar={true}
-            navbarColor={color.primary}
-            title={getCampaignDetail().title}
-            titleStyle={styles.titleStyle}
-            backgroundImage={{ uri: getCampaignDetail().campaignImage }}
-            backgroundImageScale={1.2}
-            renderNavBar={renderNavBar}
-            renderContent={renderContent}
-            containerStyle={styles.container}
-            contentContainerStyle={styles.contentContainer}
-            innerContainerStyle={styles.innerContainer}
-            scrollViewProps={{
-              onScrollBeginDrag: () => console.log('onScrollBeginDrag'),
-              onScrollEndDrag: () => console.log('onScrollEndDrag'),
-            }}
-          />
+          <ParallaxScroll
+            renderHeader={({ animatedValue }) =>
+              <ParallaxHeader
+                headerHeight={60 - 0}
+                parallaxHeight={250}
+                text={title || getCampaignDetail().title}
+                avatarSource={brandImage || getCampaignDetail().brandImage}
+                animatedValue={animatedValue}
+                onBackPress={() => navigation.goBack()}
+              />
+            }
+            headerHeight={60}
+            isHeaderFixed={true}
+            parallaxHeight={250}
+            useNativeDriver={true}
+            isBackgroundScalable={true}
+            headerBackgroundColor={'rgba(51, 51, 51, 0)'}
+            headerFixedTransformY={0}
+            renderParallaxBackground={() =>
+              <FastImage source={{ uri: campaignImage || getCampaignDetail().campaignImage }} style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, opacity: 0.7 }} />
+            }
+            onChangeHeaderVisibility={console.log('onChangeHeaderVisibility')}
+            renderParallaxForeground={() => { }}
+            fadeOutParallaxBackground={true}
+            fadeOutParallaxForeground={false}
+            headerFixedBackgroundColor={'rgba(51, 51, 51, 1)'}
+            parallaxBackgroundScrollSpeed={5}
+            parallaxForegroundScrollSpeed={2.5}
+          >
+            <View style={{ marginHorizontal: spacing.small, marginTop: -spacing.large, marginBottom: spacing.medium }}>
+              <AppliedCampaignContent data={getCampaignDetail()} />
+            </View>
+          </ParallaxScroll>
         }
         {isLoading && <Loading />}
         <Toast ref={toastRef} />
-      </SafeAreaView>
+      </Screen>
     </View >
   )
 })
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  header: {
+    color: '#fff',
+    fontSize: 20,
+    backgroundColor: 'transparent',
+  },
+  contentWrapperStyle: {
+    position: 'relative',
+    width: window.width,
+    height: 50,
+    backgroundColor: '#222',
+  },
   container: {
     flex: 1,
     borderWidth: 2,

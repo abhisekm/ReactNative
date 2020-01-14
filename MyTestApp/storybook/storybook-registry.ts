@@ -1,3 +1,5 @@
+require("../app/components/applied-campaign-content/applied-campaign-content.story")
+require("../app/components/parallax-header/parallax-header.story")
 require("../app/components/campaign-slider/campaign-slider.story")
 require("../app/components/user-profile/user-profile.story")
 require("../app/components/add-social-media-account-modal/add-social-media-account-modal.story")

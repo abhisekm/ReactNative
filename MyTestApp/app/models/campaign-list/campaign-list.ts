@@ -29,6 +29,12 @@ export const CampaignListModel = types
       self.errorMessage = null;
     },
 
+    clearCampaignDetails() {
+      self.campaignDetail = null;
+      self.loading = false;
+      self.errorMessage = null;
+    },
+
     getCampaigns() {
       return self.campaigns.slice();
     },

@@ -97,7 +97,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
   const route = ongoing ? 'AppliedCampaign' : 'CampaignDetails';
 
   return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate(route, { campaignId: id, campaignLink: link })} >
+    <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate(route, { campaignId: id, campaignLink: link, campaignImage: campaignImage, brandImage: brandImage, title: title })} >
       <View style={styles.slideInnerContainer}>
         <View style={styles.shadow} />
         <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
