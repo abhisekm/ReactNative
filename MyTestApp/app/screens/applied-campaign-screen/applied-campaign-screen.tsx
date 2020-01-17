@@ -55,9 +55,9 @@ export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampai
 
   return (
     <View style={styleSheet.view_full}>
-      <NavigationEvents
+      {/* <NavigationEvents
         onWillBlur={payload => clearCampaignDetails()}
-      />
+      /> */}
       <Wallpaper />
       <Screen
         preset="fixed"

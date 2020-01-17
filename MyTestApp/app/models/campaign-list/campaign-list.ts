@@ -91,7 +91,7 @@ export const CampaignListModel = types
     }),
 
     fetchCampaignDetails: flow(function* (campaignId: string) {
-      self.clear();
+      self.clearCampaignDetails();
       self.loading = true;
 
       const result: { kind: string, campaignDetail: CampaignDetail, temporary: boolean, errorMessage: string }

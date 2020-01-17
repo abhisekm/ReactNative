@@ -1,11 +1,13 @@
 import * as React from "react"
-import { View, ViewStyle, TouchableOpacity } from "react-native"
+import { View, ViewStyle, } from "react-native"
 import { Text } from "../text"
 import styles from "./campaign-slider-styles"
 import FastImage from "react-native-fast-image"
 import { ParallaxImage } from 'react-native-snap-carousel'
 import { Campaign } from "../../models/campaign"
 import { navigate } from "../../navigation"
+import TouchableScale from 'react-native-touchable-scale';
+
 
 export interface CampaignSliderProps {
   /**
@@ -97,9 +99,21 @@ export function CampaignSlider(props: CampaignSliderProps) {
   const route = link === "listing" ? "LiveCampaign" : (ongoing ? 'AppliedCampaign' : 'CampaignDetails');
 
   return (
-    <TouchableOpacity style={{ flex: 1 }} onPress={() => navigate(route, { campaignId: id, campaignLink: link, campaignImage: campaignImage, brandImage: brandImage, title: title })} >
-      <View style={styles.slideInnerContainer}>
-        <View style={styles.shadow} />
+    <TouchableScale
+      style={styles.slideInnerContainer}
+      activeScale={0.95}
+      friction={10}
+      onPress={() =>
+        navigate(
+          route,
+          {
+            campaignId: id,
+            campaignLink: link,
+            campaignImage: campaignImage,
+            brandImage: brandImage,
+            title: title
+          })} >
+      <View style={[styles.shadow, even ? styles.shadowEven : {}]} >
         <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
           {image}
           <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
@@ -119,6 +133,6 @@ export function CampaignSlider(props: CampaignSliderProps) {
           </Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableScale >
   )
 }

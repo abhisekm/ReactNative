@@ -39,7 +39,7 @@
     "questionText": "Select your two favorite foods!",
     "questionId": "favoriteFoods",
     "questionSettings": {
-      "maxMultiSelect": 2,
+      "maxMultiSelect": 3,
       "minMultiSelect": 2
     },
     "options": [
@@ -62,6 +62,50 @@
       {
         "optionText": "Ice cream!",
         "value": "ice crem"
+      },
+      {
+        "optionText": "Injera",
+        "value": "injera"
+      },
+      {
+        "optionText": "Ice cream!",
+        "value": "ice cream"
+      },
+      {
+        "optionText": "Tamales",
+        "value": "tamales"
+      },
+      {
+        "optionText": "Tamales1",
+        "value": "tamales1"
+      },
+      {
+        "optionText": "Tamales2",
+        "value": "tamales2"
+      },
+      {
+        "optionText": "Tamales3",
+        "value": "tamales3"
+      },
+      {
+        "optionText": "Tamales4",
+        "value": "tamales4"
+      },
+      {
+        "optionText": "Tamales5",
+        "value": "tamales5"
+      },
+      {
+        "optionText": "Tamales6",
+        "value": "tamales6"
+      },
+      {
+        "optionText": "Tamales7",
+        "value": "tamales7"
+      },
+      {
+        "optionText": "Tamales8",
+        "value": "tamales8"
       }
     ]
   }

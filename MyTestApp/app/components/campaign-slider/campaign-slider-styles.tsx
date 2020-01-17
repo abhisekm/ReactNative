@@ -20,23 +20,27 @@ const entryBorderRadius = 8;
 
 export default StyleSheet.create({
   slideInnerContainer: {
-    flex: 10,
     width: itemWidth,
     height: slideHeight,
     paddingHorizontal: itemHorizontalMargin,
-    paddingBottom: 18 // needed for shadow
+    paddingBottom: 0, // needed for shadow
   },
   shadow: {
+    elevation: 5,
+    backgroundColor: color.palette.white,
     position: 'absolute',
     top: 0,
     left: itemHorizontalMargin,
     right: itemHorizontalMargin,
     bottom: 18,
-    shadowColor: color.palette.black,
-    shadowOpacity: 0.25,
+    shadowColor: color.palette.angry,
+    shadowOpacity: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowRadius: 10,
     borderRadius: entryBorderRadius
+  },
+  shadowEven: {
+    backgroundColor: color.palette.black,
   },
   imageContainer: {
     flex: 1,

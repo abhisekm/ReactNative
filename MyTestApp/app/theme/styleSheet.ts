@@ -135,7 +135,7 @@ export default StyleSheet.create<Styles>({
   },
 
   shadow_16: {
-    shadowColor: "#000",
+    shadowColor: color.palette.black,
     shadowOffset: {
       width: 0,
       height: 8,
