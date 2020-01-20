@@ -5,6 +5,7 @@ import qs from 'qs';
 import { WebView } from "react-native-webview";
 import { Icon, SocialIcon } from 'react-native-elements';
 import { color } from "../../theme";
+import { verticalScale } from "../../utils/scale";
 
 /**
  * Stateless functional component for your needs
@@ -169,6 +170,7 @@ export const InstagramLogin: React.FunctionComponent<InstagramLoginProps> = (pro
         light
         button
         type="instagram"
+        style={{ maxHeight: verticalScale(50) }}
         onPress={() => dispatch({ type: 'show' })} />
     </View>
   )

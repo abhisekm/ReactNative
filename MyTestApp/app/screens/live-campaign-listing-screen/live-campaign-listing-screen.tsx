@@ -14,6 +14,8 @@ import { ENTRIES1 } from "../dashboard-screen/entries-dummy"
 import { Text } from "../../components/text"
 import FastImage from "react-native-fast-image"
 import { spacing, color } from "../../theme"
+import { verticalScale, scale } from "../../utils/scale"
+import { normalisedFontSize } from "../../theme/fontSize"
 
 export interface LiveCampaignListingScreenProps extends NavigationTabScreenProps<{}> {
 }
@@ -42,19 +44,19 @@ export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveC
         <View style={{ flexDirection: 'row', justifyContent: 'center' }} >
           <Image
             source={require('../../components/header/logo.png')}
-            style={{ height: 100, width: 200 }}
+            style={{ height: verticalScale(80), width: scale(200) }}
             resizeMode='contain'
           />
         </View>
 
         <Text
           preset="header"
-          style={{ margin: spacing.medium, fontSize: 20 }}
+          style={{ paddingTop: spacing.small, fontSize: normalisedFontSize.large, paddingHorizontal: spacing.medium }}
           text="Spread your story with media and storytellers that are just right for you. "
         />
 
         <Text
-          style={{ margin: spacing.medium, flex: 1 }}
+          style={{ paddingVertical: spacing.small, flex: 1, paddingHorizontal: spacing.medium }}
           text="Immersify is a private marketplace for media business that enables media owners and partners to easily and effortlessly find the right match. We help you spread your story using the medium and storytellers who are just right for you."
         />
 
@@ -104,18 +106,18 @@ LiveCampaignListingScreen.navigationOptions = {
 const styles = StyleSheet.create({
   slider: {
     flexGrow: 0,
-    marginTop: 15,
+    marginTop: spacing.small,
   },
   sliderContentContainer: {
   },
   paginationContainer: {
-    paddingVertical: spacing.medium,
-    marginBottom: spacing.tiny
+    paddingVertical: spacing.tiny,
+    marginBottom: spacing.tiny,
   },
   paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: scale(8),
+    height: scale(8),
+    borderRadius: scale(4),
     marginHorizontal: 0
   }
 });

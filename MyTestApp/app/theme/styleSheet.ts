@@ -1,9 +1,12 @@
 import { StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { color, spacing } from ".";
+import { normalisedFontSize } from "./fontSize";
+import { scale } from "../utils/scale";
 
 const text: TextStyle = {
   color: color.palette.white,
   fontFamily: 'Montserrat',
+  fontSize: normalisedFontSize.normal,
 }
 
 const bold: TextStyle = {
@@ -47,8 +50,8 @@ export default StyleSheet.create<Styles>({
   text_header_title: {
     ...text,
     ...bold,
-    fontSize: 12,
-    lineHeight: 15,
+    fontSize: normalisedFontSize.small,
+    lineHeight: scale(15),
     textAlign: 'center',
     letterSpacing: 1.5,
   },
@@ -61,23 +64,23 @@ export default StyleSheet.create<Styles>({
   text_title: {
     ...text,
     ...bold,
-    fontSize: 28,
-    lineHeight: 38,
+    fontSize: normalisedFontSize.extraLarge,
+    lineHeight: scale(38),
     textAlign: 'center',
   },
 
   text_italic: {
     ...text,
-    fontSize: 12,
+    fontSize: normalisedFontSize.small,
     fontStyle: 'italic',
   },
 
   text_content: {
     ...text,
     color: '#BAB6C8',
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: spacing[5],
+    fontSize: normalisedFontSize.normal,
+    lineHeight: scale(22),
+    marginBottom: spacing.medium,
   },
 
   view_continue: {
@@ -89,24 +92,24 @@ export default StyleSheet.create<Styles>({
   text_continue: {
     ...text,
     ...bold,
-    fontSize: 13,
+    fontSize: normalisedFontSize.small,
     letterSpacing: 2,
   },
 
   text_input_container: {
     borderRadius: 4,
     padding: 0,
-    paddingHorizontal: spacing.small,
+    paddingHorizontal: spacing.tiny,
     marginTop: spacing.small,
     borderWidth: 2,
     backgroundColor: color.inputBackground,
     borderColor: color.borderColor,
-    fontSize: 14,
+    fontSize: normalisedFontSize.normal,
   },
 
   text_hashtag: {
     ...text,
-    fontSize: 12,
+    fontSize: normalisedFontSize.small,
     color: color.link,
   },
 

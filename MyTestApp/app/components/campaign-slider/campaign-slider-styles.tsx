@@ -1,5 +1,7 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
 import { color, spacing } from '../../theme';
+import { scale } from '../../utils/scale';
+import { normalisedFontSize } from '../../theme/fontSize';
 
 const IS_IOS = Platform.OS === 'ios';
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -32,7 +34,7 @@ export default StyleSheet.create({
     top: 0,
     left: itemHorizontalMargin,
     right: itemHorizontalMargin,
-    bottom: 18,
+    bottom: itemHorizontalMargin,
     shadowColor: color.palette.angry,
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: 10 },
@@ -61,10 +63,10 @@ export default StyleSheet.create({
   },
   imageLogo: {
     position: 'absolute',
-    height: 50,
-    width: 50,
-    top: -30,
-    start: 10,
+    height: scale(50),
+    width: scale(50),
+    top: scale(-30),
+    start: scale(10),
     backgroundColor: color.palette.white,
     resizeMode: 'contain',
     borderColor: color.palette.white,
@@ -88,9 +90,8 @@ export default StyleSheet.create({
   },
   textContainer: {
     justifyContent: 'center',
-    paddingTop: 20 - entryBorderRadius,
-    paddingBottom: 20,
-    paddingHorizontal: 16,
+    paddingVertical: spacing.medium,
+    paddingHorizontal: spacing.medium,
     backgroundColor: 'white',
     borderBottomLeftRadius: entryBorderRadius,
     borderBottomRightRadius: entryBorderRadius
@@ -100,7 +101,7 @@ export default StyleSheet.create({
   },
   title: {
     color: color.text,
-    fontSize: 13,
+    fontSize: normalisedFontSize.small,
     fontWeight: 'bold',
     letterSpacing: 0.5
   },
@@ -109,20 +110,20 @@ export default StyleSheet.create({
   },
   brand: {
     color: color.text,
-    fontSize: 14,
-    paddingStart: 50,
-    marginTop: -15,
-    marginBottom: spacing.medium,
+    fontSize: normalisedFontSize.small,
+    paddingStart: scale(50),
+    marginTop: scale(-15),
+    marginBottom: spacing.tiny,
     fontWeight: 'bold',
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
   },
   brandEven: {
     color: 'white'
   },
   subtitle: {
-    marginTop: 6,
+    marginTop: spacing.tiny,
     color: color.palette.grey8,
-    fontSize: 12,
+    fontSize: normalisedFontSize.small,
     fontStyle: 'italic'
   },
   subtitleEven: {

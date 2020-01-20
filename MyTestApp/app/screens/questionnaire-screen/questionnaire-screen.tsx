@@ -4,6 +4,7 @@ import { View, StyleSheet } from "react-native"
 import { Text } from "../../components/text"
 import { useStores } from "../../models/root-store"
 import { color, spacing } from "../../theme"
+import { Screen } from "../../components/screen"
 import { Wallpaper } from "../../components/wallpaper"
 import { Button } from "../../components/button"
 import { TextField } from "../../components/text-field"
@@ -12,6 +13,7 @@ import { SimpleSurvey } from "react-native-simple-survey"
 import { CheckBox } from "react-native-elements"
 import styleSheet from "../../theme/styleSheet"
 import { NavigationSwitchScreenComponent, NavigationSwitchScreenProps } from "react-navigation"
+import { verticalScale } from "../../utils/scale"
 
 export interface QuestionnareScreenProps extends NavigationSwitchScreenProps<{}> {
 }
@@ -33,7 +35,7 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
         onPress={onPress}
         disabled={!enabled}
         title={'Next'}
-        buttonStyle={{ paddingVertical: 20, minWidth: 100 }}
+        buttonStyle={{ paddingVertical: spacing.small, minWidth: 100 }}
         containerStyle={{ margin: 4 }}
       />
     );
@@ -55,7 +57,7 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
         onPress={onPress}
         disabled={!enabled}
         title={'Previous'}
-        buttonStyle={{ paddingVertical: 20, minWidth: 100 }}
+        buttonStyle={{ paddingVertical: spacing.small, minWidth: 100 }}
         containerStyle={{ margin: 4 }}
       />
     );
@@ -74,7 +76,7 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
         onPress={onPress}
         disabled={!enabled}
         title={'Finished'}
-        buttonStyle={{ paddingVertical: 20, minWidth: 100 }}
+        buttonStyle={{ paddingVertical: spacing.small, minWidth: 100 }}
         containerStyle={{ margin: 4 }}
       />
     );
@@ -87,7 +89,7 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
    */
   const renderQuestionText = (questionText) => {
     return (
-      <View style={{ marginLeft: 10, marginRight: 10 }}>
+      <View style={{ marginHorizontal: spacing.small }}>
         <Text preset="question" text={questionText} />
       </View>
     );
@@ -108,7 +110,7 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
     return (
       <View
         key={`selection_button_view_${index}`}
-        style={{ marginTop: 5, marginBottom: 5, justifyContent: 'flex-start' }}
+        style={{ marginBottom: spacing.tiny, justifyContent: 'flex-start' }}
       >
         <CheckBox
           title={data.optionText}
@@ -120,6 +122,8 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
           uncheckedIcon="check"
           textStyle={{ color: color.text }}
           uncheckedColor={color.transparent}
+          containerStyle={{ maxHeight: verticalScale(50), justifyContent: 'center', marginVertical: spacing.tiny }}
+          wrapperStyle={{}}
         />
       </View>
     );
@@ -173,15 +177,17 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
    */
   const renderTextInput = (onChange, placeholder, value) => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
+      <View style={{ flex: 1, marginVertical: spacing.small, justifyContent: 'center' }}>
         <TextField
           onChangeText={text => onChange(text)}
           placeholder={placeholder}
           value={value}
           multiline
+          numberOfLines={3}
           blurOnSubmit
           returnKeyType='done'
-          inputStyle={styleSheet.text_input_container}
+          inputStyle={{ textAlignVertical: 'bottom' }}
+        // inputStyle={styleSheet.text_input_container}
         />
       </View>
     );
@@ -195,15 +201,15 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
    */
   const renderNumericInput = (onChange, value) => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', padding: 10 }}>
+      <View style={{ flex: 1, marginVertical: spacing.small, justifyContent: 'center' }}>
         <TextField
           onChangeText={text => { onChange(text); }}
           underlineColorAndroid={'white'}
           placeholderTextColor={'rgba(184,184,184,1)'}
           value={String(value)}
           keyboardType={'numeric'}
-          maxLength={3}
-          inputStyle={styleSheet.text_input_container}
+        // maxLen565gth={3}
+        // inputStyle={styleSheet.text_input_container}
         />
       </View>
     );
@@ -226,52 +232,52 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
   const survey = require("./survey-demo.json");
 
   return (
-    <View style={styles.background}>
-      <Wallpaper />
-      <View style={styles.container}>
-        <SimpleSurvey
-          survey={survey}
-          containerStyle={styles.surveyContainer}
-          selectionGroupContainerStyle={styles.selectionGroupContainer}
-          navButtonContainerStyle={styles.navButtonContainerStyle}
-          renderPrevious={renderPrevious}
-          renderNext={renderNext}
-          renderFinished={renderFinished}
-          renderQuestionText={renderQuestionText}
-          renderSelector={renderSelector}
-          onSurveyFinished={onSurveyFinished}
-          onAnswerSubmitted={onQuestionAnswered}
-          renderTextInput={renderTextInput}
-          renderNumericInput={renderNumericInput}
-          renderInfo={renderInfoText}
-        />
-      </View>
+    <View style={{ flex: 1 }} >
+      <Screen preset="fixed" style={styles.background}>
+        <View style={styles.container}>
+          <SimpleSurvey
+            survey={survey}
+            containerStyle={styles.surveyContainer}
+            selectionGroupContainerStyle={styles.selectionGroupContainer}
+            navButtonContainerStyle={styles.navButtonContainerStyle}
+            renderPrevious={renderPrevious}
+            renderNext={renderNext}
+            renderFinished={renderFinished}
+            renderQuestionText={renderQuestionText}
+            renderSelector={renderSelector}
+            onSurveyFinished={onSurveyFinished}
+            onAnswerSubmitted={onQuestionAnswered}
+            renderTextInput={renderTextInput}
+            renderNumericInput={renderNumericInput}
+            renderInfo={renderInfoText}
+          />
+        </View>
+      </Screen>
     </View>
   )
 })
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   container: {
     minWidth: '70%',
     maxWidth: '90%',
-    minHeight: '50%',
+    minHeight: verticalScale(300),
     maxHeight: '90%',
     alignItems: 'stretch',
     justifyContent: 'center',
     elevation: 20,
     borderRadius: 10,
     backgroundColor: 'white',
-    padding: 10,
+    padding: spacing.small,
   },
   surveyContainer: {
     minWidth: '70%',
     maxWidth: '90%',
-    minHeight: '50%',
+    minHeight: verticalScale(300),
     alignSelf: 'center',
     alignContent: 'center',
   },
@@ -281,6 +287,7 @@ const styles = StyleSheet.create({
   },
   selectionGroupContainer: {
     flexGrow: 1,
+    maxHeight: '80%',
     marginHorizontal: spacing.medium,
     justifyContent: 'center',
     flexDirection: 'column',

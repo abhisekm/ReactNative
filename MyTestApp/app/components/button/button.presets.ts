@@ -1,5 +1,6 @@
 import { ViewStyle, TextStyle, Platform } from "react-native"
 import { color, spacing } from "../../theme"
+import { normalisedFontSize } from "../../theme/fontSize"
 
 /**
  * All text will start off looking like this.
@@ -53,7 +54,7 @@ export const viewPresets = {
         },
       }),
       fontWeight: 'bold',
-      fontSize: 14,
+      fontSize: normalisedFontSize.normal,
     } as TextStyle,
     containerStyle: {
       margin: spacing.small,
@@ -64,12 +65,12 @@ export const viewPresets = {
     buttonStyle: {
       flex: 1,
       paddingHorizontal: spacing.large,
-      paddingVertical: spacing.medium - 2,
+      paddingVertical: spacing.medium,
       borderWidth: 2
     } as ViewStyle,
     titleStyle: {
       fontWeight: 'bold',
-      fontSize: 14,
+      fontSize: normalisedFontSize.normal,
     } as TextStyle,
     containerStyle: {
       margin: spacing.small,
@@ -80,13 +81,13 @@ export const viewPresets = {
 
   social: {
     buttonStyle: {
-      borderRadius: 30,
-      paddingTop: 14,
-      paddingBottom: 14,
+      borderRadius: spacing.large,
+      paddingTop: spacing.medium,
+      paddingBottom: spacing.medium,
     } as ViewStyle,
     titleStyle: {
       color: 'white',
-      marginLeft: 15,
+      marginLeft: spacing.medium,
       ...Platform.select({
         android: {
           fontFamily: 'sans-serif',
@@ -96,11 +97,11 @@ export const viewPresets = {
         },
       }),
       fontWeight: 'bold',
-      fontSize: 14,
+      fontSize: normalisedFontSize.normal,
     } as TextStyle,
     containerStyle: {
       flex: 1,
-      margin: 7,
+      margin: spacing.small,
       borderRadius: 30,
       justifyContent: 'center',
     } as ViewStyle,
@@ -108,7 +109,7 @@ export const viewPresets = {
 }
 
 export const textPresets = {
-  primary: { ...BASE_TEXT, fontSize: 9, color: color.palette.white } as TextStyle,
+  primary: { ...BASE_TEXT, fontSize: normalisedFontSize.small, color: color.palette.white } as TextStyle,
   link: {
     ...BASE_TEXT,
     color: color.text,

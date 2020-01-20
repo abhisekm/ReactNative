@@ -6,18 +6,16 @@ import { Text } from "../text"
 import { TextFieldProps } from "./text-field.props"
 import { mergeAll, flatten } from "ramda"
 import { Input } from "react-native-elements"
+import { scale } from "../../utils/scale"
+import { normalisedFontSize } from "../../theme/fontSize"
 
 // the base styling for the container
 const CONTAINER: ViewStyle = {
-  paddingVertical: spacing.medium,
 }
 
 // the base styling for the TextInput
 const INPUT: TextStyle = {
-  fontFamily: typography.primary,
-  color: color.text,
-  minHeight: 44,
-  fontSize: 18,
+  fontSize: normalisedFontSize.normal,
   backgroundColor: color.palette.white,
 }
 

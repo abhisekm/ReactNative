@@ -7,6 +7,7 @@ import { color, spacing } from "../../theme";
 import { Button } from "../button";
 import { useObserver } from "mobx-react";
 import { useStores } from "../../models/root-store";
+import { normalisedFontSize } from "../../theme/fontSize";
 
 const tiktok = require('./tik-tok.png');
 
@@ -137,7 +138,7 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
               }
               type="outline"
               title="Add Account"
-              titleStyle={{ fontSize: 14 }}
+              titleStyle={{ fontSize: normalisedFontSize.normal }}
               buttonStyle={{ borderWidth: 2, borderRadius: 10 }}
               onPress={toggleModal} />
           </View>

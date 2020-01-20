@@ -71,6 +71,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
   const uppercaseHeader = React.useMemo(() => title ? (
     <Text
       style={[styles.brand, even ? styles.brandEven : {}]}
+      numberOfLines={2}
     >
       {(brandName ? brandName.toUpperCase() + " - " : "") + title.toUpperCase()}
     </Text>

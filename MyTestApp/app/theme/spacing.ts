@@ -1,3 +1,5 @@
+import { scale } from "../utils/scale";
+
 /**
  * NOTE TO DEVS:
  *
@@ -39,10 +41,10 @@
  * 8 = massive - an uncomfortable amount of whitespace
  */
 export const spacing = {
-  tiny: 4,
-  small: 8,
-  medium: 12,
-  large: 24,
-  extraLarge: 48,
-  huge: 64,
+  tiny: scale(4),
+  small: scale(8),
+  medium: scale(16),
+  large: scale(24),
+  extraLarge: scale(48),
+  huge: scale(64),
 }

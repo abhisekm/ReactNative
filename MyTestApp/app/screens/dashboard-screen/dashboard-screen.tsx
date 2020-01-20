@@ -13,6 +13,8 @@ import { Loading } from "../../components/loading"
 import { Screen } from "../../components/screen"
 import { Text } from "../../components/text"
 import { spacing, color } from "../../theme"
+import { scale } from "../../utils/scale"
+import { normalisedFontSize } from "../../theme/fontSize"
 
 export interface DashboardScreenProps extends NavigationTabScreenProps<{}> {
 }
@@ -51,7 +53,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
 
         <Text
           preset="header"
-          style={{ marginTop: spacing.medium, marginHorizontal: spacing.medium, fontSize: 18 }}
+          style={{ marginTop: spacing.medium, marginHorizontal: spacing.medium }}
           text={`Welcome back`}
         />
         <Text
@@ -62,7 +64,12 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
 
         <Text
           preset="question"
-          style={{ margin: spacing.medium, flex: 1 }}
+          style={{
+            flex: 1,
+            marginVertical: spacing.small,
+            marginHorizontal: spacing.medium,
+            fontSize: normalisedFontSize.small
+          }}
           text="This is your Dashboard, all your ongoing campaigns will show up here. Lorem Ipsum is simply dummy text of the printing and typesett an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centur was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         />
 
@@ -111,20 +118,18 @@ DashboardScreen.navigationOptions = {
 const styles = StyleSheet.create({
   slider: {
     flexGrow: 0,
-    marginTop: 15,
-    overflow: 'visible', // for custom animations
+    marginTop: spacing.small,
   },
   sliderContentContainer: {
-    paddingVertical: 10 // for custom animation
   },
   paginationContainer: {
-    paddingVertical: spacing.medium,
-    marginBottom: spacing.tiny
+    paddingVertical: spacing.tiny,
+    marginBottom: spacing.tiny,
   },
   paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: scale(8),
+    height: scale(8),
+    borderRadius: scale(4),
     marginHorizontal: 0
   }
 });

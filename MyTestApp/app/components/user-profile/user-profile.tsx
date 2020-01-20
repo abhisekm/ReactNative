@@ -12,6 +12,8 @@ import { InstagramLogin } from "../instagram-login";
 import { AddSocialMediaAccount } from "../add-social-media-account";
 import { Loading } from "../loading";
 import { useObserver } from "mobx-react";
+import { scale } from "../../utils/scale";
+import { normalisedFontSize } from "../../theme/fontSize";
 
 export interface UserProfileProps {
   showName?: boolean
@@ -45,24 +47,24 @@ const InterestButton = (props) => {
       type={selected ? "solid" : "outline"}
       title={text}
       containerStyle={{
-        borderRadius: 20,
+        borderRadius: scale(20),
         marginVertical: spacing.small,
         marginHorizontal: spacing.tiny
       }}
       buttonStyle={{
-        minWidth: 80,
+        minWidth: scale(80),
         paddingHorizontal: spacing.medium,
-        borderRadius: 20,
+        borderRadius: scale(20),
         backgroundColor: selected ? color.secondary : 'transparent',
         borderColor: color.secondary,
         borderWidth: 2
       }}
-      titleStyle={{ color: selected ? 'white' : color.secondary }}
+      titleStyle={{ color: selected ? 'white' : color.secondary, fontSize: normalisedFontSize.normal }}
       onPress={() => onSelect(id)} />
   )
 }
 
-const DEFAULT_MARGIN = { margin: spacing.medium, } as ViewStyle;
+const DEFAULT_MARGIN = { margin: spacing.small, } as ViewStyle;
 
 export function UserProfile(props: UserProfileProps) {
   const { showName = true } = props;
