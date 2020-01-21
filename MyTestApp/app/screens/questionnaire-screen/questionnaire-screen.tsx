@@ -14,6 +14,7 @@ import { CheckBox } from "react-native-elements"
 import styleSheet from "../../theme/styleSheet"
 import { NavigationSwitchScreenComponent, NavigationSwitchScreenProps } from "react-navigation"
 import { verticalScale } from "../../utils/scale"
+import { normalisedFontSize } from "../../theme/fontSize"
 
 export interface QuestionnareScreenProps extends NavigationSwitchScreenProps<{}> {
 }
@@ -89,7 +90,7 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
    */
   const renderQuestionText = (questionText) => {
     return (
-      <View style={{ marginHorizontal: spacing.small }}>
+      <View style={{ marginHorizontal: spacing.small, marginBottom: spacing.medium }}>
         <Text preset="question" text={questionText} />
       </View>
     );
@@ -183,11 +184,9 @@ export const QuestionnaireScreen: NavigationSwitchScreenComponent<QuestionnareSc
           placeholder={placeholder}
           value={value}
           multiline
-          numberOfLines={3}
+          numberOfLines={2}
           blurOnSubmit
           returnKeyType='done'
-          inputStyle={{ textAlignVertical: 'bottom' }}
-        // inputStyle={styleSheet.text_input_container}
         />
       </View>
     );
@@ -284,9 +283,10 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
     justifyContent: 'center',
+    padding: spacing.small,
   },
   selectionGroupContainer: {
-    flexGrow: 1,
+    flexGrow: 0,
     maxHeight: '80%',
     marginHorizontal: spacing.medium,
     justifyContent: 'center',
@@ -296,5 +296,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     minWidth: '100%',
     justifyContent: 'space-between',
+    marginTop: spacing.small,
   },
 });

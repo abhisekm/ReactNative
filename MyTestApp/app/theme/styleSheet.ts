@@ -100,7 +100,7 @@ export default StyleSheet.create<Styles>({
     borderRadius: 4,
     padding: 0,
     paddingHorizontal: spacing.tiny,
-    marginTop: spacing.small,
+    marginVertical: spacing.small,
     borderWidth: 2,
     backgroundColor: color.inputBackground,
     borderColor: color.borderColor,

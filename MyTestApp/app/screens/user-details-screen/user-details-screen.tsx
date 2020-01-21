@@ -10,11 +10,12 @@ import { useStores } from "../../models/root-store"
 import { UserProfile } from "../../components/user-profile"
 import { NavigationSwitchScreenComponent, NavigationSwitchScreenProps } from "react-navigation"
 import { Loading } from "../../components/loading"
+import { scale } from "../../utils/scale"
 
 export interface UserDetailsScreenProps extends NavigationSwitchScreenProps<{}> {
 }
 
-const DEFAULT_MARGIN = { margin: spacing.medium, } as ViewStyle;
+const DEFAULT_MARGIN = { margin: spacing.small, } as ViewStyle;
 
 export const UserDetailsScreen: NavigationSwitchScreenComponent<UserDetailsScreenProps> = observer(() => {
   const {
@@ -50,7 +51,6 @@ export const UserDetailsScreen: NavigationSwitchScreenComponent<UserDetailsScree
       >
 
         <Text preset="header" text="Almost done ..." style={[DEFAULT_MARGIN, { color: color.primary, }]} />
-        <View style={{ height: 20 }} />
 
         <UserProfile />
 

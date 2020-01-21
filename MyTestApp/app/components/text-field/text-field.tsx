@@ -1,12 +1,11 @@
 import * as React from "react"
 import { View, TextStyle, ViewStyle } from "react-native"
-import { color, spacing, typography } from "../../theme"
+import { color } from "../../theme"
 import { translate } from "../../i18n"
 import { Text } from "../text"
 import { TextFieldProps } from "./text-field.props"
 import { mergeAll, flatten } from "ramda"
 import { Input } from "react-native-elements"
-import { scale } from "../../utils/scale"
 import { normalisedFontSize } from "../../theme/fontSize"
 
 // the base styling for the container
@@ -17,6 +16,7 @@ const CONTAINER: ViewStyle = {
 const INPUT: TextStyle = {
   fontSize: normalisedFontSize.normal,
   backgroundColor: color.palette.white,
+  textAlignVertical: 'bottom'
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
@@ -43,6 +43,7 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
     forwardedRef,
     ...rest
   } = props
+
   let containerStyle: ViewStyle = { ...CONTAINER, ...PRESETS[preset] }
   containerStyle = enhance(containerStyle, styleOverride)
 
@@ -53,13 +54,12 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
 
   return (
     <View style={containerStyle}>
-
       <Input
         placeholder={actualPlaceholder}
         placeholderTextColor={color.palette.grey8}
         underlineColorAndroid={color.transparent}
         label={labelElement}
-        style={inputStyle}
+        inputStyle={inputStyle}
         ref={forwardedRef}
         {...rest}
       />

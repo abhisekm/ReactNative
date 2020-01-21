@@ -64,7 +64,7 @@ const InterestButton = (props) => {
   )
 }
 
-const DEFAULT_MARGIN = { margin: spacing.small, } as ViewStyle;
+const DEFAULT_MARGIN = { margin: spacing.small, marginTop: spacing.medium } as ViewStyle;
 
 export function UserProfile(props: UserProfileProps) {
   const { showName = true } = props;
@@ -110,7 +110,7 @@ export function UserProfile(props: UserProfileProps) {
             placeholder="Name" label="Name"
             forwardedRef={nameRef}
             value={name} onChangeText={setName}
-            style={DEFAULT_MARGIN}
+            // style={DEFAULT_MARGIN}
             leftIcon={{ type: "ocicons", name: "person", color: color.palette.grey10 }}
             inputStyle={styleSheet.text_input_container}
             errorMessage={!isValidName() ? "Name cannot be blank" : null}
@@ -146,7 +146,7 @@ export function UserProfile(props: UserProfileProps) {
         text="Interests"
         style={DEFAULT_MARGIN} />
 
-      <View style={[DEFAULT_MARGIN, { paddingHorizontal: spacing.small, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }]}>
+      <View style={[DEFAULT_MARGIN, { marginTop: 0, paddingHorizontal: spacing.small, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }]}>
         {
           interestData.map((item) => {
             return (

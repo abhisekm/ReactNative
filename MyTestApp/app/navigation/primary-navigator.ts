@@ -21,12 +21,15 @@ import { LiveCampaignListingScreen } from "../screens/live-campaign-listing-scre
 const DashboardFlowStack = createBottomTabNavigator({
   LiveCampaign: { screen: LiveCampaignListingScreen },
   Dashboard: { screen: DashboardScreen },
-  Feature: { screen: FeaturePostsScreen },
+  // Feature: { screen: FeaturePostsScreen },
   Account: { screen: AccountScreen },
 }, {
   tabBarOptions: {
     activeTintColor: color.primary,
-    inactiveTintColor: color.palette.grey10,
+    inactiveTintColor: color.palette.white,
+    style: {
+      backgroundColor: color.palette.grey10
+    }
   }
 });
 

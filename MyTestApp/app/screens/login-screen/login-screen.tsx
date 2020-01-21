@@ -11,6 +11,7 @@ import { NavigationStackScreenProps, NavigationStackScreenComponent } from "reac
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
 import { Icon } from "react-native-elements"
+import { verticalScale } from "../../utils/scale"
 
 
 interface Props extends NavigationStackScreenProps {
@@ -40,16 +41,18 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
   return (
     <View style={styleSheet.view_full}>
       <Screen style={styleSheet.view_container} preset="scroll" unsafe statusBar="light-content"  >
-        <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
-          <Text preset="header" tx="loginScreen.header" />
+        <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1, padding: 0 }} >
+          <Text preset="header" tx="loginScreen.header" style={{ padding: spacing.small }} />
 
-          <View style={{ height: 50 }} />
+          <View style={{ height: verticalScale(50) }} />
 
           <TextField
             placeholder="Email" label="Email"
             value={email} onChangeText={setEmail}
             inputStyle={styleSheet.text_input_container}
             autoCapitalize="none" />
+
+          <View style={{ height: verticalScale(20) }} />
 
           <TextField
             placeholder="Password" label="Password"
@@ -68,7 +71,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
             errorMessage ? <Text preset="error" text={errorMessage} /> : null
           }
 
-          <View style={{ flexDirection: "row", marginTop: spacing.large }}>
+          <View style={{ flexDirection: "row-reverse", marginVertical: spacing.small }}>
             <Button
               preset="raised"
               title="Submit"
@@ -76,7 +79,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
               disabled={email.length < 1 || password.length < 1}
             />
           </View>
-          <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
+          <View style={{ flexDirection: "row", marginTop: spacing.medium, paddingHorizontal: spacing.small }}>
             <Text tx="loginScreen.signup" />
 
             <Button
@@ -86,7 +89,7 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
               onPress={goToEmailSignup}
             />
           </View>
-          <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
+          <View style={{ flexDirection: "row", marginTop: spacing.medium, paddingHorizontal: spacing.small }}>
             <Button
               preset="link"
               tx="loginScreen.forgotPassword"
@@ -106,13 +109,16 @@ LoginScreen.navigationOptions = {
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
         <Image
           source={require('../../components/header/light.png')}
-          style={{ height: 25, width: 110 }}
+          style={{ height: 25, width: 100 }}
           resizeMode='contain'
         />
       </View>
     )
   },
   headerTitleContainerStyle: {
-    flex: 1
+    flex: 1,
+  },
+  headerRight: () => {
+    return <View />
   }
 }

@@ -126,7 +126,7 @@ export function AddSocialMediaAccount(props: AddSocialMediaAccountProps) {
       {
         getRemainingMedia().length > 0
           ?
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: spacing.medium, marginHorizontal: spacing.large }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginVertical: spacing.small, marginHorizontal: spacing.small }}>
             <RNEButton
               icon={
                 <Icon

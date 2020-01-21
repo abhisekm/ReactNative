@@ -12,6 +12,8 @@ import { TextField } from "../../components/text-field"
 import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
 import { BarPasswordStrengthDisplay } from "react-native-password-strength-meter"
 import { Icon } from "react-native-elements"
+import { scale } from "../../utils/scale"
+import { Header } from "../../components/header"
 
 interface Props extends NavigationStackScreenProps {
 }
@@ -19,6 +21,8 @@ interface Props extends NavigationStackScreenProps {
 const { width } = Dimensions.get('window');
 const METER_WIDTH = width - 2 * spacing.large;
 const MIN_LENGTH = 6;
+
+const Spacer = () => <View style={{ height: scale(20) }} />
 
 const LEVELS = [
   {
@@ -69,10 +73,10 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
   return (
     <View style={styleSheet.view_full}>
       <Screen style={styleSheet.view_container} preset="scroll" unsafe statusBar="light-content"  >
-        <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1 }} >
-          <Text preset="header" tx="signupScreen.header" />
+        <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1, padding: 0 }} >
+          <Text preset="header" tx="signupScreen.header" style={{ padding: spacing.small }} />
 
-          <View style={{ height: 20 }} />
+          <Spacer />
 
           <TextField
             placeholder="John Doe" label="Name"
@@ -81,12 +85,16 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
             autoCapitalize="words"
           />
 
+          <Spacer />
+
           <TextField
             placeholder="johndoe@gmail.com" label="Email"
             value={email} onChangeText={setEmail}
             inputStyle={styleSheet.text_input_container}
             autoCapitalize="none"
           />
+
+          <Spacer />
 
           <TextField
             placeholder="Password" label="Password"
@@ -103,6 +111,8 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
             barColor={color.palette.grey2}
             levels={LEVELS}
           />
+
+          <Spacer />
 
           <TextField
             placeholder="Confirm Password" label="Confirm Password"
@@ -125,7 +135,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
             errorMessage ? <Text style={{ marginTop: spacing.medium }} preset="error" text={errorMessage} /> : null
           }
 
-          <View style={{ flexDirection: "row", marginTop: spacing.large }}>
+          <View style={{ flexDirection: "row-reverse", marginVertical: spacing.tiny }}>
             <Button
               preset="raised"
               disabled={disableSubmitButton()}
@@ -133,7 +143,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
               onPress={() => signUpEmail(name, email, password, confirmPassword)}
             />
           </View>
-          <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
+          <View style={{ flexDirection: "row", marginTop: spacing.medium, paddingHorizontal: spacing.small }}>
             <Text tx="signupScreen.signin" />
 
             <Button
@@ -155,13 +165,16 @@ SignupScreen.navigationOptions = {
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
         <Image
           source={require('../../components/header/light.png')}
-          style={{ height: 25, width: 200 }}
+          style={{ height: 25, width: 100 }}
           resizeMode='contain'
         />
       </View>
     )
   },
   headerTitleContainerStyle: {
-    flex: 1
+    flex: 1,
+  },
+  headerRight: () => {
+    return <View />
   }
 }

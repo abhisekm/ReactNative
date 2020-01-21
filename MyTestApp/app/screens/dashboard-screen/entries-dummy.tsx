@@ -52,6 +52,9 @@ export const ENTRIES1 = [
     brandName: 'Facebook',
     brandImage: 'https://image.flaticon.com/icons/png/512/124/124010.png',
     link: 'https://www.facebook.com'
+  },
+  {
+    id: 'more'
   }
 ];
 

@@ -1,6 +1,7 @@
 import { ViewStyle, TextStyle, Platform } from "react-native"
 import { color, spacing } from "../../theme"
 import { normalisedFontSize } from "../../theme/fontSize"
+import { scale } from "../../utils/scale"
 
 /**
  * All text will start off looking like this.
@@ -40,8 +41,8 @@ export const viewPresets = {
 
   raised: {
     buttonStyle: {
-      paddingHorizontal: spacing.large,
-      paddingVertical: spacing.medium,
+      paddingHorizontal: spacing.medium,
+      paddingVertical: spacing.small,
     } as ViewStyle,
     titleStyle: {
       color: 'white',
@@ -64,8 +65,8 @@ export const viewPresets = {
   outline: {
     buttonStyle: {
       flex: 1,
-      paddingHorizontal: spacing.large,
-      paddingVertical: spacing.medium,
+      paddingHorizontal: spacing.medium,
+      paddingVertical: spacing.small,
       borderWidth: 2
     } as ViewStyle,
     titleStyle: {
@@ -81,9 +82,8 @@ export const viewPresets = {
 
   social: {
     buttonStyle: {
-      borderRadius: spacing.large,
-      paddingTop: spacing.medium,
-      paddingBottom: spacing.medium,
+      borderRadius: spacing.extraLarge,
+      paddingVertical: spacing.medium,
     } as ViewStyle,
     titleStyle: {
       color: 'white',
@@ -102,7 +102,7 @@ export const viewPresets = {
     containerStyle: {
       flex: 1,
       margin: spacing.small,
-      borderRadius: 30,
+      borderRadius: spacing.extraLarge,
       justifyContent: 'center',
     } as ViewStyle,
   },

@@ -16,18 +16,22 @@ import FastImage from "react-native-fast-image"
 import { spacing, color } from "../../theme"
 import { verticalScale, scale } from "../../utils/scale"
 import { normalisedFontSize } from "../../theme/fontSize"
+import { Campaign } from "../../models/campaign"
+import { CampaignSeeAll } from "../../components/campaign-see-all"
 
 export interface LiveCampaignListingScreenProps extends NavigationTabScreenProps<{}> {
 }
 
-const _renderItemWithParallax = ({ item, index }, parallaxProps) => {
+const _renderItemWithParallax = ({ item, index }: { item: Campaign, index: number }, parallaxProps) => {
   return (
-    <CampaignSlider
-      data={item}
-      even={(index + 1) % 2 === 0}
-      parallax={true}
-      parallaxProps={parallaxProps}
-    />
+    item.id === 'more' ?
+      <CampaignSeeAll /> :
+      <CampaignSlider
+        data={item}
+        even={(index + 1) % 2 === 0}
+        parallax={true}
+        parallaxProps={parallaxProps}
+      />
   );
 }
 

@@ -12,6 +12,7 @@ import { navigate } from "../../navigation"
 import { SocialIcon, Icon } from "react-native-elements"
 import { useStores } from "../../models/root-store"
 import { Loading } from "../../components/loading"
+import { normalisedFontSize } from "../../theme/fontSize"
 
 interface Props extends NavigationStackScreenProps {
 }
@@ -35,6 +36,7 @@ export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props
             button
             type="facebook"
             onPress={signInFacebook}
+            fontStyle={{ fontSize: normalisedFontSize.normal }}
           />
 
           <SocialIcon
@@ -43,6 +45,7 @@ export const HomeScreen: NavigationStackScreenComponent<Props> = observer((props
             button
             type="google"
             onPress={signInGoogle}
+            fontStyle={{ fontSize: normalisedFontSize.normal }}
           />
 
           <Button

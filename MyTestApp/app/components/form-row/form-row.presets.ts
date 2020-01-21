@@ -1,10 +1,11 @@
 import { ViewStyle } from "react-native"
 import { color, spacing } from "../../theme"
+import { scale } from "../../utils/scale"
 
 /**
  * The size of the border radius.
  */
-const RADIUS = 8
+const RADIUS = scale(8)
 
 /**
  * The default style of the container.
@@ -68,7 +69,7 @@ export const PRESETS = {
   */
   inputContainer: {
     ...ROOT,
-    borderRadius: 4,
+    borderRadius: scale(4),
     padding: 0,
     paddingHorizontal: spacing.small,
     marginTop: spacing.small,

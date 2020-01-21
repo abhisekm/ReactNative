@@ -46,13 +46,16 @@ CampaignDetailsScreen.navigationOptions = {
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
         <Image
           source={require('../../components/header/light.png')}
-          style={{ height: 25, width: 200 }}
+          style={{ height: 25, width: 100 }}
           resizeMode='contain'
         />
       </View>
     )
   },
   headerTitleContainerStyle: {
-    flex: 1
+    flex: 1,
+  },
+  headerRight: () => {
+    return <View />
   }
 }

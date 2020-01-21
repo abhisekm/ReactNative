@@ -1,6 +1,7 @@
 import * as React from "react"
-import { View, ViewStyle } from "react-native"
+import { View, ViewStyle, Image } from "react-native"
 import { Text } from "../text"
+import { verticalScale, scale } from "../../utils/scale"
 export interface HeaderProps {
   /**
    * Text which is looked up via i18n.
@@ -29,8 +30,12 @@ export function Header(props: HeaderProps) {
   const textStyle = {}
 
   return (
-    <View style={style} {...rest}>
-      <Text tx={tx} text={text} style={textStyle} />
+    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
+      <Image
+        source={require('../../components/header/light.png')}
+        style={{ height: verticalScale(25), width: scale(200) }}
+        resizeMode='contain'
+      />
     </View>
   )
 }

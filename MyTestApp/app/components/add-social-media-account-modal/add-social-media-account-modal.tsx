@@ -7,6 +7,7 @@ import { spacing, color } from "../../theme";
 import { TextField } from "../text-field";
 import styleSheet from "../../theme/styleSheet";
 import { Button } from "../button";
+import { normalisedFontSize } from "../../theme/fontSize";
 
 
 const tiktok = require('../add-social-media-account/tik-tok.png');
@@ -127,7 +128,7 @@ export function AddSocialMediaAccountModal(props: AddSocialMediaAccountModalProp
       <View style={{ backgroundColor: 'white', borderRadius: 10 }}>
         <Text
           preset="fieldLabel" text="Select social media type"
-          style={{ marginHorizontal: spacing.large, marginVertical: spacing.medium, color: color.text, fontSize: 20, textTransform: 'capitalize' }} />
+          style={{ marginHorizontal: spacing.large, marginVertical: spacing.medium, color: color.text, fontSize: normalisedFontSize.large, textTransform: 'capitalize' }} />
 
         <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginVertical: spacing.small }} >
           {remainingMedia.map((value) => {
@@ -169,7 +170,6 @@ export function AddSocialMediaAccountModal(props: AddSocialMediaAccountModalProp
             marginTop: spacing.large,
             marginBottom: spacing.medium,
             marginHorizontal: spacing.medium,
-            height: 60
           }}>
           <Button
             preset="raised"
