@@ -17,6 +17,7 @@ import { WalkthroughScreen } from "../screens/walkthrough-screen"
 import { CampaignDetailsScreen } from "../screens/campaign-details-screen"
 import { AppliedCampaignScreen } from "../screens/applied-campaign-screen"
 import { LiveCampaignListingScreen } from "../screens/live-campaign-listing-screen"
+import { AllCampaignListingScreen } from "../screens/all-campaign-listing-screen"
 
 const DashboardFlowStack = createBottomTabNavigator({
   LiveCampaign: { screen: LiveCampaignListingScreen },
@@ -66,6 +67,7 @@ export const PrimaryNavigator = createSwitchNavigator(
       dashboardFlow: DashboardFlowStack,
       CampaignDetails: { screen: CampaignDetailsScreen },
       AppliedCampaign: { screen: AppliedCampaignScreen },
+      AllCampaign: { screen: AllCampaignListingScreen },
     }, {
       headerMode: 'screen',
       defaultNavigationOptions: DefaultNavOptions

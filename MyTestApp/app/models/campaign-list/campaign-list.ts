@@ -4,6 +4,8 @@ import { CampaignModel, Campaign } from "../campaign/campaign";
 import FastImage, { FastImageSource } from "react-native-fast-image";
 import { CampaignDetailModel, CampaignDetail } from "../campaign-detail";
 import omit from "ramda/es/omit";
+import { ENTRIES1 } from "../../screens/dashboard-screen/entries-dummy"
+import { delay } from "../../utils/delay";
 
 /**
  * Model description here for TypeScript hints.
@@ -12,6 +14,7 @@ export const CampaignListModel = types
   .model("CampaignList")
   .props({
     campaigns: types.array(CampaignModel),
+    allCampaigns: types.array(CampaignModel),
     campaignDetail: types.maybeNull(CampaignDetailModel),
     errorMessage: types.maybeNull(types.string),
     loading: false,
@@ -29,6 +32,12 @@ export const CampaignListModel = types
       self.errorMessage = null;
     },
 
+    clearAll() {
+      self.allCampaigns && self.allCampaigns.clear();
+      self.loading = false;
+      self.errorMessage = null;
+    },
+
     clearCampaignDetails() {
       self.campaignDetail = null;
       self.loading = false;
@@ -37,6 +46,10 @@ export const CampaignListModel = types
 
     getCampaigns() {
       return self.campaigns.slice();
+    },
+
+    getAllCampaigns() {
+      return self.allCampaigns;
     },
 
     getCampaignDetail() {
@@ -89,6 +102,67 @@ export const CampaignListModel = types
 
       self.loading = false;
     }),
+
+    fetchAllCampaigns: flow(function* () {
+      self.clearAll();
+      self.loading = true;
+
+      // const result: { kind: string, campaigns: Campaign[], temporary: boolean, errorMessage: string }
+      //   = yield self.environment.api.getCampaignListing();
+
+      // const { kind, campaigns, errorMessage } = result;
+
+      // if (kind !== "ok") {
+      //   console.log(kind, errorMessage);
+      //   self.loading = false;
+      //   self.errorMessage = errorMessage ? errorMessage : "Unknown Error. Try again later";
+      //   return;
+      // }
+
+      // const images: FastImageSource[] = []
+
+      // const moreCampaign: Campaign = {
+      //   id: "404",
+      //   campaignImage: "http://prod-upp-image-read.ft.com/39648f42-2110-11ea-b8a1-584213ee7b2b",
+      //   brandName: "Immersify",
+      //   brandImage: "https://st3.depositphotos.com/3969727/12985/v/950/depositphotos_129854204-stock-illustration-hashtag-sign-of-splash-paint.jpg",
+      //   title: "Are you an Influencer?",
+      //   link: "listing",
+      //   description: "Spread your story with media and storytellers that are just right for you."
+      // }
+
+      // campaigns.push(moreCampaign);
+
+      // if (campaigns) {
+      //   campaigns.forEach((_campaign) => {
+      //     self.campaigns.push(_campaign);
+      //     if (_campaign.campaignImage)
+      //       images.push({ uri: _campaign.campaignImage });
+
+      //     if (_campaign.brandImage)
+      //       images.push({ uri: _campaign.brandImage });
+      //   })
+
+      //   FastImage.preload(images);
+      // }
+
+
+      const images: FastImageSource[] = []
+
+      ENTRIES1.forEach((entry: Campaign) => {
+        self.allCampaigns.push(entry);
+        if (entry.campaignImage)
+          images.push({ uri: entry.campaignImage });
+
+        if (entry.brandImage)
+          images.push({ uri: entry.brandImage });
+      })
+
+      FastImage.preload(images);
+
+      self.loading = false;
+    }),
+
 
     fetchCampaignDetails: flow(function* (campaignId: string) {
       self.clearCampaignDetails();

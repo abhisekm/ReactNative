@@ -101,7 +101,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
 
   return (
     <TouchableScale
-      style={styles.slideInnerContainer}
+      style={[styles.slideInnerContainer, style]}
       activeScale={0.95}
       friction={10}
       onPress={() =>

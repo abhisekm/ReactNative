@@ -24,7 +24,7 @@ export function CampaignSeeAll(props: CampaignSeeAllProps) {
       style={[styles.slideInnerContainer, {}]}
       activeScale={0.95}
       friction={10}
-      onPress={() => navigate("route")} >
+      onPress={() => navigate("AllCampaign")} >
       <View style={[styles.shadow, { backgroundColor: color.palette.pink1 }]} >
 
         <Image
@@ -40,4 +40,3 @@ export function CampaignSeeAll(props: CampaignSeeAllProps) {
     </TouchableScale>
   )
 }
-
