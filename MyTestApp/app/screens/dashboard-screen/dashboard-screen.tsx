@@ -41,7 +41,6 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
         even={(index + 1) % 2 === 0}
         parallax={true}
         parallaxProps={parallaxProps}
-        ongoing={true}
       />
     );
   }
@@ -112,7 +111,7 @@ export const DashboardScreen: NavigationBottomTabScreenComponent<DashboardScreen
 
 DashboardScreen.navigationOptions = {
   title: 'Dashboard',
-  tabBarIcon: ({ tintColor }) => <Icon name='home' color={tintColor} />
+  tabBarIcon: ({ tintColor }) => <Icon name='home' color={tintColor} size={scale(24)} />
 }
 
 const styles = StyleSheet.create({

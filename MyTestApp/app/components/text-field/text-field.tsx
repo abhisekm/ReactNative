@@ -6,23 +6,7 @@ import { Text } from "../text"
 import { TextFieldProps } from "./text-field.props"
 import { mergeAll, flatten } from "ramda"
 import { Input } from "react-native-elements"
-import { normalisedFontSize } from "../../theme/fontSize"
-
-// the base styling for the container
-const CONTAINER: ViewStyle = {
-}
-
-// the base styling for the TextInput
-const INPUT: TextStyle = {
-  fontSize: normalisedFontSize.normal,
-  backgroundColor: color.palette.white,
-  textAlignVertical: 'bottom'
-}
-
-// currently we have no presets, but that changes quickly when you build your app.
-const PRESETS: { [name: string]: ViewStyle } = {
-  default: {},
-}
+import { presets } from "./text-field.preset"
 
 const enhance = (style, styleOverride) => {
   return mergeAll(flatten([style, styleOverride]))
@@ -38,31 +22,36 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
     labelTx,
     label,
     preset = "default",
-    style: styleOverride,
+    containerStyle: containerStyleOverride,
+    inputContainerStyle: inputContainerStyleOverride,
     inputStyle: inputStyleOverride,
     forwardedRef,
     ...rest
   } = props
 
-  let containerStyle: ViewStyle = { ...CONTAINER, ...PRESETS[preset] }
-  containerStyle = enhance(containerStyle, styleOverride)
+  let containerStyle: ViewStyle = presets[preset].containerStyle
+  containerStyle = enhance(containerStyle, containerStyleOverride)
 
-  let inputStyle: TextStyle = INPUT
+  let inputContainerStyle: ViewStyle = presets[preset].inputContainerStyle
+  inputContainerStyle = enhance(inputContainerStyle, inputContainerStyleOverride)
+
+  let inputStyle: TextStyle = presets[preset].inputStyle;
   inputStyle = enhance(inputStyle, inputStyleOverride)
+
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
-  const labelElement = <Text preset="fieldLabel" tx={labelTx} text={label} />
+  const labelElement = label ? <Text preset="fieldLabel" tx={labelTx} text={label} /> : null
 
   return (
-    <View style={containerStyle}>
-      <Input
-        placeholder={actualPlaceholder}
-        placeholderTextColor={color.palette.grey8}
-        underlineColorAndroid={color.transparent}
-        label={labelElement}
-        inputStyle={inputStyle}
-        ref={forwardedRef}
-        {...rest}
-      />
-    </View>
+    <Input
+      placeholder={actualPlaceholder}
+      placeholderTextColor={color.palette.grey8}
+      underlineColorAndroid={color.transparent}
+      label={labelElement}
+      inputStyle={inputStyle}
+      ref={forwardedRef}
+      containerStyle={containerStyle}
+      inputContainerStyle={inputContainerStyle}
+      {...rest}
+    />
   )
 }

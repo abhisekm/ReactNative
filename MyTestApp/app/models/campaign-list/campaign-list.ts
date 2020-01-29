@@ -173,6 +173,8 @@ export const CampaignListModel = types
 
       const { kind, campaignDetail, errorMessage } = result;
 
+
+
       if (kind !== "ok") {
         console.log(kind, errorMessage);
         self.loading = false;
@@ -182,9 +184,9 @@ export const CampaignListModel = types
 
       const images: FastImageSource[] = []
 
-      if (campaignDetail) {
-        images.push({ uri: campaignDetail.brandImage });
-        images.push({ uri: campaignDetail.campaignImage });
+      if (campaignDetail != null && campaignDetail.campaignDetails != null) {
+        images.push({ uri: campaignDetail.campaignDetails.brandImage });
+        images.push({ uri: campaignDetail.campaignDetails.campaignImage });
 
         FastImage.preload(images);
 

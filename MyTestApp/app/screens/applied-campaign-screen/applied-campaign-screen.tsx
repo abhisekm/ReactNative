@@ -17,6 +17,7 @@ import { Avatar, Icon } from "react-native-elements"
 import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { ParallaxHeader } from "../../components/parallax-header"
 import { AppliedCampaignContent } from "../../components/applied-campaign-content"
+import { scale, verticalScale } from "../../utils/scale"
 
 export interface AppliedCampaignScreenProps extends NavigationStackScreenProps<{}> {
 }
@@ -52,41 +53,41 @@ export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampai
     }
   }, [campaignId]);
 
-
   return (
     <View style={styleSheet.view_full}>
-      {/* <NavigationEvents
+      <NavigationEvents
         onWillBlur={payload => clearCampaignDetails()}
-      /> */}
+      />
       <Wallpaper />
       <Screen
         preset="fixed"
-        unsafe
         statusBar="light-content"
-        style={{ flex: 1, backgroundColor: getCampaignDetail() != null ? 'rgba(51,51,51,1)' : color.transparent }} >
+        style={{ backgroundColor: getCampaignDetail() != null ? 'rgba(51,51,51,1)' : color.transparent }} >
         {
-          !isLoading && getCampaignDetail() != null
+          !isLoading && getCampaignDetail() != null && getCampaignDetail().campaignDetails != null
           &&
           <ParallaxScroll
             renderHeader={({ animatedValue }) =>
               <ParallaxHeader
-                headerHeight={60 - 0}
-                parallaxHeight={250}
-                text={title || getCampaignDetail().title}
-                avatarSource={brandImage || getCampaignDetail().brandImage}
+                headerHeight={(60)}
+                parallaxHeight={(250)}
+                text={title || getCampaignDetail().campaignDetails.title}
+                avatarSource={brandImage || getCampaignDetail().campaignDetails.brandImage}
                 animatedValue={animatedValue}
                 onBackPress={() => navigation.goBack()}
               />
             }
-            headerHeight={60}
+            headerHeight={(60)}
             isHeaderFixed={true}
-            parallaxHeight={250}
+            parallaxHeight={(250)}
             useNativeDriver={true}
             isBackgroundScalable={true}
             headerBackgroundColor={'rgba(51, 51, 51, 0)'}
             headerFixedTransformY={0}
             renderParallaxBackground={() =>
-              <FastImage source={{ uri: campaignImage || getCampaignDetail().campaignImage }} style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, opacity: 0.7 }} />
+              <FastImage
+                source={{ uri: campaignImage || getCampaignDetail().campaignDetails.campaignImage }}
+                style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, opacity: 0.7 }} />
             }
             onChangeHeaderVisibility={console.log('onChangeHeaderVisibility')}
             renderParallaxForeground={() => { }}
@@ -96,9 +97,10 @@ export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampai
             parallaxBackgroundScrollSpeed={5}
             parallaxForegroundScrollSpeed={2.5}
             keyboardShouldPersistTaps="always"
+            scrollStyle={{ flexGrow: 1, flexShrink: 1 }}
           >
 
-            <View style={{ minHeight: 750, marginHorizontal: spacing.small, marginTop: -spacing.large, marginBottom: spacing.medium }} >
+            <View style={{ marginHorizontal: spacing.small, marginTop: -spacing.large, marginBottom: spacing.medium, }} >
               <AppliedCampaignContent data={getCampaignDetail()} />
             </View>
           </ParallaxScroll>

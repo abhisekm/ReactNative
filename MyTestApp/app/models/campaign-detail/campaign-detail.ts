@@ -1,4 +1,9 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { CampaignModel } from "../campaign/campaign"
+import { CampaignDeliverableModel } from "../campaign-deliverable"
+import { CampaignStatusModel } from "../campaign-status"
+import { CampaignQuoteModel } from "../campaign-quote"
+import { CampaignInfoModel } from "../campaign-info"
 
 /**
  * Model description here for TypeScript hints.
@@ -6,19 +11,11 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 export const CampaignDetailModel = types
   .model("CampaignDetail")
   .props({
-    id: types.string,
-    campaignImage: types.maybeNull(types.string),
-    brandName: types.maybeNull(types.string),
-    brandImage: types.maybeNull(types.string),
-    title: types.maybeNull(types.string),
-    link: types.maybeNull(types.string),
-    description: types.maybeNull(types.string),
-    campaignStatusText: types.maybeNull(types.string),
-    campaignStatus: types.number,
-    deliverableLink: types.maybeNull(types.string),
-    deliverableStatus: types.maybeNull(types.number),
-    deliverableDeadline: types.number,
-    quote: types.maybeNull(types.number)
+    campaignDetails: types.maybeNull(CampaignModel),
+    deliverable: types.maybeNull(CampaignDeliverableModel),
+    status: types.maybeNull(CampaignStatusModel),
+    quote: types.maybeNull(CampaignQuoteModel),
+    info: types.maybeNull(types.array(CampaignInfoModel))
   })
   .views(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

@@ -343,6 +343,8 @@ PODS:
   - react-native-fbsdk/Share (1.0.4):
     - FBSDKShareKit (~> 5.5)
     - React
+  - react-native-image-picker (2.2.0):
+    - React
   - react-native-splash-screen (3.2.0):
     - React
   - react-native-webview (7.4.3):
@@ -445,6 +447,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-cookies (from `../node_modules/react-native-cookies/ios`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -543,6 +546,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-cookies/ios"
   react-native-fbsdk:
     :path: "../node_modules/react-native-fbsdk"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   react-native-webview:
@@ -641,6 +646,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
   react-native-cookies: 854d59c4135c70b92a02ca4930e68e4e2eb58150
   react-native-fbsdk: 45e28bbab3e905cbc635c0bdd3444b372e933ae9
+  react-native-image-picker: 5f9eabde109955b2faf6ef5d5114a49a8ff45ded
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 82d6456dfae1b3ef70c3939135536342afc96373
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6

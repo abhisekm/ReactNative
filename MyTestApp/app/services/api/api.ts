@@ -6,6 +6,14 @@ import * as Types from "./api.types"
 import { InstagramPost } from "../../models/instagram-post"
 import { Campaign } from "../../models/campaign"
 import { CampaignDetail } from "../../models/campaign-detail"
+import { ImagePickerResponse } from "react-native-image-picker"
+import { Platform } from "react-native"
+import { firebase } from "@react-native-firebase/auth"
+import { CampaignDeliverable } from "../../models/campaign-deliverable"
+import { CampaignQuote } from "../../models/campaign-quote"
+import { CampaignInfo } from "../../models/campaign-info"
+import { CampaignStatus } from "../../models/campaign-status"
+import { cast } from "mobx-state-tree"
 
 /**
  * Manages all requests to the API.
@@ -30,6 +38,11 @@ export class Api {
   * The Immersify apisauce instance which performs the requests.
   */
   immersifyapisauce: ApisauceInstance
+
+  /**
+   * Test api for upload
+   */
+  testapisauce: ApisauceInstance
 
   /**
    * Configurable options.
@@ -86,63 +99,6 @@ export class Api {
       },
     })
   }
-
-  /**
-   * Gets a list of users.
-   */
-  async getUsers(): Promise<Types.GetUsersResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users`)
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    const convertUser = raw => {
-      return {
-        id: raw.id,
-        name: raw.name,
-      }
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
-      return { kind: "ok", users: resultUsers }
-    } catch {
-      return { kind: "bad-data" }
-    }
-  }
-
-  /**
-   * Gets a single user by ID
-   */
-
-  async getUser(id: string): Promise<Types.GetUserResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const resultUser: Types.User = {
-        id: response.data.id,
-        name: response.data.name,
-      }
-      return { kind: "ok", user: resultUser }
-    } catch {
-      return { kind: "bad-data" }
-    }
-  }
-
 
   /**
   * Gets insta access_token from code
@@ -356,20 +312,52 @@ export class Api {
     }
 
     const convertPost = (raw): CampaignDetail => {
+      const _campaignDetail: Campaign = raw.campaign_details ? {
+        id: raw.campaign_details.campaign_id,
+        campaignImage: raw.campaign_details.campaign_image,
+        brandImage: raw.campaign_details.brand_image,
+        brandName: raw.campaign_details.brand_name,
+        title: raw.campaign_details.campaign_title,
+        link: raw.campaign_details.link,
+        description: raw.campaign_details.campaign_description,
+      } : null;
+
+      const _deliverable: CampaignDeliverable = raw.deliverable ? {
+        deliverableDeadline: raw.deliverable.deliverable_deadline,
+        deliverableLink: raw.deliverable.deliverable_link,
+        deliverableStatus: raw.deliverable.deliverable_status,
+        editable: raw.deliverable.editable
+      } : null;
+
+      const _status: CampaignStatus = raw.status ? {
+        campaignStatus: raw.status.campaign_status,
+        campaignStatusText: raw.status.campaign_status_text,
+      } : null;
+
+      const _quote: CampaignQuote = raw.quote ? {
+        amount: raw.quote.amount,
+        comment: raw.quote.comment,
+        editable: raw.quote.editable
+      } : null;
+
+      const _info: CampaignInfo[] = new Array();
+      if (raw.info) {
+        raw.info.forEach(element => {
+          const _eachInfo: CampaignInfo = {
+            title: element.title,
+            description: element.description
+          }
+
+          _info.push(_eachInfo);
+        });
+      }
+
       return {
-        id: raw.campaign_id,
-        campaignImage: raw.campaign_image,
-        brandImage: raw.brand_image,
-        brandName: raw.brand_name,
-        title: raw.campaign_title,
-        link: raw.link,
-        description: raw.campaign_description,
-        campaignStatus: raw.campaign_status,
-        campaignStatusText: raw.campaign_status_text,
-        deliverableDeadline: raw.deliverable_deadline,
-        deliverableLink: raw.deliverable_link,
-        deliverableStatus: raw.deliverable_status,
-        quote: raw.quote,
+        campaignDetails: _campaignDetail,
+        status: _status,
+        deliverable: _deliverable,
+        quote: _quote,
+        info: cast(_info),
       }
     }
 
@@ -433,4 +421,49 @@ export class Api {
       return { kind: "bad-data" };
     }
   }
+
+  /**
+   * Dummy test image upload
+   */
+
+  async uploadImage(photo: ImagePickerResponse): Promise<Types.GetCampaignListingResult> {
+    // create form data
+    const createFormData = (photo: ImagePickerResponse, body) => {
+      const data = new FormData();
+
+      data.append("photo", JSON.stringify({
+        name: photo.fileName,
+        type: photo.type,
+        uri:
+          Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+      }));
+
+      Object.keys(body).forEach(key => {
+        data.append(key, body[key]);
+      });
+
+      return data;
+    };
+
+    const data = {
+      userId: await firebase.auth().currentUser.getIdToken(),
+    }
+
+    // make the api call
+    const response: ApiResponse<any> = await this.apisauce.post('/getlivecampaigns', createFormData(photo, data))
+
+    // the typical ways to die when calling an api
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem;
+    }
+
+    // transform the data into the format we are expecting
+    try {
+      return { kind: "ok", campaigns: null };
+    } catch (error) {
+      return { kind: "bad-data" };
+    }
+  }
+
 }

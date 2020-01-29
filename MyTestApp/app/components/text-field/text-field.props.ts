@@ -1,5 +1,6 @@
 import { TextStyle, ViewStyle } from "react-native"
 import { InputProps } from "react-native-elements";
+import { TextFieldPresets } from "./text-field.preset";
 
 export interface TextFieldProps extends InputProps {
   /**
@@ -25,7 +26,12 @@ export interface TextFieldProps extends InputProps {
   /**
    * Optional container style overrides useful for margins & padding.
    */
-  style?: ViewStyle | ViewStyle[]
+  containerStyle?: ViewStyle | ViewStyle[]
+
+  /**
+  * Optional input container style overrides useful for margins & padding.
+  */
+  inputContainerStyle?: ViewStyle | ViewStyle[]
 
   /**
    * Optional style overrides for the input.
@@ -35,7 +41,7 @@ export interface TextFieldProps extends InputProps {
   /**
    * Various look & feels.
    */
-  preset?: "default"
+  preset?: TextFieldPresets
 
   forwardedRef?: any
 }

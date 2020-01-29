@@ -31,8 +31,6 @@ export interface CampaignSliderProps {
   parallax?: boolean
 
   parallaxProps?: Object
-
-  ongoing?: boolean
 }
 
 /**
@@ -47,8 +45,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
     style,
     data: { id, title, brandImage, brandName, campaignImage, link, description },
     parallax,
-    parallaxProps,
-    ongoing
+    parallaxProps
   } = props
 
   const uppercaseTitle = React.useMemo(() => title ? (
@@ -97,7 +94,7 @@ export function CampaignSlider(props: CampaignSliderProps) {
       );
   }, [campaignImage, parallaxProps, even, parallax]);
 
-  const route = link === "listing" ? "LiveCampaign" : (ongoing ? 'AppliedCampaign' : 'CampaignDetails');
+  const route = link === "listing" ? "LiveCampaign" : 'CampaignDetails';
 
   return (
     <TouchableScale

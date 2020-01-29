@@ -4,20 +4,21 @@ import { LoginScreen } from "../screens/login-screen"
 import { SignupScreen } from "../screens/signup-screen"
 import { DashboardScreen } from "../screens/dashboard-screen"
 import { createSwitchNavigator } from "react-navigation"
-import { color } from "../theme"
+import { color, spacing } from "../theme"
 import { ResetPasswordScreen } from "../screens/reset-password-screen"
 import { VerifyPhoneScreen } from "../screens/verify-phone-screen"
 import { QuestionnaireScreen } from "../screens/questionnaire-screen"
 import { HomeScreen } from "../screens/home-screen"
 import { createBottomTabNavigator } from "react-navigation-tabs"
 import { AccountScreen } from "../screens/account-screen"
-import { FeaturePostsScreen } from "../screens/feature-posts-screen"
 import { UserDetailsScreen } from "../screens/user-details-screen"
 import { WalkthroughScreen } from "../screens/walkthrough-screen"
-import { CampaignDetailsScreen } from "../screens/campaign-details-screen"
 import { AppliedCampaignScreen } from "../screens/applied-campaign-screen"
 import { LiveCampaignListingScreen } from "../screens/live-campaign-listing-screen"
 import { AllCampaignListingScreen } from "../screens/all-campaign-listing-screen"
+import { DeadlineImageUploadScreen } from "../screens/deadline-image-upload-screen"
+import { verticalScale, scale } from "../utils/scale"
+import { normalisedFontSize } from "../theme/fontSize"
 
 const DashboardFlowStack = createBottomTabNavigator({
   LiveCampaign: { screen: LiveCampaignListingScreen },
@@ -29,7 +30,12 @@ const DashboardFlowStack = createBottomTabNavigator({
     activeTintColor: color.primary,
     inactiveTintColor: color.palette.white,
     style: {
-      backgroundColor: color.palette.grey10
+      backgroundColor: color.palette.grey10,
+      height: scale(60)
+    },
+    labelStyle: {
+      fontSize: normalisedFontSize.small,
+      paddingBottom: spacing.tiny,
     }
   }
 });
@@ -65,9 +71,9 @@ export const PrimaryNavigator = createSwitchNavigator(
     UserDetails: { screen: UserDetailsScreen },
     campaignFlow: createStackNavigator({
       dashboardFlow: DashboardFlowStack,
-      CampaignDetails: { screen: CampaignDetailsScreen },
-      AppliedCampaign: { screen: AppliedCampaignScreen },
+      CampaignDetails: { screen: AppliedCampaignScreen },
       AllCampaign: { screen: AllCampaignListingScreen },
+      ImageUpload: { screen: DeadlineImageUploadScreen },
     }, {
       headerMode: 'screen',
       defaultNavigationOptions: DefaultNavOptions

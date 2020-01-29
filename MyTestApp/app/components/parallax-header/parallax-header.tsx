@@ -3,6 +3,7 @@ import { View, ViewStyle, Animated, StyleSheet, Dimensions, Platform, TouchableO
 import { spacing, color } from "../../theme";
 import { Icon } from "react-native-elements";
 import FastImage from "react-native-fast-image";
+import { normalisedFontSize } from "../../theme/fontSize";
 
 export interface ParallaxHeaderProps {
   /**
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: normalisedFontSize.large,
     fontWeight: 'bold',
     textAlign: 'center',
     marginHorizontal: spacing.small,

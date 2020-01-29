@@ -67,11 +67,15 @@ export const AuthStoreModel = types
         else
           navigate("campaignFlow")
       } else {
-        navigate("loginFlow")
+        navigate("dashboardFlow")
       }
 
       self.state = "done";
     }),
+
+    isSignedIn() {
+      return firebase.auth().currentUser != null;
+    },
 
     /**
      * Sign in with firebase with facebook credential

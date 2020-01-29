@@ -104,7 +104,7 @@ export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveC
 
 LiveCampaignListingScreen.navigationOptions = {
   title: 'Campaign',
-  tabBarIcon: ({ tintColor }) => <Icon name="hash" type="feather" color={tintColor} />,
+  tabBarIcon: ({ tintColor }) => <Icon name="hash" type="feather" color={tintColor} size={scale(24)} />,
 }
 
 const styles = StyleSheet.create({

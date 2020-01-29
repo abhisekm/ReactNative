@@ -24,7 +24,7 @@ const _renderItem = ({ item, index }) => {
         data={item}
         even={(index + 1) % 2 === 0}
         parallax={false}
-        style={{ width: '100%' }}
+        style={{ width: '100%', marginBottom: spacing.medium }}
       />
   );
 }
