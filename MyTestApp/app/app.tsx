@@ -4,13 +4,15 @@
 
 import "./i18n"
 import React, { useState, useEffect } from "react"
-import { AppRegistry, YellowBox, View } from "react-native"
+import { AppRegistry, YellowBox, View, Alert, PushNotificationIOS, Platform } from "react-native"
 import { RootNavigator, setNavigator } from "./navigation"
 import { StorybookUIRoot } from "../storybook"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models/root-store"
 
 import { AppTheme } from "./theme"
 import { ThemeProvider } from "react-native-elements"
+import { firebase, FirebaseMessagingTypes } from "@react-native-firebase/messaging"
+import NotifService from "./utils/notifService"
 
 /**
  * Ignore some yellowbox warnings. Some of these are for deprecated functions
@@ -40,8 +42,77 @@ Object.defineProperty(ReactNative, "AsyncStorage", {
  */
 const App = () => {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
+  let unsubscribePushMessage;
+
+  const onRegister = (token) => {
+    Alert.alert("Registered !", JSON.stringify(token));
+    console.log(token);
+  }
+
+  const onNotif = (notif) => {
+    console.log(notif);
+
+    if (notif.foregroound)
+      Alert.alert(notif.title, notif.message);
+
+    if (Platform.OS == "ios")
+      notif.finish(PushNotificationIOS.FetchResult.NoData);
+  }
+
+  const checkPushNotificationPermission = async (_rootStore: RootStore) => {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+      getToken(_rootStore);
+    } else {
+      requestPermission(_rootStore);
+    }
+  }
+
+  const getToken = async (_rootStore: RootStore) => {
+    let fcmToken = _rootStore.authStore.getToken();
+
+    if (!fcmToken) {
+      fcmToken = await firebase.messaging().getToken();
+      if (fcmToken) {
+        // user has a device token
+        _rootStore.authStore.setToken(fcmToken);
+      }
+    }
+  }
+
+  const requestPermission = async (_rootStore: RootStore) => {
+    try {
+      await firebase.messaging().requestPermission();
+      // User has authorised
+      getToken(_rootStore);
+    } catch (error) {
+      // User has rejected permissions
+      console.log('permission rejected');
+    }
+  }
+
+  const registerListeners = () => {
+    unsubscribePushMessage = firebase.messaging().onMessage(async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+      console.log('FCM Message Data:', remoteMessage.data);
+    })
+  }
+
+  const storeRootStore = async (store: RootStore) => {
+    await setRootStore(store);
+
+    return store;
+  }
+
   useEffect(() => {
-    setupRootStore().then(setRootStore)
+    setupRootStore()
+      .then(storeRootStore).catch((reason) => console.log('setup error - ', reason))
+      .then(checkPushNotificationPermission).catch((reason) => console.log('push error - ', reason))
+      .then(registerListeners)
+      .then(() => new NotifService(onRegister, onNotif));
+
+    return () => {
+      unsubscribePushMessage();
+    }
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
@@ -92,3 +163,9 @@ const SHOW_STORYBOOK = false
 
 const RootComponent = SHOW_STORYBOOK && __DEV__ ? StorybookUIRoot : App
 AppRegistry.registerComponent(APP_NAME, () => RootComponent)
+firebase.messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+  // Update a users messages list using AsyncStorage
+  console.log('background msg - ', remoteMessage);
+
+});
+

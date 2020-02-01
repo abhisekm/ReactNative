@@ -22,6 +22,7 @@ export const AuthStoreModel = types
     errorMessage: types.maybe(types.string),
     successMessage: types.maybeNull(types.string),
     displayName: types.maybe(types.string),
+    fcmToken: types.maybeNull(types.string),
     showWalkthrough: true,
     showUserDetails: true,
     showQuestionnaire: true,
@@ -29,7 +30,11 @@ export const AuthStoreModel = types
   .extend(withRootStore)
   .views(self => ({
     showLoading(): boolean {
-      return self.state === "pending"
+      return self.state === "pending";
+    },
+
+    getToken(): string {
+      return self.fcmToken;
     }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions(self => ({
@@ -325,6 +330,10 @@ export const AuthStoreModel = types
       console.log(answersAsObj);
       self.showQuestionnaire = false;
       self.silentSignIn();
+    },
+
+    setToken(token) {
+      self.fcmToken = token;
     },
 
     goToEmailLogin() {
