@@ -55,7 +55,7 @@ if (__DEV__) {
 export class Reactotron {
   config: ReactotronConfig
 
-  rootStore: any
+  rootStore: RootStore
 
   /**
    * Create the Reactotron service.
@@ -81,7 +81,7 @@ export class Reactotron {
    *
    * @param rootStore The root store
    */
-  setRootStore(rootStore: any, initialData: any) {
+  setRootStore(rootStore: RootStore, initialData: any) {
     if (__DEV__) {
       rootStore = rootStore as RootStore // typescript hack
       this.rootStore = rootStore

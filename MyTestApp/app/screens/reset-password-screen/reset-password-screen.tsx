@@ -9,7 +9,6 @@ import styleSheet from "../../theme/styleSheet"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
 import { Button } from "../../components/button"
-import { goBack } from "../../navigation/navigationRef"
 import { useStores } from "../../models/root-store"
 
 export interface ResetPasswordScreenProps extends NavigationStackScreenProps<{}> {
@@ -17,7 +16,10 @@ export interface ResetPasswordScreenProps extends NavigationStackScreenProps<{}>
 
 export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordScreenProps> = observer((props) => {
   const [email, setEmail] = React.useState('');
-  const { authStore: { resetPassword, errorMessage, successMessage } } = useStores();
+  const {
+    authStore: { resetPassword, errorMessage, successMessage },
+    navigationStore: { goBack }
+  } = useStores();
 
   return (
     <View style={styleSheet.view_full}>
@@ -30,11 +32,11 @@ export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordSc
           <Text tx="resetPasswordScreen.context" />
 
           <TextField
+            preset="clear"
             placeholder="johndoe@mail.com" label="Email"
             value={email} onChangeText={setEmail}
             autoCompleteType="email" autoCapitalize="none" autoCorrect={false}
-            containerStyle={{ marginTop: spacing.large }}
-            inputStyle={styleSheet.text_input_container} />
+            containerStyle={{ marginTop: spacing.large }} />
 
           {
             errorMessage ? <Text preset="error" text={errorMessage} /> : null
@@ -69,18 +71,11 @@ export const ResetPasswordScreen: NavigationStackScreenComponent<ResetPasswordSc
 })
 
 ResetPasswordScreen.navigationOptions = {
-  headerTitle: () => {
-    return (
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
-        <Image
-          source={require('../../components/header/light.png')}
-          style={{ height: 25, width: 110 }}
-          resizeMode='contain'
-        />
-      </View>
-    )
-  },
+  headerTitle: 'Forgot Password',
   headerTitleContainerStyle: {
     flex: 1
+  },
+  headerRight: () => {
+    return (<View />);
   }
 }

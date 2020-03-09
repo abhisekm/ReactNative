@@ -1,30 +1,36 @@
 import * as React from "react"
-import { View, ViewStyle } from "react-native"
+import { View, ViewStyle, Alert, TextStyle } from "react-native"
 import { Text } from "../text"
-import { CampaignDetail } from "../../models/campaign-detail"
 import styleSheet from "../../theme/styleSheet"
 import { spacing, color } from "../../theme"
-import { Divider, Icon, Overlay, Input } from "react-native-elements"
+import { Divider, Icon } from "react-native-elements"
 import { useState } from "react"
 import moment from 'moment';
 import { Button } from "../button"
-import { TextField } from "../text-field"
 import { normalisedFontSize } from "../../theme/fontSize"
-import { navigate } from "../../navigation"
-import { scale, verticalScale } from "../../utils/scale"
+import { scale } from "../../utils/scale"
+import { observer } from "mobx-react"
+import { useStores } from "../../models/root-store"
+import { Campaign } from "../../models/campaign"
+import { BidHistoryView } from "../bid-history-view"
+import { bidStatus } from "../../utils/bid-status"
+import { BidEntryDialog } from "../bid-entry-dialog"
+import { Loading } from "../loading"
+import { Button as RNEButton } from "react-native-elements"
+import ViewMoreText from "react-native-view-more-text"
 
 export interface AppliedCampaignContentProps {
   /**
    * Text which is looked up via i18n.
    */
-  data: CampaignDetail
+  data: Campaign
 }
 
 const card: ViewStyle = {
   backgroundColor: 'white',
   padding: spacing.small,
-  marginBottom: spacing.medium,
-  borderRadius: 4
+  marginBottom: spacing.small + spacing.tiny,
+  borderRadius: scale(8)
 }
 
 const deliverableStatusText = [
@@ -39,82 +45,241 @@ const deliverableStatusTextColor = [
   "green"
 ]
 
-const campaignStatusText = [
-  "Applied",
-  "Approved",
-  "Needs Attention",
-  "Delivered",
-  "Payment Pending",
-  "Paid"
-]
+const renderButton = (onPress, showMoreDescription, color) => {
+  return (
+    <View style={{ flexDirection: 'row-reverse' }}>
+      <RNEButton
+        type="clear"
+        icon={{
+          type: "material-community",
+          name: showMoreDescription ? "chevron-double-down" : "chevron-double-up",
+          color: color,
+          size: scale(24)
+        }}
+        title={showMoreDescription ? "Show More" : "Show Less"}
+        titleStyle={{ color: color, fontSize: normalisedFontSize.normal }}
+        onPress={onPress}
+      />
+    </View>
+  )
+}
 
-const campaignStatusTextColor = [
-  color.palette.orangeDarker,
-  "green",
-  color.error,
-  "green",
-  color.palette.orangeDarker,
-  "green"
-]
+const ROW_STYLE: ViewStyle = { paddingHorizontal: spacing.small, paddingTop: spacing.small, flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start' };
+
+const TAG: TextStyle = {
+  textAlign: 'center',
+  textAlignVertical: 'center',
+  borderColor: color.primary,
+  borderWidth: 2,
+  color: 'black',
+  fontSize: normalisedFontSize.small,
+  borderRadius: spacing.medium,
+  paddingHorizontal: spacing.small,
+  paddingVertical: spacing.tiny,
+}
 
 /**
  * Stateless functional component for your needs
  *
  * Component description here for TypeScript tips.
  */
-export function AppliedCampaignContent(props: AppliedCampaignContentProps) {
+export const AppliedCampaignContent: React.FC<AppliedCampaignContentProps> = observer((props) => {
   // grab the props
+
+  const {
+    authStore: { isSignedIn },
+    navigationStore: { navigateTo },
+  } = useStores();
+
   const { data, ...rest } = props
-  const { deliverable, campaignDetails, status, info, quote } = data;
+  const { createBid, acceptBid, rejectBid, askNewBid, alertText, clearAlert, loading, bidHistory } = data;
 
-  const [deliverableLink, setDeliverableLink] = useState((deliverable && deliverable.deliverableLink) || "");
-  const [showQuoteInput, setShowQuoteInput] = useState(false);
-  const [quoteAmount, setQuoteAmount] = useState(quote && quote.amount && quote.amount.toString() || "");
-  const [editQuote, setEditQuote] = useState(quoteAmount);
-  const [quoteComment, setQuoteComment] = useState(quote && quote.comment || "");
-
-  const [commentError, setCommentError] = useState('');
-  const [amountError, setAmountError] = useState('');
-
-  const quoteAmountRef = React.useRef(null);
-  const quoteCommentRef = React.useRef(null);
+  const [showBidInput, setShowBidInput] = useState(false);
 
   const deadlineDateMillis = 1579850830000;
-  const deadlineDate = '24/01/2020';
-  const dateFormat = 'DD/MM/YYYY';
   const dayDiff = moment(deadlineDateMillis).diff(moment(), 'days');
   const hourDiff = moment(deadlineDateMillis).diff(moment(), 'hours');
 
 
-  if (campaignDetails == null)
+  if (data == null)
     return null;
+
+  const bidState = data.bid ? data.bid.state : "admin_asking_for_a_new_price";
+  const bidStarted = data.bid != null;
+  const loggedIn = isSignedIn();
+
+  React.useEffect(() => {
+    alertText && Alert.alert(data.campaignName, alertText, [
+      {
+        text: 'Ok',
+        onPress: () => clearAlert()
+      }
+    ])
+  }, [alertText]);
+
+  const renderViewMore = (onPress) => {
+    return renderButton(onPress, true, color.primary);
+  }
+
+  const renderViewLess = (onPress) => {
+    return renderButton(onPress, false, color.primary);
+  }
+
+  const renderViewMoreInfo = (onPress) => {
+    return renderButton(onPress, true, "white");
+  }
+
+  const renderViewLessInfo = (onPress) => {
+    return renderButton(onPress, false, "white");
+  }
 
   return (
     <View style={{ paddingBottom: spacing.large }}>
       <View key="description" style={[card, styleSheet.shadow_4]} {...rest}>
-        <Text preset="default" text={campaignDetails.description} style={{ padding: spacing.small }} />
+        <View
+          style={{ flexDirection: 'row', margin: spacing.small }}
+        >
+          {
+            data.campaignCategory.map((category: string, index: number) => {
+              return (
+                <Text key={`tag${index}`} preset="default" text={category.trim()}
+                  style={TAG} />
+              );
+            })
+          }
+        </View>
+
+        <ViewMoreText
+          numberOfLines={5}
+          renderViewMore={renderViewMore}
+          renderViewLess={renderViewLess}
+          textStyle={{ padding: spacing.small, }}  >
+          <Text preset="default" text={data.deliverableDescription && data.deliverableDescription.trim()} style={{ fontStyle: 'italic' }} />
+        </ViewMoreText>
+        <Divider />
+
+        {
+          data.platform && data.platform.join().length > 0 &&
+          <View style={ROW_STYLE} >
+            <Icon name="web" type="material-community" size={16} containerStyle={{ marginEnd: spacing.small }} color={color.primary} />
+            <Text preset="fieldLabel" text="Where:" style={{ color: color.primary }} />
+            <Text preset="default" text={data.platform.join(", ")} style={{ flex: 1, marginLeft: spacing.small }} />
+          </View>
+        }
+        {
+          data.contentType && data.contentType.join().length > 0 &&
+          <View style={ROW_STYLE} >
+            <Icon name="file-multiple" type="material-community" size={16} containerStyle={{ marginEnd: spacing.small }} color={color.primary} />
+            <Text preset="fieldLabel" text="What:" style={{ color: color.primary }} />
+            <Text preset="default" text={data.contentType.join(", ")} style={{ flex: 1, marginLeft: spacing.small }} />
+          </View>
+        }
+        {
+          data.campaignScope && data.campaignScope.length > 0 &&
+          <View style={ROW_STYLE} >
+            <Icon name="account-multiple" type="material-community" size={16} containerStyle={{ marginEnd: spacing.small }} color={color.primary} />
+            <Text preset="fieldLabel" text="Openings:" style={{ color: color.primary }} />
+            <Text preset="default" text={data.campaignScope} style={{ flex: 1, marginLeft: spacing.small }} />
+          </View>
+        }
+        {
+          data.language && data.language.join().length > 0 &&
+          <View style={[ROW_STYLE, { marginBottom: spacing.small }]} >
+            <Icon name="font" type="font-awesome" size={16} containerStyle={{ marginEnd: spacing.small }} color={color.primary} />
+            <Text preset="fieldLabel" text="Language:" style={{ color: color.primary }} />
+            <Text preset="default" text={data.language.join(", ")} style={{ flex: 1, marginLeft: spacing.small }} />
+          </View>
+        }
       </View>
 
-      {status &&
-        <View key="status-card" style={[card, styleSheet.shadow_4]} {...rest}>
-          <View style={{ padding: spacing.small, flexDirection: 'row', justifyContent: 'center' }} >
-            <Text preset="bold" text="Campaign Status" style={{ flex: 1, fontSize: normalisedFontSize.large }} />
-            <Text preset="bold" text={campaignStatusText[status.campaignStatus]} style={{ color: campaignStatusTextColor[status.campaignStatus] }} />
-            {/* <Text preset="bold" text={campaignStatusText[data.campaignStatus]} style={{ color: "green" }} /> */}
-          </View>
-          <Divider />
-          <Text
-            preset="question"
-            text={status.campaignStatusText}
-            style={{
-              padding: spacing.small,
-              fontSize: normalisedFontSize.normal,
-              color: status.campaignStatus == 2 ? 'red' : 'black'
-            }} />
+      <View key="bid-info" style={[card, styleSheet.shadow_4, { backgroundColor: color.secondary }]} {...rest}>
+        <View style={{ padding: spacing.small, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
+          <Icon name="information-variant" type="material-community" size={scale(24)} containerStyle={{ marginEnd: spacing.small }} color="white" />
+          <Text preset="bold" text="What is Campaign Bidding?" style={{ flex: 1, fontSize: normalisedFontSize.large, color: 'white' }} />
         </View>
-      }
+        <Divider />
+        <ViewMoreText
+          numberOfLines={3}
+          renderViewMore={renderViewMoreInfo}
+          renderViewLess={renderViewLessInfo}
+          textStyle={{ padding: spacing.small, }}
+        >
+          <Text preset="default" tx="campaignDetail.bidInfo" style={{ color: 'white' }} />
+        </ViewMoreText>
+      </View>
 
-      {deliverable &&
+      <View key="bid" style={[card, styleSheet.shadow_4]} {...rest}>
+        <View style={{ padding: spacing.small, flexDirection: 'row', justifyContent: 'center' }} >
+          <Text preset="bold" text="Campaign Bidding" style={{ flex: 1, fontSize: normalisedFontSize.large }} />
+          {
+            bidStarted &&
+            <Text preset="bold" text={bidStatus.get(bidState).campaignStatus.statusText} style={{ color: bidStatus.get(bidState).campaignStatus.color }} />
+          }
+        </View>
+        <Divider style={{ marginBottom: spacing.small }} />
+        {
+          !loggedIn &&
+          <Button
+            preset="raised"
+            text="Sign up to bid"
+            onPress={() => { navigateTo("loginFlow") }}
+          />
+        }
+
+        {
+          loggedIn && !bidStarted &&
+          <Button
+            preset="raised"
+            text="Start Bidding"
+            onPress={() => { setShowBidInput(true) }}
+          />
+        }
+
+        {
+          loggedIn && bidStarted &&
+          <View style={[card, styleSheet.shadow_4, { flexDirection: 'row', backgroundColor: bidStatus.get(bidState).campaignStatus.color, }]}>
+            <Icon type="material-community" name="information-outline" size={scale(16)} color="white" containerStyle={{ paddingTop: scale(2) }} />
+            <Text text={bidStatus.get(bidState).bidStatusText} style={{ color: 'white', marginLeft: spacing.small, }} />
+          </View>
+        }
+
+        {
+          loggedIn && bidStarted && bidState == 'admin_asking_for_a_new_price' &&
+          <View style={[card, styleSheet.shadow_4, { padding: spacing.small, borderColor: color.primary, borderWidth: 2 }]}>
+            <View style={ROW_STYLE} >
+              <Text preset="fieldLabel" text="New Price : " style={{ color: color.primary }} />
+              <Text preset="default" text={`Rs ${data.bid.price}`} style={{ flex: 1, marginLeft: spacing.small }} />
+            </View>
+            <View style={{ flexDirection: 'row', marginTop: spacing.small }} >
+              <Button
+                preset="outline"
+                text="Reject"
+                containerStyle={{ flex: 1 }}
+                onPress={() => { rejectBid(data.bid.price, '') }} />
+              <Button
+                preset="raised"
+                text="Accept"
+                containerStyle={{ flex: 1 }}
+                onPress={() => { acceptBid(data.bid.price, '') }} />
+            </View>
+
+            <Button
+              preset="raised"
+              text="Negotiate New Bid"
+              onPress={() => { setShowBidInput(true) }} />
+          </View>
+        }
+
+        {
+          loggedIn && bidStarted &&
+          <View style={{ padding: spacing.small }}>
+            <BidHistoryView bidData={data} />
+          </View>
+        }
+
+      </View>
+
+      {/* {deliverable &&
         <View key="deliverable-card" style={[card, styleSheet.shadow_4]} {...rest}>
           <View style={{ padding: spacing.small, flexDirection: 'row', justifyContent: 'center' }} >
             <Text preset="bold" text="Deliverable Info" style={{ flex: 1, fontSize: normalisedFontSize.large }} />
@@ -137,7 +302,7 @@ export function AppliedCampaignContent(props: AppliedCampaignContentProps) {
                 size={16} containerStyle={{ marginStart: spacing.small, }}
                 raised reverse color={color.primary}
                 onPress={() => {
-                  navigate(
+                  navigateTo(
                     "ImageUpload",
                     {
                       campaignId: campaignDetails.id,
@@ -152,113 +317,22 @@ export function AppliedCampaignContent(props: AppliedCampaignContentProps) {
             <Text preset="default" text={deliverableStatusText[deliverable.deliverableStatus]} style={{ color: deliverableStatusTextColor[deliverable.deliverableStatus] }} />
           </View>
         </View>
-      }
+      } */}
 
-      {quote &&
-        <View key="quote-card" style={[card, styleSheet.shadow_4]} {...rest}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text preset="bold" text="Quote" style={{ padding: spacing.small, fontSize: normalisedFontSize.large }} />
-            {!showQuoteInput ?
-              (
-                !quote.editable ? null :
-                  <Button
-                    preset="outline"
-                    buttonStyle={{ paddingVertical: spacing.small, paddingHorizontal: spacing.medium, borderRadius: 25, height: scale(30) }}
-                    text={quoteAmount ? "Edit" : "Add"}
-                    textStyle={{ color: color.primary, fontSize: normalisedFontSize.small }}
-                    onPress={() => setShowQuoteInput(true)}
-                  />)
-              : (
-                <Button
-                  preset="outline"
-                  buttonStyle={{ paddingVertical: spacing.small, paddingHorizontal: spacing.medium, borderRadius: 25, maxHeight: scale(30) }}
-                  text="Save"
-                  textStyle={{ color: color.primary, fontSize: normalisedFontSize.small }}
-                  onPress={() => {
-                    if (editQuote.length == 0) {
-                      quoteAmountRef.current.shake();
-                      setAmountError("Enter a valid quote");
-                      return;
-                    } else {
-                      setAmountError("");
-                    }
+      <BidEntryDialog
+        visibility={showBidInput}
+        onClose={() => setShowBidInput(false)}
+        onSave={(price, comment) => {
+          setShowBidInput(false);
 
-                    if (quoteComment.length == 0) {
-                      quoteCommentRef.current.shake();
-                      setCommentError("Enter a valid comment");
-                      return;
-                    } else {
-                      setCommentError("");
-                    }
+          if (bidStarted)
+            askNewBid(data.bid.price, price, comment);
+          else
+            createBid(price, comment);
+        }}
+      />
 
-                    setQuoteAmount(editQuote);
-                    setShowQuoteInput(false)
-                  }}
-                />
-              )
-            }
-          </View>
-          <Divider />
-          <View style={{ padding: spacing.small, marginTop: spacing.small, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
-            <Icon name="rupee" type="font-awesome" size={16} containerStyle={{ marginEnd: spacing.small }} />
-            <Text preset="default" text="Your Quote" />
-            {!showQuoteInput ?
-              <Text preset="bold" text={quoteAmount || " - "} style={{ flex: 1, textAlign: 'right', marginRight: spacing.medium }} />
-              :
-              <TextField
-                forwardedRef={quoteAmountRef}
-                value={editQuote}
-                onChangeText={(text) => setEditQuote(text.replace(/[^0-9]/g, ''))}
-                keyboardType='numeric'
-                placeholder="Enter quote in INR"
-                numberOfLines={1}
-                containerStyle={{ flex: 1 }}
-                errorMessage={amountError}
-                inputStyle={{ textAlignVertical: 'center' }}
-              />
-            }
-          </View>
-          <View style={{ padding: spacing.tiny, marginTop: spacing.small, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
-            <Icon name="comment-outline" type="material-community" size={16} containerStyle={{ marginEnd: spacing.small }} />
-
-            {!showQuoteInput ?
-              <Text preset="default" text={quoteComment || "Add a comment"} style={{ flex: 1 }} />
-              :
-              <TextField
-                forwardedRef={quoteCommentRef}
-                value={quoteComment}
-                placeholder="Add a comment"
-                onChangeText={setQuoteComment}
-                inputStyle={{ textAlignVertical: 'top' }}
-                multiline
-                errorMessage={commentError}
-                containerStyle={{ flex: 1 }} />
-            }
-          </View>
-        </View>
-      }
-
-      {
-        info != null && info.slice().length > 0 &&
-        <Text preset="header" text="Campaign Details" style={{ color: color.primary, marginVertical: spacing.large }} />
-      }
-
-      {info != null && info.slice().length > 0 &&
-        info.slice().map((eachInfo, index) => {
-          return (
-            <View key={`info-card-${index}`} style={[card, styleSheet.shadow_4]} {...rest}>
-              <Text preset="bold" text={eachInfo.title} style={{ flex: 1, fontSize: normalisedFontSize.normal }} />
-              <Text
-                preset="question"
-                text={eachInfo.description}
-                style={{
-                  paddingVertical: spacing.small,
-                  fontSize: normalisedFontSize.normal,
-                }} />
-            </View>
-          )
-        })
-      }
+      {loading && <Loading />}
     </View>
   )
-}
+})

@@ -10,7 +10,7 @@ import { Button } from "../../components/button"
 import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
-import { Icon } from "react-native-elements"
+import { Icon, Input } from "react-native-elements"
 import { verticalScale } from "../../utils/scale"
 
 
@@ -42,22 +42,21 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
     <View style={styleSheet.view_full}>
       <Screen style={styleSheet.view_container} preset="scroll" unsafe statusBar="light-content"  >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1, padding: 0 }} >
-          <Text preset="header" tx="loginScreen.header" style={{ padding: spacing.small }} />
 
           <View style={{ height: verticalScale(50) }} />
 
           <TextField
+            preset="clear"
             placeholder="Email" label="Email"
             value={email} onChangeText={setEmail}
-            inputStyle={styleSheet.text_input_container}
             autoCapitalize="none" />
 
           <View style={{ height: verticalScale(20) }} />
 
           <TextField
+            preset="clear"
             placeholder="Password" label="Password"
             value={password} onChangeText={setPassword}
-            inputStyle={styleSheet.text_input_container}
             autoCapitalize="none" autoCorrect={false} autoCompleteType="off"
             secureTextEntry={!passwordVisibility}
             rightIcon={
@@ -104,21 +103,8 @@ export const LoginScreen: NavigationStackScreenComponent<Props> = observer(() =>
 })
 
 LoginScreen.navigationOptions = {
-  headerTitle: () => {
-    return (
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
-        <Image
-          source={require('../../components/header/light.png')}
-          style={{ height: 25, width: 100 }}
-          resizeMode='contain'
-        />
-      </View>
-    )
-  },
+  headerTitle: "Sign In",
   headerTitleContainerStyle: {
     flex: 1,
-  },
-  headerRight: () => {
-    return <View />
   }
 }

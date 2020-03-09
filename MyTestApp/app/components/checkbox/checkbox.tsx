@@ -4,14 +4,16 @@ import { Text } from "../text"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
 import { mergeAll, flatten } from "ramda"
+import { Icon, colors } from "react-native-elements"
+import { scale } from "../../utils/scale"
 
 const ROOT: ViewStyle = {
   flexDirection: "row",
-  paddingVertical: spacing[1],
+  paddingVertical: spacing.small,
   alignSelf: "flex-start",
 }
 
-const DIMENSIONS = { width: 16, height: 16 }
+const DIMENSIONS = { width: spacing.medium, height: spacing.medium }
 
 const OUTLINE: ViewStyle = {
   ...DIMENSIONS,
@@ -23,15 +25,19 @@ const OUTLINE: ViewStyle = {
   borderRadius: 1,
 }
 
+
+
 const FILL: ViewStyle = {
-  width: DIMENSIONS.width - 4,
-  height: DIMENSIONS.height - 4,
+  width: DIMENSIONS.width - spacing.tiny,
+  height: DIMENSIONS.height - spacing.tiny,
   backgroundColor: color.primary,
 }
 
 const LABEL: TextStyle = { paddingLeft: spacing[2] }
 
 export function Checkbox(props: CheckboxProps) {
+  const { size = 24, iconColor = color.primary } = props;
+
   const numberOfLines = props.multiline ? 0 : 1
 
   const rootStyle = mergeAll(flatten([ROOT, props.style]))
@@ -47,7 +53,11 @@ export function Checkbox(props: CheckboxProps) {
       onPress={onPress}
       style={rootStyle}
     >
-      <View style={outlineStyle}>{props.value && <View style={fillStyle} />}</View>
+      {
+        props.value
+          ? <Icon type="material-community" name="checkbox-marked-outline" size={scale(size)} color={iconColor} />
+          : <Icon type="material-community" name="checkbox-blank-outline" size={scale(size)} color={iconColor} />
+      }
       <Text text={props.text} tx={props.tx} numberOfLines={numberOfLines} style={LABEL} />
     </TouchableOpacity>
   )

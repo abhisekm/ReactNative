@@ -1,12 +1,16 @@
 import * as React from "react"
-import { View, ViewStyle, } from "react-native"
+import { View, ViewStyle, StyleSheet, } from "react-native"
 import { Text } from "../text"
 import styles from "./campaign-slider-styles"
 import FastImage from "react-native-fast-image"
 import { ParallaxImage } from 'react-native-snap-carousel'
 import { Campaign } from "../../models/campaign"
-import { navigate } from "../../navigation"
-import TouchableScale from 'react-native-touchable-scale';
+import TouchableScale from 'react-native-touchable-scale'
+import { useStores } from "../../models/root-store"
+import { useObserver } from "mobx-react"
+import LinearGradient from "react-native-linear-gradient"
+import { color, spacing } from "../../theme"
+import { SvgUri } from 'react-native-svg'
 
 
 export interface CampaignSliderProps {
@@ -43,39 +47,83 @@ export function CampaignSlider(props: CampaignSliderProps) {
   const {
     even,
     style,
-    data: { id, title, brandImage, brandName, campaignImage, link, description },
+    data,
     parallax,
     parallaxProps
   } = props
 
-  const uppercaseTitle = React.useMemo(() => title ? (
-    <Text
-      style={[styles.title, even ? styles.titleEven : {}]}
-      numberOfLines={2}
-    >
-      {title.toUpperCase()}
-    </Text>
-  ) : false, [title]);
+  const { campaignName, campaignImage, campaignDescription, campaignCategory, location } = data;
 
-  const uppercaseBrand = React.useMemo(() => brandName ? (
-    <Text
-      style={[styles.brand, even ? styles.brandEven : {}]}
-    >
-      {brandName.toUpperCase()}
-    </Text>
-  ) : false, [brandName]);
+  const { navigationStore: { navigateTo } } = useStores();
 
-  const uppercaseHeader = React.useMemo(() => title ? (
-    <Text
-      style={[styles.brand, even ? styles.brandEven : {}]}
-      numberOfLines={2}
+  // const uppercaseTitle = React.useMemo(() => title ? (
+  //   <Text
+  //     style={[styles.title, even ? styles.titleEven : {}]}
+  //     numberOfLines={2}
+  //   >
+  //     {title.toUpperCase()}
+  //   </Text>
+  // ) : false, [title]);
+
+  // const uppercaseBrand = React.useMemo(() => brandName ? (
+  //   <Text
+  //     style={[styles.brand, even ? styles.brandEven : {}]}
+  //   >
+  //     {brandName.toUpperCase()}
+  //   </Text>
+  // ) : false, [brandName]);
+
+  const uppercaseHeader = React.useMemo(() => campaignName ? (
+    <View>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {/* <Icon type="material-community" name="bookmark" color={even ? 'white' : 'black'} size={scale(20)} /> */}
+        <Text
+          style={[styles.brand, even ? styles.brandEven : {}]}
+        >
+          {campaignName.toUpperCase()}
+        </Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {/* <Icon type="material-community" name="map-marker" color={even ? 'white' : 'black'} size={scale(20)} /> */}
+        <Text
+          style={[styles.subtitle, even ? styles.subtitleEven : {}]}
+        >
+          {location.join(",")}
+        </Text>
+      </View>
+
+    </View>
+  ) : false, [campaignName]);
+
+  const category = React.useMemo(() => campaignCategory ? (
+    <View
+      style={{ flexDirection: 'row', marginTop: spacing.small }}
     >
-      {(brandName ? brandName.toUpperCase() + " - " : "") + title.toUpperCase()}
-    </Text>
-  ) : false, [title, brandName]);
+      {
+        campaignCategory.map((category: string, index: number) => {
+          return (
+            <Text key={`tag${index}`} preset="default" text={category.trim()}
+              style={[styles.categoryContainer, even ? styles.categoryContainerEven : {}]} />
+          );
+        })
+      }
+    </View>
+  ) : false, [campaignCategory]);
 
 
   const image = React.useMemo(() => {
+    if (campaignImage.includes('.svg')) {
+      return (
+        <View style={styles.svgImageContainer}>
+          <SvgUri
+            width="100%"
+            height="100%"
+            uri={campaignImage}
+          />
+        </View>
+      )
+    }
+
     return parallax ? (
       <ParallaxImage
         source={{ uri: campaignImage }}
@@ -94,43 +142,43 @@ export function CampaignSlider(props: CampaignSliderProps) {
       );
   }, [campaignImage, parallaxProps, even, parallax]);
 
-  const route = link === "listing" ? "LiveCampaign" : 'CampaignDetails';
+  // const route = link === "listing" ? "LiveCampaign" : 'CampaignDetails';
 
-  return (
+  return useObserver(() => (
     <TouchableScale
       style={[styles.slideInnerContainer, style]}
       activeScale={0.95}
       friction={10}
-      onPress={() =>
-        navigate(
-          route,
-          {
-            campaignId: id,
-            campaignLink: link,
-            campaignImage: campaignImage,
-            brandImage: brandImage,
-            title: title
-          })} >
+      onPress={() => navigateTo("CampaignDetails", { "campaignId": data.id })} >
       <View style={[styles.shadow, even ? styles.shadowEven : {}]} >
         <View style={[styles.imageContainer, even ? styles.imageContainerEven : {}]}>
           {image}
           <View style={[styles.radiusMask, even ? styles.radiusMaskEven : {}]} />
         </View>
+        <LinearGradient
+          colors={
+            even ?
+              [color.transparent, color.transparentBlack, color.palette.black]
+              :
+              [color.transparent, color.transparentWhite, color.palette.white]
+          }
+          style={[styles.textContainer, { top: 10 }]} />
         <View style={[styles.textContainer, even ? styles.textContainerEven : {}]}>
-          <FastImage
-            source={{ uri: brandImage }}
+          {/* <FastImage
+            source={{ uri: campaignImage }}
             style={[styles.imageLogo, even ? styles.imageLogoEven : {}]}
-          />
+          /> */}
           <View style={{ flexDirection: 'row' }} >
             {uppercaseHeader}
           </View>
           <Text
-            style={[styles.subtitle, even ? styles.subtitleEven : {}]}
+            style={[styles.description, even ? styles.descriptionEven : {}]}
           >
-            {description}
+            {campaignDescription.trim()}
           </Text>
+          {category}
         </View>
       </View>
     </TouchableScale >
-  )
+  ))
 }

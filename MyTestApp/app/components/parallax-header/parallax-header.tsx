@@ -1,9 +1,13 @@
 import * as React from "react"
 import { View, ViewStyle, Animated, StyleSheet, Dimensions, Platform, TouchableOpacity } from "react-native"
 import { spacing, color } from "../../theme";
-import { Icon } from "react-native-elements";
+import { Icon, Divider } from "react-native-elements";
 import FastImage from "react-native-fast-image";
+import { scale as s, verticalScale as vs } from "../../utils/scale"
 import { normalisedFontSize } from "../../theme/fontSize";
+import LinearGradient from 'react-native-linear-gradient';
+import { Text } from "../text";
+
 
 export interface ParallaxHeaderProps {
   /**
@@ -16,7 +20,9 @@ export interface ParallaxHeaderProps {
    */
   style?: ViewStyle
 
-  avatarSource: string
+  location?: string
+
+  description?: string
 
   height?: number
 
@@ -24,7 +30,9 @@ export interface ParallaxHeaderProps {
 
   parallaxHeight?: number
 
-  onBackPress?: () => {}
+  onBackPress?: () => void
+
+  onRefresh?: () => void
 
   animatedValue?: Animated.Value
 }
@@ -32,12 +40,20 @@ export interface ParallaxHeaderProps {
 
 const isIos = Platform.OS === "ios";
 
-const backArrowIcon = (onPress: () => {}) =>
+const backArrowIcon = (onPress: () => void) =>
   isIos
     ?
     <Icon color='white' name='md-arrow-back' type='ionicons' onPress={onPress} Component={TouchableOpacity} />
     :
     <Icon color='white' name='arrow-back' type='material' onPress={onPress} Component={TouchableOpacity} />;
+
+
+const refreshIcon = (onPress: () => void) =>
+  isIos
+    ?
+    <Icon color='white' name='ios-refresh' type='ionicons' onPress={onPress} Component={TouchableOpacity} />
+    :
+    <Icon color='white' name='refresh' type='material' onPress={onPress} Component={TouchableOpacity} />;
 
 /**
  * Stateless functional component for your needs
@@ -49,12 +65,14 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
   const {
     text,
     style,
-    avatarSource,
+    location,
+    description,
     height = 250,
     headerHeight = 60,
     parallaxHeight = 250,
     animatedValue = new Animated.Value(0),
     onBackPress,
+    onRefresh,
     ...rest } = props
 
   const window = Dimensions.get('window');
@@ -87,15 +105,22 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
 
   const textTranslateX = animatedValue.interpolate({
     inputRange: [0, headerHeight / 4],
-    outputRange: [0, -10],
+    outputRange: [0, 0],
     extrapolateRight: 'clamp'
   });
 
   const textTranslateY = animatedValue.interpolate({
-    inputRange: [0, parallaxHeight - headerHeight],
-    outputRange: [-10, -headerHeight * 1.5],
+    inputRange: [0, headerHeight],
+    outputRange: [-10, headerHeight / 2 * 0.8],
     extrapolateRight: 'clamp'
   });
+
+  const textTranslateYScrollOut = animatedValue.interpolate({
+    inputRange: [0, headerHeight],
+    outputRange: [-10, -100],
+    extrapolateRight: 'clamp'
+  });
+
 
   const opacity = animatedValue.interpolate({
     inputRange: [0, parallaxHeight - headerHeight - 50, parallaxHeight - headerHeight],
@@ -103,15 +128,21 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
     extrapolate: 'clamp'
   });
 
+  const fadeOut = animatedValue.interpolate({
+    inputRange: [0, headerHeight / 2],
+    outputRange: [1, 0.3],
+    extrapolate: 'extend'
+  });
+
   const scale = animatedValue.interpolate({
     inputRange: [0, parallaxHeight - headerHeight],
-    outputRange: [1, 0.8],
+    outputRange: [1, 1],
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
   });
 
   const translateY = animatedValue.interpolate({
-    inputRange: [0, parallaxHeight - headerHeight],
+    inputRange: [0, (parallaxHeight - headerHeight) / 4],
     outputRange: [headerHeight, 0],
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp'
@@ -128,19 +159,22 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
 
       <Animated.View style={{ transform: [{ scale }, { translateY }] }}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Animated.View style={[styles.avatarContainer, {
-            transform: [
-              { scale: avatarScale },
-              { translateX: avatarTranslateX },
-              { translateY: avatarTranslateY }
-            ]
-          }]}>
-            <FastImage
-              style={styles.avatar}
-              resizeMode='contain'
-              source={{ uri: avatarSource }}
-            />
-          </Animated.View>
+          {/* {
+            avatarSource &&
+            <Animated.View style={[styles.avatarContainer, {
+              transform: [
+                { scale: avatarScale },
+                { translateX: avatarTranslateX },
+                { translateY: avatarTranslateY }
+              ]
+            }]}>
+              <FastImage
+                style={styles.avatar}
+                resizeMode='contain'
+                source={{ uri: avatarSource }}
+              />
+            </Animated.View>
+          } */}
           <Animated.Text
             style={[
               styles.name,
@@ -153,27 +187,43 @@ export function ParallaxHeader(props: ParallaxHeaderProps) {
               }
             ]}
           >
-            {/* <Text
-              preset="header"
-              text={"who lets the dogs out lorem ipsum".toUpperCase()}
-              numberOfLines={1}
-              style={{
-                color: 'white',
-                flex: 1,
-                textAlign: 'center',
-                marginHorizontal: spacing.small,
-                borderWidth: 1,
-                borderColor: 'black',
-                flexWrap: "nowrap"
-              }} /> */}
             {text.toUpperCase()}
           </Animated.Text>
+          <Animated.View
+            style={[
+              styles.locationContainer,
+              { opacity: fadeOut, flex: 1 },
+              {
+                transform: [
+                  { scale: textScale },
+                  { translateX: textTranslateX },
+                  { translateY: textTranslateY }
+                ]
+              }
+            ]}
+            pointerEvents="box-none"
+          >
+            <Divider style={{ backgroundColor: 'white', marginVertical: spacing.medium }} />
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Icon name="location" type="entypo" size={18} containerStyle={{ marginEnd: spacing.small }} color={color.palette.white} />
+              <Text text={location} preset="default" style={{ color: 'white' }} />
+            </View>
+            <Text text={description.trim()} preset="default" style={styles.description} />
+          </Animated.View>
         </View>
       </Animated.View>
+
       {
         onBackPress &&
-        <View key="fixed-header" style={{ position: 'absolute', left: 10, height: 70, justifyContent: 'center' }}>
+        <View key="fixed-header-left" style={{ position: 'absolute', left: 10, height: 70, justifyContent: 'center' }}>
           {backArrowIcon(onBackPress)}
+        </View>
+      }
+
+      {
+        onRefresh &&
+        <View key="fixed-header-right" style={{ position: 'absolute', right: 10, height: 70, justifyContent: 'center' }}>
+          {refreshIcon(onRefresh)}
         </View>
       }
     </Animated.View>
@@ -208,9 +258,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: spacing.small,
     backgroundColor: 'transparent',
-    maxHeight: 80,
-    minHeight: 80,
     textAlignVertical: 'center'
+  },
+  locationContainer: {
+    marginHorizontal: spacing.medium,
+  },
+  location: {
+    color: '#fff',
+    fontSize: normalisedFontSize.large,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginHorizontal: spacing.small,
+    backgroundColor: 'transparent',
+    textAlignVertical: 'center'
+  },
+  descriptionContainer: {
+    flex: 1,
+    borderWidth: 1,
+    marginHorizontal: spacing.medium,
+  },
+  description: {
+    color: '#fff',
+    fontSize: normalisedFontSize.normal,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginHorizontal: spacing.small,
+    backgroundColor: 'transparent',
+    textAlignVertical: 'center',
+    marginTop: spacing.large,
   },
   avatarContainer: {
     width: 100,

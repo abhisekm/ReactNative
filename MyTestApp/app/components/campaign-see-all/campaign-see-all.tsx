@@ -1,15 +1,23 @@
 import * as React from "react"
-import { View, ViewStyle, Image, StyleSheet } from "react-native"
+import { View, Image, StyleSheet } from "react-native"
 import { Text } from "../text"
 import TouchableScale from 'react-native-touchable-scale';
-import { navigate } from "../../navigation";
 import styles from "../campaign-slider/campaign-slider-styles"
-import { color, spacing } from "../../theme";
+import { color } from "../../theme";
 import { Icon } from "react-native-elements";
-import { scale, verticalScale } from "../../utils/scale";
+import { scale } from "../../utils/scale";
+import { useObserver } from "mobx-react";
+import { useStores } from "../../models/root-store";
 
 export interface CampaignSeeAllProps {
-
+  /**
+   * Mode for all campaign.
+   * values = live / influencer
+   * live : show all live campaigns
+   * influencer: show all applied campaigns
+   * signup: open signup
+   */
+  mode?: string
 }
 
 /**
@@ -17,18 +25,28 @@ export interface CampaignSeeAllProps {
  *
  * Component description here for TypeScript tips.
  */
-export function CampaignSeeAll(props: CampaignSeeAllProps) {
+export const CampaignSeeAll: React.FC<CampaignSeeAllProps> = (props) => {
+  const { mode = "live" } = props;
+  const { navigationStore: { navigateTo } } = useStores();
 
-  return (
+  const _onPress = React.useCallback(() => {
+    if (mode == 'signup') {
+      navigateTo("loginFlow");
+    } else {
+      navigateTo("AllCampaign", { mode: mode })
+    }
+  }, [mode]);
+
+  return useObserver(() => (
     <TouchableScale
       style={[styles.slideInnerContainer, {}]}
       activeScale={0.95}
       friction={10}
-      onPress={() => navigate("AllCampaign")} >
+      onPress={_onPress} >
       <View style={[styles.shadow, { backgroundColor: color.palette.pink1 }]} >
 
         <Image
-          source={require('../../components/header/light.png')}
+          source={require('../../res/images/light.png')}
           style={[StyleSheet.absoluteFill, { top: scale(-90), height: scale(200), width: '100%' }]}
 
         />
@@ -38,5 +56,5 @@ export function CampaignSeeAll(props: CampaignSeeAllProps) {
         </View>
       </View>
     </TouchableScale>
-  )
+  ))
 }

@@ -10,13 +10,13 @@ import styleSheet from "../../theme/styleSheet"
 import { FormRow } from "../../components/form-row"
 import { TextField } from "../../components/text-field"
 import { Button } from "../../components/button"
-import { navigate } from "../../navigation"
+import { useStores } from "../../models/root-store"
 
 export interface VerifyPhoneScreenProps extends NavigationStackScreenProps<{}> {
 }
 
 export const VerifyPhoneScreen: NavigationStackScreenComponent<VerifyPhoneScreenProps> = observer((props) => {
-  // const { someStore } = useStores()
+  const { navigationStore: { goBack, navigateTo } } = useStores()
   const [otp, setOtp] = React.useState('');
 
   return (
@@ -38,7 +38,7 @@ export const VerifyPhoneScreen: NavigationStackScreenComponent<VerifyPhoneScreen
             <Button
               preset="raised"
               tx="verifyPhone.verify"
-              onPress={() => navigate("Dashboard")}
+              onPress={() => navigateTo("Dashboard")}
             />
           </View>
           <View style={{ flexDirection: "row", marginTop: spacing.medium }}>
@@ -59,7 +59,7 @@ export const VerifyPhoneScreen: NavigationStackScreenComponent<VerifyPhoneScreen
               preset="link"
               tx="verifyPhone.goBack"
               textStyle={{ color: color.palette.pink1 }}
-              onPress={() => props.navigation.goBack()}
+              onPress={goBack}
             />
           </View>
         </FormRow>

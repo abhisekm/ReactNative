@@ -37,3 +37,8 @@ export const IMMERSIFY_API_CONFIG: ApiConfig = {
   url: "https://immersify.in",
   timeout: 10000,
 }
+
+export const IMMERSIFY_TEST_API_CONFIG: ApiConfig = {
+  url: "https://immersifytest.appspot.com",
+  timeout: 10000,
+}

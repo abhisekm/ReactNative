@@ -1,6 +1,7 @@
 import { TextStyle, ViewStyle } from "react-native"
 import { color, typography, spacing } from "../../theme"
 import { normalisedFontSize } from "../../theme/fontSize"
+import { verticalScale } from "../../utils/scale"
 
 /**
  * All text will start off looking like this.
@@ -25,13 +26,21 @@ export const presets = {
 
     } as ViewStyle,
     inputContainerStyle: {
-
     } as ViewStyle,
     inputStyle: {
       fontSize: normalisedFontSize.normal,
       backgroundColor: color.palette.white,
-      textAlignVertical: 'bottom'
+      textAlignVertical: 'bottom',
     } as TextStyle
+  },
+
+  clear: {
+    containerStyle: {
+    } as ViewStyle,
+    inputContainerStyle: {
+    } as ViewStyle,
+    inputStyle: {
+    } as TextStyle,
   },
 
   rounded: {

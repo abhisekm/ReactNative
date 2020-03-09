@@ -16,6 +16,8 @@ const loadingContainer: ViewStyle = {
   top: 0,
   bottom: 0,
   opacity: 0.5,
+  elevation: 999,
+  zIndex: 10000,
   backgroundColor: 'black',
   justifyContent: 'center',
   alignItems: 'center'

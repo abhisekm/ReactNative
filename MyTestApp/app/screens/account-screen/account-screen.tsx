@@ -11,8 +11,7 @@ import { Button } from "../../components/button"
 import { Text } from "../../components/text"
 import { UserProfile } from "../../components/user-profile"
 import { scale } from "../../utils/scale"
-import { TextField } from "../../components/text-field"
-import { navigate } from "../../navigation"
+import { UserProfileCompactDisplay } from "../../components/user-profile-compact-display"
 
 export interface AccountScreenProps extends NavigationTabScreenProps<{}> {
 }
@@ -20,25 +19,24 @@ export interface AccountScreenProps extends NavigationTabScreenProps<{}> {
 
 export const AccountScreen: NavigationBottomTabScreenComponent<AccountScreenProps> = observer((props) => {
   const {
-    userInfoStore: { name, gender, selectedInterests, igUsername, mediaAccounts, isValid, updateCalculated },
-    authStore: { logout, isSignedIn }
+    userInfoStore: { isEditing },
+    authStore: { isSignedIn },
+    navigationStore: { navigateTo }
   } = useStores();
 
-  const validateAndProceed = React.useCallback(() => {
-    updateCalculated();
-    if (!isValid()) {
-      return;
-    }
-    const json = {
-      gender: gender,
-      name: name,
-      ig_name: igUsername,
-      interest: selectedInterests,
-      accounts: mediaAccounts()
-    }
+  // const validateAndProceed = React.useCallback(() => {
+  //   updateCalculated();
 
-    alert(`All valid\n\nGender - ${gender}\n\nName - ${name}\n\nIG nick - ${igUsername}\n\nInterest - ${selectedInterests}\n\nSocial Accounts\n${mediaAccounts()}`);
-  }, [name, gender, selectedInterests]);
+  //   const json = {
+  //     gender: gender,
+  //     name: name,
+  //     ig_name: igUsername,
+  //     interest: selectedInterests,
+  //     accounts: mediaAccounts()
+  //   }
+
+  //   alert(`All valid\n\nGender - ${gender}\n\nName - ${name}\n\nIG nick - ${igUsername}\n\nInterest - ${selectedInterests}\n\nSocial Accounts\n${mediaAccounts()}`);
+  // }, [name, gender, selectedInterests]);
 
   const DEFAULT_MARGIN = {
     margin: spacing.medium,
@@ -50,27 +48,10 @@ export const AccountScreen: NavigationBottomTabScreenComponent<AccountScreenProp
   if (isSignedIn()) {
     return (
       <View style={styleSheet.view_full}>
-        <Screen
-          style={{ ...styleSheet.view_container, justifyContent: "center", }}
-          preset="scroll"
-          unsafe
-        >
-
-          <View style={[DEFAULT_MARGIN, { flexDirection: "row", alignItems: "center" }]} >
-            <Text preset="header" text={`Hi ${name}`} style={{ color: color.primary, flex: 1, marginEnd: spacing.small }} />
-            <Button preset="raised" text="Logout" onPress={logout} />
-          </View>
-          <View style={{ height: 20 }} />
-
-
-          <UserProfile showName={false} />
-
-          <Button
-            preset="raised"
-            text="Save"
-            onPress={validateAndProceed}
-          />
-        </Screen>
+        {isEditing ?
+          <UserProfile /> :
+          <UserProfileCompactDisplay />
+        }
       </View>
     );
   } else {
@@ -85,7 +66,8 @@ export const AccountScreen: NavigationBottomTabScreenComponent<AccountScreenProp
           <Button
             preset="raised"
             text="Log In"
-            onPress={() => navigate("loginFlow")}
+            onPress={() => navigateTo("loginFlow")}
+          // onPress={() => navigateTo("onboardingFlow")}
           />
         </Screen>
       </View>

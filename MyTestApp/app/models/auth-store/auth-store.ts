@@ -1,14 +1,15 @@
 import { Instance, SnapshotOut, types, flow } from "mobx-state-tree"
 import { LoginManager, AccessToken, LoginResult } from "react-native-fbsdk"
 import { firebase, FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { navigate } from "../../navigation";
 import omit from "ramda/es/omit";
 import { GoogleSignin, statusCodes, User } from '@react-native-community/google-signin';
-import { withRootStore } from "../extensions";
+import { withRootStore, withEnvironment } from "../extensions";
 import { RootStore } from "../root-store";
 import { InstagramStore } from "../instagram-store";
 import { validate } from "../../utils/validate";
 import { UserDetails } from "../user-details";
+import { NavigationStore } from "../../navigation/navigation-store";
+import { CheckInfluencerResult } from "../../services/api";
 
 
 /**
@@ -23,10 +24,13 @@ export const AuthStoreModel = types
     successMessage: types.maybeNull(types.string),
     displayName: types.maybe(types.string),
     fcmToken: types.maybeNull(types.string),
+    fcmUpdateNeeded: true,
     showWalkthrough: true,
     showUserDetails: true,
-    showQuestionnaire: true,
+    showQuestionnaire: false,
+    apiAuthUpdated: false,
   })
+  .extend(withEnvironment)
   .extend(withRootStore)
   .views(self => ({
     showLoading(): boolean {
@@ -35,8 +39,17 @@ export const AuthStoreModel = types
 
     getToken(): string {
       return self.fcmToken;
+    },
+
+    authUpdated(): boolean {
+      return self.apiAuthUpdated;
     }
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
+  .actions(self => ({
+    navigate(routeName) {
+      ((self.rootStore as RootStore).navigationStore as NavigationStore).navigateTo(routeName);
+    }
+  }))
   .actions(self => ({
     setState(newState) {
       self.state = newState;
@@ -59,20 +72,29 @@ export const AuthStoreModel = types
 
       if (self.showWalkthrough) {
         self.state = "done";
-        navigate("WalkThrough");
+
+        self.navigate("WalkThrough");
         return;
       }
 
       const user = firebase.auth().currentUser;
       if (user) {
+        const firebaseToken = yield firebase.auth().currentUser.getIdToken();
+        self.environment.api.setAuthToken(firebaseToken);
+
+        const result: CheckInfluencerResult = yield self.environment.api.checkInfluencerSignUp();
+        if (result.kind == "ok" && result.response.isSuccess) {
+          self.showUserDetails = !result.response.userRegistered;
+        }
+
         if (self.showUserDetails)
-          navigate("UserDetails")
+          self.navigate("onboardingFlow")
         else if (self.showQuestionnaire)
-          navigate("Questionnaire")
+          self.navigate("Questionnaire")
         else
-          navigate("campaignFlow")
+          self.navigate("dashboardFlow")
       } else {
-        navigate("dashboardFlow")
+        self.navigate("SampleCampaign")
       }
 
       self.state = "done";
@@ -81,6 +103,19 @@ export const AuthStoreModel = types
     isSignedIn() {
       return firebase.auth().currentUser != null;
     },
+
+    /**
+     * Update the firebase token for authentication for api call
+     */
+    updateApiAuth: flow(function* () {
+      if (firebase.auth().currentUser != null) {
+        const firebaseToken = yield firebase.auth().currentUser.getIdToken();
+        self.environment.api.setAuthToken(firebaseToken);
+        self.apiAuthUpdated = true;
+      } else {
+        self.apiAuthUpdated = true;
+      }
+    }),
 
     /**
      * Sign in with firebase with facebook credential
@@ -106,7 +141,15 @@ export const AuthStoreModel = types
         self.state = "done";
         self.provider = "facebook";
         self.displayName = firebase.auth().currentUser.displayName;
-        return navigate("UserDetails");
+        const firebaseToken = yield firebase.auth().currentUser.getIdToken();
+        self.environment.api.setAuthToken(firebaseToken);
+
+        const influencerResult: CheckInfluencerResult = yield self.environment.api.checkInfluencerSignUp();
+        if (influencerResult.kind == "ok" && influencerResult.response.isSuccess && influencerResult.response.userRegistered) {
+          return self.navigate("dashboardFlow");
+        }
+
+        return self.navigate("onboardingFlow");
       } catch (error) {
         self.state = "error";
         self.errorMessage = error.message;
@@ -133,7 +176,15 @@ export const AuthStoreModel = types
         self.state = "done";
         self.provider = "google";
         self.displayName = firebase.auth().currentUser.displayName;
-        navigate("UserDetails");
+        const firebaseToken = yield firebase.auth().currentUser.getIdToken();
+        self.environment.api.setAuthToken(firebaseToken);
+
+        const influencerResult: CheckInfluencerResult = yield self.environment.api.checkInfluencerSignUp();
+        if (influencerResult.kind == "ok" && influencerResult.response.isSuccess && influencerResult.response.userRegistered) {
+          return self.navigate("dashboardFlow");
+        }
+
+        self.navigate("onboardingFlow");
       } catch (error) {
         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
           // user cancelled the login flow
@@ -158,7 +209,6 @@ export const AuthStoreModel = types
     */
     signInEmail: flow(function* (email: string, password: string) {
       self.clearError();
-      console.log(email, password);
       if (!email) {
         self.state = "error";
         self.errorMessage = "Email cannot be empty";
@@ -176,7 +226,15 @@ export const AuthStoreModel = types
         self.state = "done";
         self.provider = "email";
         self.displayName = firebase.auth().currentUser.displayName;
-        navigate("UserDetails");
+        const firebaseToken = yield firebase.auth().currentUser.getIdToken();
+        self.environment.api.setAuthToken(firebaseToken);
+
+        const influencerResult: CheckInfluencerResult = yield self.environment.api.checkInfluencerSignUp();
+        if (influencerResult.kind == "ok" && influencerResult.response.isSuccess && influencerResult.response.userRegistered) {
+          return self.navigate("dashboardFlow");
+        }
+
+        self.navigate("onboardingFlow");
       } catch (error) {
         self.state = "error";
         self.errorMessage = "Invalid email id or password";
@@ -191,7 +249,6 @@ export const AuthStoreModel = types
       self.state = "pending";
 
       self.clearError();
-      console.log(email, password);
       if (name.length < 3) {
         self.state = "error";
         self.errorMessage = "Please enter a valid Name";
@@ -242,7 +299,15 @@ export const AuthStoreModel = types
         firebase.auth().currentUser.updateProfile({
           displayName: name,
         })
-        navigate("UserDetails")
+        const firebaseToken = yield firebase.auth().currentUser.getIdToken();
+        self.environment.api.setAuthToken(firebaseToken);
+
+        const influencerResult: CheckInfluencerResult = yield self.environment.api.checkInfluencerSignUp();
+        if (influencerResult.kind == "ok" && influencerResult.response.isSuccess && influencerResult.response.userRegistered) {
+          return self.navigate("dashboardFlow");
+        }
+
+        self.navigate("onboardingFlow")
       } catch (error) {
         self.state = "error";
         self.errorMessage = error.message;
@@ -304,11 +369,13 @@ export const AuthStoreModel = types
           break;
       }
 
+      self.environment.api.removeAuthToken();
       ((self.rootStore as RootStore).igStore as InstagramStore).clear();
       ((self.rootStore as RootStore).userInfoStore as UserDetails).clear();
       self.provider = null;
+
       self.state = "done";
-      navigate("loginFlow")
+      self.navigate("loginFlow")
     }),
 
     resetWalkthrough() {
@@ -336,19 +403,23 @@ export const AuthStoreModel = types
       self.fcmToken = token;
     },
 
+    setFcmUpdateNeeded(value: boolean) {
+      self.fcmUpdateNeeded = value;
+    },
+
     goToEmailLogin() {
       self.clearError();
-      navigate("Login");
+      self.navigate("Login");
     },
 
     goToEmailSignup() {
       self.clearError();
-      navigate("Signup");
+      self.navigate("Signup");
     },
 
     goToForgotPassword() {
       self.clearError();
-      navigate("ResetPassword");
+      self.navigate("ResetPassword");
     },
   }))
   .postProcessSnapshot(omit(["state", "errorMessage", "successMessage"]))

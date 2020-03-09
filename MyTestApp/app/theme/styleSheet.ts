@@ -29,6 +29,7 @@ type Styles = {
   shadow_4: ViewStyle,
   shadow_8: ViewStyle,
   shadow_16: ViewStyle,
+  card: ViewStyle
 }
 
 export default StyleSheet.create<Styles>({
@@ -148,5 +149,10 @@ export default StyleSheet.create<Styles>({
 
     elevation: 16,
   },
-
+  card: {
+    backgroundColor: 'white',
+    padding: spacing.small,
+    marginBottom: spacing.medium,
+    borderRadius: 4
+  },
 })

@@ -48,5 +48,8 @@
   "storybook": {
     "placeholder": "Placeholder",
     "field": "Field"
+  },
+  "campaignDetail": {
+    "bidInfo": "A bid is the price you are willing to do a campaign at. Please choose this wisely. Too high, and the brands will not want to negotiate either, thinking it is a non-serious bid.  Remember, multiple influencers/creators may be interested in the same campaigns. \n\nMay the odds be ever in your favor!"
   }
 }

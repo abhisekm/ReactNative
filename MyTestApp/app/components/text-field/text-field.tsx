@@ -21,6 +21,7 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
     placeholder,
     labelTx,
     label,
+    labelStyle: labelStyleOverride,
     preset = "default",
     containerStyle: containerStyleOverride,
     inputContainerStyle: inputContainerStyleOverride,
@@ -38,8 +39,11 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
   let inputStyle: TextStyle = presets[preset].inputStyle;
   inputStyle = enhance(inputStyle, inputStyleOverride)
 
+  let labelStyle: TextStyle = {};
+  labelStyle = enhance(labelStyle, labelStyleOverride)
+
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
-  const labelElement = label ? <Text preset="fieldLabel" tx={labelTx} text={label} /> : null
+  const labelElement = label ? <Text preset="fieldLabel" tx={labelTx} text={label} style={labelStyle} /> : null
 
   return (
     <Input
@@ -47,6 +51,7 @@ export const TextField: React.FunctionComponent<TextFieldProps> = props => {
       placeholderTextColor={color.palette.grey8}
       underlineColorAndroid={color.transparent}
       label={labelElement}
+      labelStyle={labelStyle}
       inputStyle={inputStyle}
       ref={forwardedRef}
       containerStyle={containerStyle}

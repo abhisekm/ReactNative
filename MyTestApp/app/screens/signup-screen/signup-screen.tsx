@@ -74,14 +74,13 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
     <View style={styleSheet.view_full}>
       <Screen style={styleSheet.view_container} preset="scroll" unsafe statusBar="light-content"  >
         <FormRow preset="top" style={{ borderColor: color.transparent, backgroundColor: color.transparent, flex: 1, padding: 0 }} >
-          <Text preset="header" tx="signupScreen.header" style={{ padding: spacing.small }} />
 
           <Spacer />
 
           <TextField
             placeholder="John Doe" label="Name"
             value={name} onChangeText={setName}
-            inputStyle={styleSheet.text_input_container}
+            preset="clear"
             autoCapitalize="words"
           />
 
@@ -90,7 +89,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
           <TextField
             placeholder="johndoe@gmail.com" label="Email"
             value={email} onChangeText={setEmail}
-            inputStyle={styleSheet.text_input_container}
+            preset="clear"
             autoCapitalize="none"
           />
 
@@ -99,7 +98,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
           <TextField
             placeholder="Password" label="Password"
             value={password} onChangeText={setPassword}
-            inputStyle={styleSheet.text_input_container}
+            preset="clear"
             secureTextEntry
             autoCapitalize="none" autoCorrect={false} autoCompleteType="password"
           />
@@ -117,7 +116,7 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
           <TextField
             placeholder="Confirm Password" label="Confirm Password"
             value={confirmPassword} onChangeText={setConfirmPassword}
-            inputStyle={styleSheet.text_input_container}
+            preset="clear"
             secureTextEntry
             rightIcon={password.length > MIN_LENGTH && confirmPassword === password && <Icon name="check" type="material" color={color.palette.green} />}
             autoCapitalize="none" autoCorrect={false} autoCompleteType="password"
@@ -160,21 +159,8 @@ export const SignupScreen: NavigationStackScreenComponent<Props> = observer((pro
 })
 
 SignupScreen.navigationOptions = {
-  headerTitle: () => {
-    return (
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
-        <Image
-          source={require('../../components/header/light.png')}
-          style={{ height: 25, width: 100 }}
-          resizeMode='contain'
-        />
-      </View>
-    )
-  },
+  headerTitle: "Sign Up",
   headerTitleContainerStyle: {
     flex: 1,
   },
-  headerRight: () => {
-    return <View />
-  }
 }

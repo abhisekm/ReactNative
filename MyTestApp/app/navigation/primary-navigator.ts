@@ -1,4 +1,4 @@
-import { createStackNavigator } from "react-navigation-stack"
+import createNativeStackNavigator from "react-native-screens/createNativeStackNavigator"
 import { ResolveAuthScreen } from "../screens/resolve-auth-screen"
 import { LoginScreen } from "../screens/login-screen"
 import { SignupScreen } from "../screens/signup-screen"
@@ -17,8 +17,15 @@ import { AppliedCampaignScreen } from "../screens/applied-campaign-screen"
 import { LiveCampaignListingScreen } from "../screens/live-campaign-listing-screen"
 import { AllCampaignListingScreen } from "../screens/all-campaign-listing-screen"
 import { DeadlineImageUploadScreen } from "../screens/deadline-image-upload-screen"
-import { verticalScale, scale } from "../utils/scale"
+import { scale } from "../utils/scale"
 import { normalisedFontSize } from "../theme/fontSize"
+import { UserOnboardingEssentialScreen } from "../screens/user-onboarding-essential-screen"
+import { UserOnboardingSocialMediaScreen } from "../screens/user-onboarding-social-media-screen"
+import { UserOnboardingInterestScreen } from "../screens/user-onboarding-interest-screen"
+import { UserOnboardingSuccessScreen } from "../screens/user-onboarding-success-screen"
+import { UserOnboardingExtraScreen } from "../screens/user-onboarding-extra-screen"
+import { SampleCampaignScreen } from "../screens/sample-campaign-screen"
+import { BidHistoryScreen } from "../screens/bid-history-screen"
 
 const DashboardFlowStack = createBottomTabNavigator({
   LiveCampaign: { screen: LiveCampaignListingScreen },
@@ -27,6 +34,7 @@ const DashboardFlowStack = createBottomTabNavigator({
   Account: { screen: AccountScreen },
 }, {
   tabBarOptions: {
+    keyboardHidesTabBar: true,
     activeTintColor: color.primary,
     inactiveTintColor: color.palette.white,
     style: {
@@ -48,17 +56,25 @@ const DefaultNavOptions = {
   headerStyle: {
     backgroundColor: color.palette.grey9,
   },
-  headerTintColor: color.palette.white,
-  headerTitleContainerStyle: {
-    left: 0
-  }
+  headerTintColor: color.palette.white
 }
 
 export const PrimaryNavigator = createSwitchNavigator(
   {
     ResolveAuth: { screen: ResolveAuthScreen },
     WalkThrough: { screen: WalkthroughScreen },
-    loginFlow: createStackNavigator({
+    campaignFlow: createNativeStackNavigator({
+      SampleCampaign: { screen: SampleCampaignScreen },
+      dashboardFlow: DashboardFlowStack,
+      CampaignDetails: { screen: AppliedCampaignScreen },
+      BidHistory: { screen: BidHistoryScreen },
+      AllCampaign: { screen: AllCampaignListingScreen },
+      ImageUpload: { screen: DeadlineImageUploadScreen },
+    }, {
+      headerMode: 'screen',
+      defaultNavigationOptions: DefaultNavOptions
+    }),
+    loginFlow: createNativeStackNavigator({
       Home: { screen: HomeScreen },
       Login: { screen: LoginScreen },
       Signup: { screen: SignupScreen },
@@ -69,11 +85,12 @@ export const PrimaryNavigator = createSwitchNavigator(
       defaultNavigationOptions: DefaultNavOptions
     }),
     UserDetails: { screen: UserDetailsScreen },
-    campaignFlow: createStackNavigator({
-      dashboardFlow: DashboardFlowStack,
-      CampaignDetails: { screen: AppliedCampaignScreen },
-      AllCampaign: { screen: AllCampaignListingScreen },
-      ImageUpload: { screen: DeadlineImageUploadScreen },
+    onboardingFlow: createNativeStackNavigator({
+      Essential: { screen: UserOnboardingEssentialScreen },
+      Interest: { screen: UserOnboardingInterestScreen },
+      OnboardingSuccess: { screen: UserOnboardingSuccessScreen },
+      SocialMedia: { screen: UserOnboardingSocialMediaScreen },
+      Extra: { screen: UserOnboardingExtraScreen }
     }, {
       headerMode: 'screen',
       defaultNavigationOptions: DefaultNavOptions
@@ -92,4 +109,4 @@ export const PrimaryNavigator = createSwitchNavigator(
  * Anything not on this list will be a standard `back` action in
  * react-navigation.
  */
-export const exitRoutes: string[] = ["Home", "dashboardFlow", "Dashboard"]
+export const exitRoutes: string[] = ["LiveCampaign", "WalkThrough", "SampleCampaign"]

@@ -18,15 +18,17 @@ import ParallaxScroll from '@monterosa/react-native-parallax-scroll';
 import { ParallaxHeader } from "../../components/parallax-header"
 import { AppliedCampaignContent } from "../../components/applied-campaign-content"
 import { scale, verticalScale } from "../../utils/scale"
+import LinearGradient from "react-native-linear-gradient"
+import { Campaign, CampaignModel } from "../../models/campaign"
+import { getEnv } from "mobx-state-tree"
+import { SvgUri } from "react-native-svg"
+import { observable } from "mobx"
 
 export interface AppliedCampaignScreenProps extends NavigationStackScreenProps<{}> {
 }
 
 export interface AppliedCampaignNavigationParams extends NavigationParams {
   campaignId: string,
-  brandImage: string,
-  campaignImage: string,
-  title: string
 }
 
 const isIos = Platform.OS === "ios";
@@ -34,74 +36,116 @@ const isIos = Platform.OS === "ios";
 const window = Dimensions.get('window');
 
 export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampaignNavigationParams, AppliedCampaignScreenProps> = observer((props) => {
-  const { campaignStore: { getCampaignDetail, isLoading, fetchCampaignDetails, clearCampaignDetails } } = useStores();
+  const {
+    authStore: { isSignedIn },
+    navigationStore: { navigateTo },
+    campaignDetail
+  } = useStores();
   const toastRef = React.useRef(null);
 
   const { navigation } = props;
-  const campaignId = navigation.getParam("campaignId", "");
-  const brandImage = navigation.getParam("brandImage", "");
-  const campaignImage = navigation.getParam("campaignImage", "");
-  const title = navigation.getParam("title", "");
+  const id = navigation.getParam("campaignId", null);
 
-  const backArrowIcon = (onPress: () => {}) => isIos ? <Icon color='white' name='md-arrow-back' type='ionicons' onPress={onPress} /> : <Icon color='white' name='arrow-back' type='material' onPress={onPress} />;
+  const data = campaignDetail;
+  data.setCampaignId(id);
+
+  const { isLoading, updateCampaignDetails, campaignName } = data;
 
   React.useEffect(() => {
-    if (campaignId)
-      fetchCampaignDetails(campaignId)
-    else {
-      toastRef.current.show("Campaign id is missing")
+    if (id == null) {
+      alert("Campaign not found")
+      return;
     }
-  }, [campaignId]);
+    updateCampaignDetails()
+  }, [id]);
+
+  if (data == null) {
+    return (
+      <View style={styleSheet.view_full}>
+        <Screen
+          preset="fixed"
+          statusBar="light-content"
+          style={{ backgroundColor: 'rgba(51,51,51,1)' }} />
+      </View>
+    )
+  }
+
+  if (campaignName == null) {
+    return (
+      <View style={styleSheet.view_full}>
+        <Wallpaper />
+        <Screen
+          preset="fixed"
+          statusBar="light-content"
+          style={{ backgroundColor: 'rgba(51,51,51,1)' }} />
+        <Loading />
+      </View>
+    )
+  }
+
+  console.log(navigation.state)
 
   return (
     <View style={styleSheet.view_full}>
-      <NavigationEvents
-        onWillBlur={payload => clearCampaignDetails()}
-      />
       <Wallpaper />
       <Screen
         preset="fixed"
         statusBar="light-content"
-        style={{ backgroundColor: getCampaignDetail() != null ? 'rgba(51,51,51,1)' : color.transparent }} >
+        style={{ backgroundColor: 'rgba(51,51,51,1)' }} >
         {
-          !isLoading && getCampaignDetail() != null && getCampaignDetail().campaignDetails != null
+          !isLoading
           &&
           <ParallaxScroll
             renderHeader={({ animatedValue }) =>
               <ParallaxHeader
                 headerHeight={(60)}
                 parallaxHeight={(250)}
-                text={title || getCampaignDetail().campaignDetails.title}
-                avatarSource={brandImage || getCampaignDetail().campaignDetails.brandImage}
+                text={data.campaignName}
+                location={data.location.join(", ")}
+                description={data.campaignDescription}
                 animatedValue={animatedValue}
-                onBackPress={() => navigation.goBack()}
+                onBackPress={() => navigateTo(isSignedIn() ? "dashboardFlow" : "SampleCampaign")}
+                onRefresh={isSignedIn() ? () => updateCampaignDetails() : null}
               />
             }
             headerHeight={(60)}
             isHeaderFixed={true}
-            parallaxHeight={(250)}
+            parallaxHeight={(100)}
             useNativeDriver={true}
             isBackgroundScalable={true}
             headerBackgroundColor={'rgba(51, 51, 51, 0)'}
             headerFixedTransformY={0}
             renderParallaxBackground={() =>
-              <FastImage
-                source={{ uri: campaignImage || getCampaignDetail().campaignDetails.campaignImage }}
-                style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, opacity: 0.7 }} />
+              <View>
+                {data.campaignImage.includes('.svg') ?
+
+                  <View style={styles.backgroundSVGImageContainer}>
+                    <SvgUri
+                      width="100%"
+                      height="70%"
+                      uri={data.campaignImage}
+                    />
+                  </View>
+                  :
+                  <FastImage
+                    source={{ uri: data.campaignImage }}
+                    style={styles.backgroundImageContainer} />
+                }
+                <LinearGradient colors={[color.transparent, color.palette.grey10, color.palette.grey10]} style={styles.backgroundImageContainer} />
+              </View>
             }
-            onChangeHeaderVisibility={console.log('onChangeHeaderVisibility')}
             renderParallaxForeground={() => { }}
             fadeOutParallaxBackground={true}
             fadeOutParallaxForeground={false}
             headerFixedBackgroundColor={'rgba(51, 51, 51, 1)'}
-            parallaxBackgroundScrollSpeed={5}
+            parallaxBackgroundScrollSpeed={100}
             parallaxForegroundScrollSpeed={2.5}
             keyboardShouldPersistTaps="always"
-            scrollStyle={{ flexGrow: 1, flexShrink: 1 }}
+            style={{ flexGrow: 1, flexShrink: 1 }}
           >
 
-            <View style={{ marginHorizontal: spacing.small, marginTop: -spacing.large, marginBottom: spacing.medium, }} >
-              <AppliedCampaignContent data={getCampaignDetail()} />
+            <View style={{ paddingHorizontal: spacing.small, marginTop: verticalScale(150), marginBottom: spacing.medium, }} >
+              <AppliedCampaignContent data={data} />
             </View>
           </ParallaxScroll>
         }
@@ -113,6 +157,20 @@ export const AppliedCampaignScreen: NavigationStackScreenComponent<AppliedCampai
 })
 
 const styles = StyleSheet.create({
+  backgroundImageContainer: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.8,
+    width: window.width,
+    height: window.width
+  },
+  backgroundSVGImageContainer: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.8,
+    padding: spacing.medium,
+    backgroundColor: 'white',
+    width: window.width,
+    height: window.width
+  },
   wrapper: {
     flex: 1,
     alignItems: 'center',

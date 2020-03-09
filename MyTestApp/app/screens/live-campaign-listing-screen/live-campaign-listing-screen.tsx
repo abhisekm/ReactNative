@@ -2,52 +2,64 @@ import * as React from "react"
 import { observer } from "mobx-react"
 import { StyleSheet, View, Image } from "react-native"
 import { Screen } from "../../components/screen"
-// import { useStores } from "../../models/root-store"
+import { useStores } from "../../models/root-store"
 import { NavigationTabScreenProps, NavigationBottomTabScreenComponent } from "react-navigation-tabs"
-import { Icon } from "react-native-elements"
 import { Wallpaper } from "../../components/wallpaper"
 import Carousel, { Pagination } from "react-native-snap-carousel"
 import styleSheet from "../../theme/styleSheet"
 import { CampaignSlider } from "../../components/campaign-slider"
 import { itemWidth, sliderWidth } from "../../components/campaign-slider/campaign-slider-styles"
-import { ENTRIES1 } from "../dashboard-screen/entries-dummy"
 import { Text } from "../../components/text"
-import FastImage from "react-native-fast-image"
 import { spacing, color } from "../../theme"
 import { verticalScale, scale } from "../../utils/scale"
 import { normalisedFontSize } from "../../theme/fontSize"
 import { Campaign } from "../../models/campaign"
 import { CampaignSeeAll } from "../../components/campaign-see-all"
+import { CustomIcon } from "../../components/custom-icon"
+import { Loading } from "../../components/loading"
+import { firebase } from "@react-native-firebase/auth"
+import { Api } from "../../services/api"
+import { Spacer } from "../../components/Spacer"
 
 export interface LiveCampaignListingScreenProps extends NavigationTabScreenProps<{}> {
 }
 
 const _renderItemWithParallax = ({ item, index }: { item: Campaign, index: number }, parallaxProps) => {
-  return (
-    item.id === 'more' ?
-      <CampaignSeeAll /> :
+  if (item.id == "showMore") {
+    return (
+      <CampaignSeeAll />
+    )
+  } else {
+    return (
       <CampaignSlider
         data={item}
         even={(index + 1) % 2 === 0}
         parallax={true}
         parallaxProps={parallaxProps}
       />
-  );
+    )
+  }
 }
 
 
-export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveCampaignListingScreenProps> = observer((props) => {
-  // const { someStore } = useStores()
+export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveCampaignListingScreenProps> = observer(() => {
+  const {
+    campaignStore: { liveCampaigns, fetchLiveCampaigns, loading }
+  } = useStores()
   const [sliderIndex, setSliderIndex] = React.useState(0)
   const sliderRef = React.useRef(null);
 
+  React.useEffect(() => {
+    fetchLiveCampaigns()
+  }, [])
+
+
   return (
     <View style={styleSheet.view_full}>
-      <Wallpaper />
       <Screen preset="fixed" unsafe statusBar="light-content" style={{ flex: 1 }} >
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }} >
+        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', margin: spacing.small }} >
           <Image
-            source={require('../../components/header/logo.png')}
+            source={require('../../res/images/logo.png')}
             style={{ height: verticalScale(80), width: scale(200) }}
             resizeMode='contain'
           />
@@ -64,10 +76,9 @@ export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveC
           text="Immersify is a private marketplace for media business that enables media owners and partners to easily and effortlessly find the right match. We help you spread your story using the medium and storytellers who are just right for you."
         />
 
-
         <Carousel
           ref={sliderRef}
-          data={ENTRIES1}
+          data={liveCampaigns.slice()}
           firstItem={sliderIndex}
           renderItem={_renderItemWithParallax}
           sliderWidth={sliderWidth}
@@ -83,18 +94,9 @@ export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveC
           onSnapToItem={(index) => setSliderIndex(index)}
         />
 
-        <Pagination
-          dotsLength={ENTRIES1.length}
-          activeDotIndex={sliderIndex}
-          containerStyle={styles.paginationContainer}
-          dotColor={color.primary}
-          dotStyle={styles.paginationDot}
-          inactiveDotColor={color.primary}
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-          carouselRef={sliderRef.current}
-          tappableDots={!!sliderRef.current}
-        />
+        <Spacer />
+
+        {loading && <Loading />}
 
       </Screen>
     </View>
@@ -104,7 +106,7 @@ export const LiveCampaignListingScreen: NavigationBottomTabScreenComponent<LiveC
 
 LiveCampaignListingScreen.navigationOptions = {
   title: 'Campaign',
-  tabBarIcon: ({ tintColor }) => <Icon name="hash" type="feather" color={tintColor} size={scale(24)} />,
+  tabBarIcon: ({ tintColor }) => <CustomIcon color={tintColor} size={scale(24)} />,
 }
 
 const styles = StyleSheet.create({

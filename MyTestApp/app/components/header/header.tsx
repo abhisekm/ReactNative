@@ -32,7 +32,7 @@ export function Header(props: HeaderProps) {
   return (
     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
       <Image
-        source={require('../../components/header/light.png')}
+        source={require('../../res/images/light.png')}
         style={{ height: verticalScale(25), width: scale(200) }}
         resizeMode='contain'
       />

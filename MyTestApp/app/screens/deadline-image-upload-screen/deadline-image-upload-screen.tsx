@@ -12,10 +12,10 @@ import { getGeneralApiProblem, GeneralApiProblem } from "../../services/api/api-
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import { firebase } from "@react-native-firebase/auth"
 import { Button } from "../../components/button"
-import { navigate, goBack } from "../../navigation"
 import { TextField } from "../../components/text-field"
 import { Input } from "react-native-elements"
 import { normalisedFontSize } from "../../theme/fontSize"
+import { useStores } from "../../models/root-store"
 
 export interface DeadlineImageUploadScreenProps extends NavigationStackScreenProps<{}> {
 }
@@ -68,7 +68,7 @@ const width = Dimensions.get('window').width;
 
 export const DeadlineImageUploadScreen: NavigationStackScreenComponent<DeadlineImageUploadScreenProps>
   = observer(() => {
-    // const { someStore } = useStores()
+    const { navigationStore: { goBack } } = useStores()
     const [avatarSource, setAvatarSource] = React.useState(null);
     const [photo, setPhoto] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
@@ -241,7 +241,7 @@ DeadlineImageUploadScreen.navigationOptions = {
     return (
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
         <Image
-          source={require('../../components/header/light.png')}
+          source={require('../../res/images/light.png')}
           style={{ height: 25, width: 100 }}
           resizeMode='contain'
         />

@@ -5,7 +5,7 @@ import { Screen } from "../../components/screen";
 import styleSheet from "../../theme/styleSheet";
 import { color, spacing } from "../../theme";
 
-const logo = require('../../components/header/logo.png');
+const logo = require('../../res/images/logo.png');
 
 export const ResolveAuthScreen = (props) => {
   const { authStore: { silentSignIn } } = useStores()

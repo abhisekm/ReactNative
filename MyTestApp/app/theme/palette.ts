@@ -23,5 +23,5 @@ export const palette = {
   purple1: "#736BC7",
   blue: "#0000DD",
   blue2: "#4444EE",
-  green: "#00FF00"
+  green: "#00FF00",
 }

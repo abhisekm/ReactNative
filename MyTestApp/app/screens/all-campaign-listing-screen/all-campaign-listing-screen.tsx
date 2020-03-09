@@ -1,16 +1,20 @@
 import * as React from "react"
 import { observer } from "mobx-react"
-import { ViewStyle, View, FlatList, Image, RefreshControl } from "react-native"
+import { ViewStyle, View, FlatList, Image, RefreshControl, ActivityIndicator } from "react-native"
 import { Screen } from "../../components/screen"
 import { useStores } from "../../models/root-store"
 import { color, spacing } from "../../theme"
 import { NavigationStackScreenProps, NavigationStackScreenComponent } from "react-navigation-stack"
 import styleSheet from "../../theme/styleSheet"
-import { Campaign } from "../../models/campaign"
 import { CampaignSlider } from "../../components/campaign-slider"
 import { Button, Icon } from "react-native-elements"
 import { normalisedFontSize } from "../../theme/fontSize"
 import TouchableScale from "react-native-touchable-scale"
+import { NavigationParams } from "react-navigation"
+
+export interface AllCampaignListingNavigationParams extends NavigationParams {
+  mode: string
+}
 
 export interface AllCampaignListingScreenProps extends NavigationStackScreenProps<{}> {
 }
@@ -18,48 +22,60 @@ export interface AllCampaignListingScreenProps extends NavigationStackScreenProp
 
 const _renderItem = ({ item, index }) => {
   return (
-    item.id === 'more' ?
-      null :
-      <CampaignSlider
-        data={item}
-        even={(index + 1) % 2 === 0}
-        parallax={false}
-        style={{ width: '100%', marginBottom: spacing.medium }}
-      />
+    <CampaignSlider
+      data={item}
+      even={(index + 1) % 2 === 0}
+      parallax={false}
+      style={{ width: '100%', marginBottom: spacing.medium }}
+    />
   );
 }
 
-export const AllCampaignListingScreen: NavigationStackScreenComponent<AllCampaignListingScreenProps> = observer(() => {
-  const { campaignStore: { isLoading, fetchAllCampaigns, getAllCampaigns, allCampaigns } } = useStores();
-  //  const _footerLoading = () => {
-  //   return (
-  //     isLoadingMore ? <ActivityIndicator /> : null
-  //   )
-  // }
+export const AllCampaignListingScreen: NavigationStackScreenComponent<AllCampaignListingNavigationParams, AllCampaignListingScreenProps> = observer((props) => {
+  const {
+    campaignStore: {
+      loading, loadingMore,
+      fetchLiveCampaigns, fetchMoreLiveCampaigns, liveCampaigns,
+      fetchInfluencerCampaigns, fetchMoreInfluencerCampaigns, influencerCampaigns
+    }
+  } = useStores();
+
+  const mode = props.navigation.getParam("mode", "live");
+
+  const showLive = mode == "live";
+
+  const _footerLoading = () => {
+    return (
+      loadingMore ? <ActivityIndicator /> : null
+    )
+  }
+
 
   React.useEffect(() => {
-    fetchAllCampaigns();
+    showLive ? fetchLiveCampaigns() : fetchInfluencerCampaigns();
   }, []);
-
-  // console.log(getAllCampaigns());
 
   return (
     <View style={styleSheet.view_full}>
       <Screen style={{ ...styleSheet.view_container, paddingTop: spacing.small }} preset="fixed" unsafe statusBar="light-content" backgroundColor={color.palette.grey9} hideWallpaper>
 
         <FlatList
-          data={allCampaigns.slice()}
+          data={showLive ? liveCampaigns.slice() : influencerCampaigns.slice()}
           renderItem={_renderItem}
           keyExtractor={item => item.id}
-          // onEndReached={fetchMoreFeaturedPosts}
-          // onEndReachedThreshold={0.5}
-          // ListFooterComponent={_footerLoading}
+          onEndReached={() => {
+            showLive ? fetchMoreLiveCampaigns() : fetchMoreInfluencerCampaigns();
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={_footerLoading}
           removeClippedSubviews
           initialNumToRender={3}
           refreshControl={
             <RefreshControl
-              refreshing={isLoading}
-              onRefresh={fetchAllCampaigns}
+              refreshing={loading}
+              onRefresh={() => {
+                showLive ? fetchLiveCampaigns() : fetchInfluencerCampaigns();
+              }}
               colors={[color.primary, color.secondary]}
             />
           }
@@ -74,7 +90,7 @@ AllCampaignListingScreen.navigationOptions = {
     return (
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
         <Image
-          source={require('../../components/header/light.png')}
+          source={require('../../res/images/light.png')}
           style={{ height: 25, width: 100 }}
           resizeMode='contain'
         />

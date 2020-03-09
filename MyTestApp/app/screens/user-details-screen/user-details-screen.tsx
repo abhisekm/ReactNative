@@ -72,7 +72,7 @@ export const UserDetailsScreen: NavigationSwitchScreenComponent<UserDetailsScree
 //     return (
 //       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center' }} >
 //         <Image
-//           source={require('../../components/header/light.png')}
+//           source={require('../../res/images/light.png')}
 //           style={{ height: 25, width: 110 }}
 //           resizeMode='contain'
 //         />

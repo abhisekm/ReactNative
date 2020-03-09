@@ -41,6 +41,7 @@ export const viewPresets = {
 
   raised: {
     buttonStyle: {
+      flex: 1,
       paddingHorizontal: spacing.medium,
       paddingVertical: spacing.small,
     } as ViewStyle,
@@ -59,6 +60,7 @@ export const viewPresets = {
     } as TextStyle,
     containerStyle: {
       margin: spacing.small,
+      height: scale(40),
     } as ViewStyle,
   },
 
@@ -77,6 +79,7 @@ export const viewPresets = {
       margin: spacing.small,
       justifyContent: 'center',
       backgroundColor: color.transparent,
+      height: scale(40),
     } as ViewStyle,
   },
 
@@ -104,6 +107,7 @@ export const viewPresets = {
       margin: spacing.small,
       borderRadius: spacing.extraLarge,
       justifyContent: 'center',
+      height: scale(40),
     } as ViewStyle,
   },
 }

@@ -1,7 +1,10 @@
 import React from "react"
-import { Image, View } from "react-native"
+import { Image, View, StyleSheet } from "react-native"
 import { presets } from "./wallpaper.presets"
 import { WallpaperProps } from "./wallpaper.props"
+import { Text } from "../text"
+import { color } from "../../theme"
+import LinearGradient from "react-native-linear-gradient"
 
 const defaultImage = require("./bg.png")
 
@@ -20,9 +23,19 @@ export function Wallpaper(props: WallpaperProps) {
   // figure out which image to use
   const source = backgroundImage || defaultImage
 
+  // return (
+  //   <View style={style}>
+  //     <Image source={source} />
+  //   </View>
+  // )
+
   return (
-    <View style={style}>
-      <Image source={source} />
+    <View style={{ ...StyleSheet.absoluteFillObject, opacity: 0.8 }} >
+      <LinearGradient
+        useAngle
+        angle={45}
+        colors={[color.secondary, color.primary]}
+        style={{ width: '100%', height: '100%' }} />
     </View>
   )
 }

@@ -45,21 +45,31 @@ export default StyleSheet.create({
     backgroundColor: color.palette.black,
   },
   imageContainer: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+    bottom: itemHorizontalMargin,
     marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
     backgroundColor: 'white',
-    borderTopLeftRadius: entryBorderRadius,
-    borderTopRightRadius: entryBorderRadius
+    borderRadius: entryBorderRadius,
   },
   imageContainerEven: {
     backgroundColor: color.palette.black
+  },
+  svgImageContainer: {
+    ...StyleSheet.absoluteFillObject,
+    padding: spacing.medium,
+    bottom: itemHorizontalMargin,
+    marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
+    backgroundColor: 'white',
+    borderRadius: entryBorderRadius,
   },
   image: {
     ...StyleSheet.absoluteFillObject,
     resizeMode: 'cover',
     borderRadius: IS_IOS ? entryBorderRadius : 0,
     borderTopLeftRadius: entryBorderRadius,
-    borderTopRightRadius: entryBorderRadius
+    borderTopRightRadius: entryBorderRadius,
+    borderBottomLeftRadius: entryBorderRadius,
+    borderBottomRightRadius: entryBorderRadius
   },
   imageLogo: {
     position: 'absolute',
@@ -82,25 +92,27 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: entryBorderRadius,
+    height: 0,
     backgroundColor: 'white'
   },
   radiusMaskEven: {
     backgroundColor: color.palette.black
   },
   textContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     justifyContent: 'center',
     paddingVertical: spacing.medium,
     paddingHorizontal: spacing.medium,
-    backgroundColor: 'white',
     borderBottomLeftRadius: entryBorderRadius,
-    borderBottomRightRadius: entryBorderRadius
+    borderBottomRightRadius: entryBorderRadius,
   },
   textContainerEven: {
-    backgroundColor: color.palette.black
   },
   title: {
-    color: color.text,
+    color: 'black',
     fontSize: normalisedFontSize.small,
     fontWeight: 'bold',
     letterSpacing: 0.5
@@ -109,10 +121,10 @@ export default StyleSheet.create({
     color: 'white'
   },
   brand: {
-    color: color.text,
+    color: 'black',
     fontSize: normalisedFontSize.small,
-    paddingStart: scale(50),
-    marginTop: scale(-15),
+    paddingStart: 0,
+    textAlignVertical: 'bottom',
     marginBottom: spacing.tiny,
     fontWeight: 'bold',
     letterSpacing: 0.5,
@@ -121,13 +133,22 @@ export default StyleSheet.create({
     color: 'white'
   },
   subtitle: {
-    marginTop: spacing.tiny,
-    color: color.palette.grey8,
+    fontStyle: 'italic',
+    marginBottom: spacing.tiny,
+    color: color.palette.grey10,
     fontSize: normalisedFontSize.small,
-    fontStyle: 'italic'
   },
   subtitleEven: {
-    color: 'rgba(255, 255, 255, 0.7)'
+    color: 'rgba(255, 255, 255, 1.0)'
+  },
+  description: {
+    marginTop: spacing.tiny,
+    marginBottom: spacing.tiny,
+    color: color.palette.grey10,
+    fontSize: normalisedFontSize.small,
+  },
+  descriptionEven: {
+    color: 'rgba(255, 255, 255, 1.0)'
   },
   buttonMask: {
     paddingHorizontal: spacing.large,
@@ -143,5 +164,19 @@ export default StyleSheet.create({
   },
   buttonTextEven: {
     color: color.palette.white
+  },
+  categoryContainer: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    borderColor: color.primary,
+    borderWidth: 2,
+    color: 'black',
+    fontSize: normalisedFontSize.small,
+    borderRadius: spacing.medium,
+    paddingHorizontal: spacing.small,
+    paddingVertical: spacing.tiny,
+  },
+  categoryContainerEven: {
+    color: 'white',
   }
 });

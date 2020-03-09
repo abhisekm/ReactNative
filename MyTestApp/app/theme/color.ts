@@ -25,6 +25,10 @@ export const color = {
    * by their under-powered GPUs.
    */
   transparent: "rgba(0, 0, 0, 0)",
+
+  transparentWhite: "rgba(255, 255, 255, .85)",
+
+  transparentBlack: "rgba(0, 0, 0, .85)",
   /**
    * The screen background.
    */
@@ -52,7 +56,7 @@ export const color = {
   /**
    * The default color of text in many components.
    */
-  text: palette.grey9,
+  text: palette.black,
   /**
    * Secondary information.
    */
